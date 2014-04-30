@@ -1,0 +1,146 @@
+
+package com.zjd.universal.net;
+
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteOrder;
+
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.channel.Channel;
+
+import com.zjd.universal.utils.HighLowByteConvert;
+import com.zjd.universal.utils.L;
+import com.zjd.universal.utils.NetCommun;
+
+public abstract class Message {
+    public static final int TEXT_TYPE_NUM = 0x1; // 数字
+
+    public static final int TEXT_TYPE_CHN = 0x1 << 1; // 中文
+
+    public static final int TEXT_TYPE_ENG = 0x1 << 2; // 英文
+
+    public void setMainCmdID(short mainCmdID) {
+        this.mainCmdID = mainCmdID;
+    }
+
+    public short getSubCmdID() {
+        return subCmdID;
+    }
+
+    public void setSubCmdID(short subCmdID) {
+        this.subCmdID = subCmdID;
+    }
+
+    private short mainCmdID, subCmdID;
+
+    public abstract ChannelBuffer pack();
+
+    public abstract void handle(ChannelBuffer buffer, Channel channel);
+
+    protected int readWORDByCPlusPlus(int fillByteNum, ChannelBuffer buffer) {
+        byte[] bytes = new byte[NetCommun.WORD + fillByteNum];
+        buffer.readBytes(bytes);
+        return ChannelBuffers.wrappedBuffer(ByteOrder.LITTLE_ENDIAN, bytes).readUnsignedShort();
+    }
+
+    protected long readDWORDByCPlusPlus(ChannelBuffer buffer) {
+        byte[] bytes = new byte[NetCommun.DWORD];
+        buffer.readBytes(bytes);
+        return ChannelBuffers.wrappedBuffer(ByteOrder.LITTLE_ENDIAN, bytes).readUnsignedInt();
+    }
+
+ 
+    protected int readLONGByCPlusPlus(ChannelBuffer buffer) {
+        byte[] bytes = new byte[NetCommun.LONG];
+        buffer.readBytes(bytes);
+        return ChannelBuffers.wrappedBuffer(ByteOrder.LITTLE_ENDIAN, bytes).readInt();
+    }
+
+    protected int readBYTEByCPlusPlus(int fillByteNum, ChannelBuffer buffer) {
+        byte[] bytes = new byte[NetCommun.BYTE + fillByteNum];
+        buffer.readBytes(bytes);
+        return ChannelBuffers.wrappedBuffer(ByteOrder.LITTLE_ENDIAN, bytes).readUnsignedByte();
+    }
+	/**
+	 * WIN_C++ => java
+	 * 读取Double类型数据，（ == int）
+	 * @param buffer
+	 * @return
+	 */
+	protected double readDOUBLEByCPlusPlus(ChannelBuffer buffer)
+	{
+		byte[] bytes = new byte[NetCommun.DOUBLE];
+		buffer.readBytes(bytes);
+		return ChannelBuffers.wrappedBuffer(ByteOrder.LITTLE_ENDIAN, bytes).readDouble();
+	}
+    protected String readTCharByCPlusPlus(int length, ChannelBuffer buffer) {
+        byte[] stringBytes = new byte[length];
+        buffer.readBytes(stringBytes);
+        ChannelBuffers.wrappedBuffer(ByteOrder.LITTLE_ENDIAN, stringBytes).readBytes(stringBytes);
+        try {
+            return new String(stringBytes, "gbk");
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+
+    }
+    /**
+	 * WIN_C++ => java
+	 * 读取LONGLONG类型数据，（ == long）
+	 * @param buffer
+	 * @return
+	 */
+	protected long readLONGLONGByCPlusPlus(ChannelBuffer buffer)
+	{
+		byte[] bytes = new byte[NetCommun.LONGLONG];
+		buffer.readBytes(bytes);
+		return ChannelBuffers.wrappedBuffer(ByteOrder.LITTLE_ENDIAN, bytes).readLong();
+	}
+    protected void writePacketHead(ChannelBuffer buffer) {
+        // struct CMD_Info
+        // {
+        // BYTE cbVersion;
+        // BYTE cbCheckCode;
+        // WORD wPacketSize;
+        // };
+        buffer.writeByte(0);
+        buffer.writeByte(0);
+        buffer.writeShort(0);
+        L.D("发送消息----主命令：" + mainCmdID + "，子命令：" + subCmdID);
+        // MainCmdID
+        buffer.writeBytes(HighLowByteConvert.toLH(mainCmdID));
+        // SubCmdID
+        buffer.writeBytes(HighLowByteConvert.toLH(subCmdID));
+    }
+
+    /**
+     * 写short数据 < C++ 对应 WORD >
+     * 
+     * @param data
+     * @param buffer
+     */
+    protected void writeShort(short data, ChannelBuffer buffer) {
+        buffer.writeBytes(HighLowByteConvert.toLH(data));
+    }
+
+    /**
+     * 写int数据 < C++ 对应 DWORD>
+     * 
+     * @param data
+     * @param buffer
+     */
+    protected void writeInt(int data, ChannelBuffer buffer) {
+        buffer.writeBytes(HighLowByteConvert.toLH(data));
+    }
+    /**
+     * 写int数据 < C++ 对应 DWORD>
+     * 
+     * @param data
+     * @param buffer
+     */
+    protected void writeDWORD(int data, ChannelBuffer buffer) {
+        buffer.writeInt(HighLowByteConvert.lIntToDWORD(data));
+    }
+    
+    
+}

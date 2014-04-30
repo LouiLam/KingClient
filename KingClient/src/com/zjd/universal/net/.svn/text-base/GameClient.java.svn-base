@@ -1,0 +1,686 @@
+
+package com.zjd.universal.net;
+
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.concurrent.Executors;
+
+import org.jboss.netty.bootstrap.ClientBootstrap;
+import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelFactory;
+import org.jboss.netty.channel.ChannelFuture;
+import org.jboss.netty.channel.ChannelFutureListener;
+import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
+
+import com.zjd.universal.net.game.Send1_2GRLoginByUserIDMessage;
+import com.zjd.universal.net.login.Send1_1GPLoginByAccountsMessage;
+import com.zjd.universal.net.login.Send1_208PhoneEmailMessage;
+import com.zjd.universal.net.login.Send1_3RegisterMessage;
+import com.zjd.universal.net.login.Send1_5GetPasswordMessage;
+import com.zjd.universal.net.login.Send1_7LoginPeiZhiMessage;
+import com.zjd.universal.net.login.Send4_220ApplyLotteryInfo;
+import com.zjd.universal.net.login.Send4_221ApplyLotteryResult;
+import com.zjd.universal.net.login.Send4_222UploadUserLotteryInfo;
+import com.zjd.universal.net.login.Send4_228RegPhoneMessage;
+import com.zjd.universal.net.login.Send4_400GiveGoldMessage;
+import com.zjd.universal.net.login.Send4_410RechargeMessage;
+import com.zjd.universal.net.login.Send4_451GetchargeMessage;
+import com.zjd.universal.net.login.Send4_454RechargeOfCardMessage;
+import com.zjd.universal.net.login.Send4_456HuoDongPeiZhiMessage;
+import com.zjd.universal.net.login.send4_210_RequestFriendsMessage;
+import com.zjd.universal.net.login.send4_211_UpdateFriendsMessage;
+import com.zjd.universal.net.login.send4_212_SendFriendsMessage;
+import com.zjd.universal.scene.SceneMgr;
+import com.zjd.universal.utils.Config;
+import com.zjd.universal.utils.DialogUtil;
+import com.zjd.universal.utils.EnumFlagUtil.LoginFinishState;
+import com.zjd.universal.utils.EnumFlagUtil.ServerType;
+import com.zjd.universal.utils.L;
+import com.zjd.universal.utils.NetCommun;
+
+public class GameClient {
+    public static String LOGIN_IP;
+
+    public static String LAN_LOGIN_IP = "192.168.1.67";
+
+    public static String WAN44_LOGIN_IP = "124.232.136.44";//"192.168.1.248"; //"192.168.1.14";//"192.168.1.65";//"192.168.1.192";//"124.232.136.43";//"192.168.1.67";//
+
+    public static String WAN10000KL_LOGIN_IP = "mobile.10000kl.com";
+
+    public static final int LOGIN_PROT = 9001;
+
+    public static String GAME_IP;
+
+    public static int GAME_PORT;
+
+    public static LoginFinishState loginFinishState;
+
+    private static GameClient gameClient = new GameClient();
+
+    /**
+     * 是否为连接游戏服务器过程中，使用：A:置为true:1.发起连接.....B:置为false1.<进入大厅> 或者 2.<连接完成> 或者
+     * 3.<连接完所有服务器一轮仍然失败>
+     */
+    public boolean isConnectGameServer;
+
+    ClientBootstrap bootstrap;
+
+    Channel gameChannel;
+
+    ArrayList<Channel> channelList = new ArrayList<Channel>();
+
+    private GameServerMessageFactory gameServerMessageFactory;
+
+    public GameServerMessageFactory getGSFactory() {
+        return gameServerMessageFactory;
+    }
+
+    public void setGameServerMessageFactory(GameServerMessageFactory gameServerMessageFactory) {
+        this.gameServerMessageFactory = gameServerMessageFactory;
+    }
+
+    private GameClient() {
+    }
+	/**
+	 * 发送朋友圈申请
+	 * 
+	 * @param ip
+	 * @param port
+	 * @param accountName
+	 * @param password
+	 */
+	public void connectRequestFriendsLoginServer() {
+		for (Channel channel : channelList) {
+			if (channel != null && channel.isConnected())
+				channel.close();
+		}
+		boolean t_isconnect = false;
+		do {
+			for (Channel channel : channelList) {
+				if (channel != null && channel.isConnected())
+					t_isconnect = true;
+			}
+			try {
+				Thread.sleep(10);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} while (t_isconnect);
+		ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(
+				LOGIN_IP, LOGIN_PROT));
+		connectFuture.addListener(new ChannelFutureListener() {
+			public void operationComplete(ChannelFuture cf) {
+				if (cf.getChannel().isConnected()) {
+					cf.getChannel().setAttachment(new NetCommun());
+					channelList.add(cf.getChannel());
+					Config.curServerType = ServerType.LoginServer;
+					sendMessage(cf.getChannel(),
+							new send4_210_RequestFriendsMessage());
+				}
+			}
+		});
+	}
+
+	/**
+	 * 发送朋友圈已阅的回执
+	 * 
+	 * @param ip
+	 * @param port
+	 * @param accountName
+	 * @param password
+	 */
+	public void connectUpdateFriendsLoginServer() {
+		for (Channel channel : channelList) {
+			if (channel != null && channel.isConnected())
+				channel.close();
+		}
+		boolean t_isconnect = false;
+		do {
+			for (Channel channel : channelList) {
+				if (channel != null && channel.isConnected())
+					t_isconnect = true;
+			}
+			try {
+				Thread.sleep(10);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} while (t_isconnect);
+		ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(
+				LOGIN_IP, LOGIN_PROT));
+		connectFuture.addListener(new ChannelFutureListener() {
+			public void operationComplete(ChannelFuture cf) {
+				if (cf.getChannel().isConnected()) {
+					cf.getChannel().setAttachment(new NetCommun());
+					channelList.add(cf.getChannel());
+					Config.curServerType = ServerType.LoginServer;
+					sendMessage(cf.getChannel(),
+							new send4_211_UpdateFriendsMessage());
+				}
+			}
+		});
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param ip
+	 * @param port
+	 * @param accountName
+	 * @param password
+	 */
+	public void connectSendFriendsMessage(final String str) {
+		for (Channel channel : channelList) {
+			if (channel != null && channel.isConnected())
+				channel.close();
+		}
+		boolean t_isconnect = false;
+		do {
+			for (Channel channel : channelList) {
+				if (channel != null && channel.isConnected())
+					t_isconnect = true;
+			}
+			try {
+				Thread.sleep(10);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} while (t_isconnect);
+		ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(
+				LOGIN_IP, LOGIN_PROT));
+		connectFuture.addListener(new ChannelFutureListener() {
+			public void operationComplete(ChannelFuture cf) {
+				if (cf.getChannel().isConnected()) {
+					cf.getChannel().setAttachment(new NetCommun());
+					channelList.add(cf.getChannel());
+					Config.curServerType = ServerType.LoginServer;
+					sendMessage(cf.getChannel(),
+							new send4_212_SendFriendsMessage(str));
+				}
+			}
+		});
+	}
+   
+    /**
+     * 正常登陆
+     * 
+     * @param ip
+     * @param port
+     * @param accountName
+     * @param password
+     */
+    public void connectNormalLoginServer(final String account, final String password) {
+        ChannelFuture connectFuture = bootstrap
+                .connect(new InetSocketAddress(LOGIN_IP, LOGIN_PROT));
+        connectFuture.addListener(new ChannelFutureListener() {
+            public void operationComplete(ChannelFuture cf) {
+                if (cf.getChannel().isConnected()) {
+                    cf.getChannel().setAttachment(new NetCommun());
+                    channelList.add(cf.getChannel());
+                    loginFinishState = LoginFinishState.OldUser;
+                    Config.curServerType = ServerType.LoginServer;
+                    sendMessage(cf.getChannel(), new Send1_1GPLoginByAccountsMessage(account,
+                            password));
+                }
+            }
+        });
+    }
+
+    /**
+     * 游戏服务器
+     * 
+     * @param ip
+     * @param port
+     * @param accountName
+     * @param password
+     */
+    public void connectGameServer(final String ip, final int port) {
+        isConnectGameServer = true;
+        if (ip == null || port == 0) {
+            GameClient.getInstance().isConnectGameServer = false;
+            SceneMgr.getInstance().onBackPressed();
+
+            SceneMgr.getInstance().getCurScene().getAct().runOnUiThread(new Runnable() {
+                public void run() {
+                    DialogUtil.showTipDia("服务器繁忙，请稍后重新登录");
+                }
+            });
+            return;
+        }
+
+        // gameChannel = null;
+        for (Channel channel : channelList) {
+            if (channel != null && channel.isConnected())
+                channel.close();
+        }
+        boolean t_isconnect = false;
+        do {
+            for (Channel channel : channelList) {
+                if (channel != null && channel.isConnected())
+                    t_isconnect = true;
+            }
+            try {
+                Thread.sleep(10);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } while (t_isconnect);
+        if (gameChannel != null) {
+            L.D("全部链接已经断开！游戏服务器连接状态：" + (gameChannel.isConnected() ? "连接状态" : "连接关闭状态"));
+        } else {
+            L.D("全部链接已经断开！");
+        }
+        channelList.clear();
+
+        L.D("新连接游戏服务器！");
+
+        L.D("新连接游戏服务器！"+"IP：" +ip+"，端口："+port);
+        ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(ip, port));
+        connectFuture.addListener(new ChannelFutureListener() {
+            public void operationComplete(ChannelFuture cf) {
+                if (cf.getChannel().isConnected()) {
+                    cf.getChannel().setAttachment(new NetCommun());
+                    channelList.add(cf.getChannel());
+                    L.D("添加游戏服务器Channel！当前连接数：" + channelList.size());
+                    gameChannel = cf.getChannel();
+                    Config.curServerType = ServerType.GameServer;
+                    sendMessage(cf.getChannel(), new Send1_2GRLoginByUserIDMessage());
+                }
+            }
+        });
+    }
+
+    /**
+     * 连接服务器，发送“注册”数据
+     * 
+     * @param ip
+     * @param port
+     * @param uname
+     * @param password
+     * @param udevice
+     */
+    public void connectRegisterServer(String ip, int port, final short wFaceID,
+            final byte cbGender, final String uname, final String password, final String ucity,
+            final String udevice) {
+        ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(ip, port));
+
+        /******************* 设置监听 ***********************************/
+        connectFuture.addListener(new ChannelFutureListener() {
+            public void operationComplete(ChannelFuture cf) {
+                if (cf.getChannel().isConnected()) {// 连接判断
+                    cf.getChannel().setAttachment(new NetCommun());
+                    channelList.add(cf.getChannel());
+                    loginFinishState = LoginFinishState.NewUser;
+                    Config.curServerType = ServerType.LoginServer;
+                    sendMessage(cf.getChannel(), new Send1_3RegisterMessage(wFaceID, cbGender,
+                            uname, password, ucity, udevice));
+                    L.D(wFaceID + "," + cbGender + "," + uname + "," + password + "," + ucity + ","
+                            + udevice);
+
+                }
+            }
+        });
+    }
+
+    /**
+     * 连接服务器，发送 “电话，邮箱” 的数据
+     * 
+     * @param ip
+     * @param port
+     * @param uname
+     * @param udevice
+     */
+    public void connectPhoneEmailServer(String ip, int port, final long uId, final String uname,
+            final String udevice) {
+        ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(ip, port));
+
+        /******************* 设置监听 ***********************************/
+        connectFuture.addListener(new ChannelFutureListener() {
+            public void operationComplete(ChannelFuture cf) {
+                if (cf.getChannel().isConnected()) {// 连接判断
+                    channelList.add(cf.getChannel());
+                    cf.getChannel().setAttachment(new NetCommun());
+                    Config.curServerType = ServerType.LoginServer;
+                    sendMessage(cf.getChannel(),
+                            new Send1_208PhoneEmailMessage(uId, uname, udevice));
+                    // 此消息无需 接收回复，服务器无消息返回
+                    GameClient.getInstance().disConnect();
+                    SceneMgr.getInstance().getCurScene().updateDissmissWaitDia();
+                    SceneMgr.getInstance().showNextScene(SceneMgr.Hall);
+                }
+            }
+        });
+    }
+
+    /**
+     * 连接服务器，发送 “找回密码” 的数据
+     * 
+     * @param ip
+     * @param port
+     * @param uname
+     * @param udevice
+     */
+    public void connectGetPasswordServer(String ip, int port, final String uname,
+            final String udevice) {
+        ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(ip, port));
+        connectFuture.addListener(new ChannelFutureListener() {
+            public void operationComplete(ChannelFuture cf) {
+                if (cf.getChannel().isConnected()) {
+                    channelList.add(cf.getChannel());
+                    cf.getChannel().setAttachment(new NetCommun());
+                    Config.curServerType = ServerType.LoginServer;
+                    sendMessage(cf.getChannel(), new Send1_5GetPasswordMessage(uname, udevice));
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取活动配置信息
+     * 
+     * @param ip
+     * @param port
+     * @param uname
+     * @param udevice
+     */
+    public void connectGetHDCI(String ip, int port) {
+        ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(ip, port));
+        connectFuture.addListener(new ChannelFutureListener() {
+            public void operationComplete(ChannelFuture cf) {
+                if (cf.getChannel().isConnected()) {
+                    channelList.add(cf.getChannel());
+                    cf.getChannel().setAttachment(new NetCommun());
+                    Config.curServerType = ServerType.LoginServer;
+                    sendMessage(cf.getChannel(), new Send1_7LoginPeiZhiMessage());
+                }
+            }
+        });
+    }
+
+    /**
+     * 用户获取抽奖信息请求
+     * 
+     * @param ip
+     * @param port
+     * @param uID
+     * @param szMobileCode
+     */
+    public void connectApplyLotteryInfo(String ip, int port) {
+        ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(ip, port));
+        connectFuture.addListener(new ChannelFutureListener() {
+            public void operationComplete(ChannelFuture cf) {
+                if (cf.getChannel().isConnected()) {
+                    channelList.add(cf.getChannel());
+                    cf.getChannel().setAttachment(new NetCommun());
+                    Config.curServerType = ServerType.LoginServer;
+                    sendMessage(cf.getChannel(), new Send4_220ApplyLotteryInfo());
+                }
+            }
+        });
+    }
+
+    /**
+     * 用户获取抽奖结果请求
+     * 
+     * @param ip
+     * @param port
+     * @param uID
+     * @param szMobileCode
+     */
+    public void connectApplyLotteryResult(String ip, int port) {
+        ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(ip, port));
+        connectFuture.addListener(new ChannelFutureListener() {
+            public void operationComplete(ChannelFuture cf) {
+                if (cf.getChannel().isConnected()) {
+                    channelList.add(cf.getChannel());
+                    cf.getChannel().setAttachment(new NetCommun());
+                    Config.curServerType = ServerType.LoginServer;
+                    sendMessage(cf.getChannel(), new Send4_221ApplyLotteryResult());
+                }
+            }
+        });
+    }
+
+    /**
+     * 用户提交资料结果
+     * 
+     * @param ip
+     * @param port
+     * @param dwUserID
+     * @param szMobileCode
+     * @param szQQCode
+     */
+    public void connectUploadUserLotteryInfo(String ip, int port, final String szMobileCode,
+            final String szQQCode) {
+        ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(ip, port));
+        connectFuture.addListener(new ChannelFutureListener() {
+            public void operationComplete(ChannelFuture cf) {
+                if (cf.getChannel().isConnected()) {
+                    channelList.add(cf.getChannel());
+                    cf.getChannel().setAttachment(new NetCommun());
+                    Config.curServerType = ServerType.LoginServer;
+                    sendMessage(cf.getChannel(), new Send4_222UploadUserLotteryInfo(szMobileCode,
+                            szQQCode));
+                }
+            }
+        });
+    }
+
+    /**
+     * 注册手机号
+     * 
+     * @param ip
+     * @param port
+     * @param uID
+     * @param szMobileCode
+     */
+    public void connectRegPhone(String ip, int port, final long uID, final String szMobileCode) {
+        ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(ip, port));
+        connectFuture.addListener(new ChannelFutureListener() {
+            public void operationComplete(ChannelFuture cf) {
+                if (cf.getChannel().isConnected()) {
+                    channelList.add(cf.getChannel());
+                    cf.getChannel().setAttachment(new NetCommun());
+                    Config.curServerType = ServerType.LoginServer;
+                    sendMessage(cf.getChannel(), new Send4_228RegPhoneMessage(uID, szMobileCode));
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取活动
+     * 
+     * @param ip
+     * @param port
+     * @param uname
+     * @param udevice
+     */
+    public void connectGetHuoDong(String ip, int port) {
+        ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(ip, port));
+        connectFuture.addListener(new ChannelFutureListener() {
+            public void operationComplete(ChannelFuture cf) {
+                if (cf.getChannel().isConnected()) {
+                    channelList.add(cf.getChannel());
+                    cf.getChannel().setAttachment(new NetCommun());
+                    Config.curServerType = ServerType.LoginServer;
+                    sendMessage(cf.getChannel(), new Send4_456HuoDongPeiZhiMessage());
+                }
+            }
+        });
+    }
+
+    public static boolean isGiveGold = false;
+
+    /**
+     * 邓海秋 连接服务器，发送 “金币赠送” 的数据
+     * 
+     * @param ip
+     * @param port
+     * @param uname
+     * @param udevice
+     */
+    public void connectGiveGoldServer(String ip, int port, final long uID, final int uValue,
+            final String uname) {
+        ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(ip, port));
+        connectFuture.addListener(new ChannelFutureListener() {
+            public void operationComplete(ChannelFuture cf) {
+                if (cf.getChannel().isConnected()) {
+                    channelList.add(cf.getChannel());
+                    cf.getChannel().setAttachment(new NetCommun());
+                    Config.curServerType = ServerType.LoginServer;
+                    isGiveGold = true;
+                    sendMessage(cf.getChannel(), new Send4_400GiveGoldMessage(uID, uValue, uname));
+
+                }
+            }
+        });
+    }
+
+    /**
+     * * by 邓海秋 连接服务器，发送 “领金币，领话费” 的数据
+     * 
+     * @param ip
+     * @param port
+     * @param uID
+     * @param type 0金币,1话费,
+     * @param tel_num_str 如果是1的话,tel_num_str是存储手机号码,0的话,tel_num_str可以为空
+     */
+    public void connectGetchargeServer(String ip, int port, final long uID, final int type,
+            final String tel_num_str) {
+        ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(ip, port));
+        connectFuture.addListener(new ChannelFutureListener() {
+            public void operationComplete(ChannelFuture cf) {
+                if (cf.getChannel().isConnected()) {
+                    channelList.add(cf.getChannel());
+                    cf.getChannel().setAttachment(new NetCommun());
+                    Config.curServerType = ServerType.LoginServer;
+                    sendMessage(cf.getChannel(), new Send4_451GetchargeMessage(uID, type,
+                            tel_num_str));
+                    // Log.d("领话费消息","发送成功，请等候服务器处理！");
+                }
+            }
+        });
+    }
+
+    /**
+     * by 邓海秋 连接服务器，发送 “紫金岛卡充值” 的数据
+     * 
+     * @param ip
+     * @param port
+     * @param uID
+     * @param cardnum
+     * @param cardpassword
+     */
+    public void connectRechargeServer(String ip, int port, final long uID, final String cardnum,
+            final String cardpassword) {
+        ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(ip, port));
+        connectFuture.addListener(new ChannelFutureListener() {
+            public void operationComplete(ChannelFuture cf) {
+                if (cf.getChannel().isConnected()) {
+                    channelList.add(cf.getChannel());
+                    cf.getChannel().setAttachment(new NetCommun());
+                    Config.curServerType = ServerType.LoginServer;
+                    sendMessage(cf.getChannel(), new Send4_410RechargeMessage(uID, cardnum,
+                            cardpassword));
+                }
+            }
+        });
+    }
+
+    /**
+     * by 邓海秋 连接服务器，发送 “神州付 充值卡” 的数据
+     * 
+     * @param ip
+     * @param port
+     * @param uID
+     * @param type 充值卡类型：电信，移动，联通
+     * @param cardnum
+     * @param cardpassword
+     */
+    public void connectRechargeCardServer(String ip, int port, final long uID, final byte type,
+            final int dwCardFee, final String cardnum, final String cardpassword) {
+        ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(ip, port));
+        connectFuture.addListener(new ChannelFutureListener() {
+            public void operationComplete(ChannelFuture cf) {
+                if (cf.getChannel().isConnected()) {
+                    channelList.add(cf.getChannel());
+                    cf.getChannel().setAttachment(new NetCommun());
+                    Config.curServerType = ServerType.LoginServer;
+                    sendMessage(cf.getChannel(), new Send4_454RechargeOfCardMessage(uID, type,
+                            dwCardFee, cardnum, cardpassword));
+                }
+            }
+        });
+    }
+
+    public void onCreate() {
+        ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
+                Executors.newCachedThreadPool());
+        TcpClientPipelineFactory tcpClientPipelineFactory = new TcpClientPipelineFactory();
+        bootstrap = new ClientBootstrap(factory);
+        bootstrap.setPipelineFactory(tcpClientPipelineFactory);
+        bootstrap.setOption("tcpNoDelay", true);
+        bootstrap.setOption("keepAlive", true);
+        bootstrap.setOption("reuseAddress", true);
+        System.setProperty("java.net.preferIPv6Addresses", "false");
+    }
+
+    public void disConnect() {
+        for (Channel channel : channelList) {
+            if (channel != null && channel.isConnected())
+                channel.close();
+        }
+        boolean t_isconnect = false;
+        do {
+            for (Channel channel : channelList) {
+                if (channel != null)
+                    if (channel.isConnected())
+                        t_isconnect = true;
+                    else
+                        channel.close();
+
+            }
+            try {
+                Thread.sleep(10);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } while (t_isconnect);
+        if (gameChannel != null) {
+            L.D("全部链接已经断开！游戏服务器连接状态：" + (gameChannel.isConnected() ? "连接状态" : "连接关闭状态"));
+        } else {
+            L.D("全部链接已经断开！");
+        }
+
+        channelList.clear();
+    }
+
+    public void sendMessage(Channel channel, Message msg) {
+
+        try {
+            if (channel != null && msg != null) {
+                channel.write(msg.pack());
+            } else {
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void sendMessageToGameServer(Message msg) {
+
+        if (gameChannel != null && msg != null && gameChannel.isConnected()) {
+            gameChannel.write(msg.pack());
+        } else {
+
+        }
+    }
+
+    public static GameClient getInstance() {
+        return gameClient;
+    }
+
+}

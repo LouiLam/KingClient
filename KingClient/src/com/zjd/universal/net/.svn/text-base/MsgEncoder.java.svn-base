@@ -1,0 +1,30 @@
+package com.zjd.universal.net;
+
+
+
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.handler.codec.oneone.OneToOneEncoder;
+
+import com.zjd.universal.utils.NetCommun;
+
+
+public class MsgEncoder extends OneToOneEncoder {
+	
+
+	@Override
+	protected Object encode(ChannelHandlerContext ctx, Channel channel,
+			Object msg) throws Exception {
+		NetCommun netCommun=	(NetCommun) channel.getAttachment();
+		ChannelBuffer buffer = ChannelBuffers.dynamicBuffer();
+		ChannelBuffer dataBuffer = (ChannelBuffer) msg;
+		int len = dataBuffer.readableBytes();
+		byte[] dataBytes = new byte[len];
+		dataBuffer.readBytes(dataBytes);
+		buffer.writeBytes(netCommun.encryption(len, dataBytes));
+		return buffer;
+	}
+	
+}

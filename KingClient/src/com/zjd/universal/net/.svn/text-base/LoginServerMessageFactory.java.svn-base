@@ -1,0 +1,97 @@
+
+package com.zjd.universal.net;
+
+import com.zjd.universal.net.login.Receive0_1HeartMessage;
+import com.zjd.universal.net.login.Receive1_100GPLoginSuccessMessage;
+import com.zjd.universal.net.login.Receive1_101GPLoginErrorMessage;
+import com.zjd.universal.net.login.Receive1_102GPLoginFinishMessage;
+import com.zjd.universal.net.login.Receive1_105GetPasswordMessage;
+import com.zjd.universal.net.login.Receive1_111findPasswordMessage;
+import com.zjd.universal.net.login.Receive1_456GP_PhoneConfigResultMessage;
+import com.zjd.universal.net.login.Receive1_7LoginPeiZhiMessage;
+import com.zjd.universal.net.login.Receive2_103GPListServerMessage;
+import com.zjd.universal.net.login.Receive4_208RegPhoneMessage;
+import com.zjd.universal.net.login.Receive4_213UpdateFriendMessage;
+import com.zjd.universal.net.login.Receive4_214UpdateGoldMessage;
+import com.zjd.universal.net.login.Receive4_215ReceiveFriendsMessage;
+import com.zjd.universal.net.login.Receive4_216ReceiveFriendsSmsMessage;
+import com.zjd.universal.net.login.Receive4_220ShowLotteryInfoResultMessage;
+import com.zjd.universal.net.login.Receive4_221ShowLotteryResultMessage;
+import com.zjd.universal.net.login.Receive4_222UploadUserLotteryInfoResultMessage;
+import com.zjd.universal.net.login.Receive4_400GiveGoldMessage;
+import com.zjd.universal.net.login.Receive4_410RechargeMessage;
+import com.zjd.universal.net.login.Receive4_451GetchargeMessage;
+import com.zjd.universal.net.login.Receive4_453GameLevelStandardMessage;
+import com.zjd.universal.net.login.Receive4_454RechargeCardMessage;
+import com.zjd.universal.net.login.Receive4_456HuoDongPeiZhiMessage;
+import com.zjd.universal.utils.NetCommand;
+
+public class LoginServerMessageFactory {
+
+    public static Message getMessage(int mainID, int subID) {
+        switch (mainID) {
+            case NetCommand.MDM_HEART:
+                if (subID == NetCommand.SUB_HEART)
+                    return new Receive0_1HeartMessage();
+            case NetCommand.MDM_GP_LOGON:
+                switch (subID) {
+                    case NetCommand.SUB_GP_LOGON_ERROR:
+                        return new Receive1_101GPLoginErrorMessage();
+                    case NetCommand.SUB_GP_LOGON_SUCCESS:
+                        return new Receive1_100GPLoginSuccessMessage();
+                    case NetCommand.SUB_GP_LOGON_FINISH:
+                        return new Receive1_102GPLoginFinishMessage();
+                    case NetCommand.SUB_GP_LOGON_HD_CI:
+                        return new Receive1_7LoginPeiZhiMessage();
+                    case NetCommand.DBR_GR_GET_PASSWORD_RESULT:
+                        return new Receive1_105GetPasswordMessage();
+                    case NetCommand.DBR_GR_FIND_PASSWORD_RESULT:
+                        return new Receive1_111findPasswordMessage();
+                    case NetCommand.DBR_GR_BIGHALL_INFO:
+                        return new Receive1_456GP_PhoneConfigResultMessage();
+
+                }
+                break;
+            case NetCommand.MDM_GP_SERVER_LIST:
+                switch (subID) {
+                    case NetCommand.SUB_GP_LIST_SERVER:
+                        return new Receive2_103GPListServerMessage();
+                }
+                break;
+            case NetCommand.MDM_GP_UDER: {
+                switch (subID) {
+                    case NetCommand.SUB_REG_PHONE:
+                        return new Receive4_208RegPhoneMessage();
+                    case NetCommand.SUB_GP_APPLYLOTTERYINFO:
+                        return new Receive4_220ShowLotteryInfoResultMessage();
+                    case NetCommand.SUB_GP_APPLYLOTTERYRESULT:
+                        return new Receive4_221ShowLotteryResultMessage();
+                    case NetCommand.SUB_GP_UPLOADUSERLOTTERYINFO:
+                        return new Receive4_222UploadUserLotteryInfoResultMessage();
+                    case NetCommand.SUB_GP_GIVEGOLD:
+                        return new Receive4_400GiveGoldMessage();
+                    case NetCommand.SUB_GP_ISLANDCARD:
+                        return new Receive4_410RechargeMessage();
+                    case NetCommand.SUB_GP_GETCHARGE:
+                        return new Receive4_451GetchargeMessage();
+                    case NetCommand.SUB_GP_LEVELSTANDARD:
+                        return new Receive4_453GameLevelStandardMessage();
+                    case NetCommand.SUB_GP_RECHARGECARD:
+                        return new Receive4_454RechargeCardMessage();
+                    case NetCommand.SUB_GP_HUODONG:
+                        return new Receive4_456HuoDongPeiZhiMessage();
+                    case NetCommand. SUB_GP_UPDATE_FIREND :   //刷新新注册的朋友圈       --朋友圈
+                        return  new Receive4_213UpdateFriendMessage();
+                    case NetCommand.SUB_GP_UPDATE_GOLD :       //刷新朋友圈       --朋友圈
+                        return new Receive4_214UpdateGoldMessage();
+                    case NetCommand.SUB_GP_SEARCH_RESULT: 
+                        return new Receive4_215ReceiveFriendsMessage();
+                    case NetCommand.SUB_GP_SMSMESSAGE:
+                         return new Receive4_216ReceiveFriendsSmsMessage();
+                }
+            }
+        }
+        return null;
+    }
+
+}

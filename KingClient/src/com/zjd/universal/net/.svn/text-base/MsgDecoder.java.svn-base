@@ -1,0 +1,111 @@
+package com.zjd.universal.net;
+
+import java.nio.ByteOrder;
+
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.ChannelStateEvent;
+import org.jboss.netty.channel.ExceptionEvent;
+import org.jboss.netty.handler.codec.frame.FrameDecoder;
+
+import android.util.Log;
+
+import com.zjd.universal.obj.GameServerList;
+import com.zjd.universal.scene.SceneMgr;
+import com.zjd.universal.utils.L;
+import com.zjd.universal.utils.NetCommun;
+
+public class MsgDecoder extends FrameDecoder {
+	public static boolean isMsgDecoderException = false;
+
+	@Override
+	protected Object decode(ChannelHandlerContext ctx, Channel channel,
+			ChannelBuffer buffer) throws Exception {
+		NetCommun netUtils = (NetCommun) channel.getAttachment();
+		// MyLog.info(this,
+		// "decode()-----revice data length:"+buffer.readableBytes());
+		if (buffer.readableBytes() < 4) {
+			System.out.println("buffer.readableBytes() < 4");
+			return null;
+		}
+		// short cbVersion=buffer.getUnsignedByte(buffer.readerIndex());
+		byte cbCheckCode = buffer.getByte(buffer.readerIndex() + 1);
+		byte[] packetLengthBytes = new byte[NetCommun.WORD];
+		buffer.getBytes(buffer.readerIndex() + 2, packetLengthBytes);
+		int wPacketSize = ChannelBuffers.wrappedBuffer(ByteOrder.LITTLE_ENDIAN,
+				packetLengthBytes).getUnsignedShort(0);
+
+		System.out.println("wPacketSize:" + wPacketSize);
+		if (buffer.readableBytes() < wPacketSize) {
+			System.out.println("buffer.readableBytes() < wPacketSize");
+			return null;
+		}
+		if (wPacketSize > (NetCommun.SOCKET_PACKET + (2 * NetCommun.BYTE + 3 * NetCommun.WORD))) {
+			System.out.println("packet wPacketSize over size");
+			return null;
+		}
+		byte[] packetData = new byte[wPacketSize];
+		buffer.getBytes(buffer.readerIndex(), packetData);
+		byte[] packetDataTemp = new byte[wPacketSize + NetCommun.DWORD];
+		for (int i = 0; i < wPacketSize; i++) {
+			packetDataTemp[i] = packetData[i];
+		}
+		netUtils.m_dwRecvPacketCount++;
+
+		netUtils.deciphering(packetDataTemp, wPacketSize, cbCheckCode);
+
+		buffer.skipBytes(wPacketSize);
+		ChannelBuffer dataBuffer = ChannelBuffers.dynamicBuffer();
+		dataBuffer.writeBytes(packetDataTemp);
+		return dataBuffer;
+
+	}
+
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
+		e.getCause().printStackTrace();
+		if(ctx.getChannel()!=GameClient.getInstance().gameChannel)
+		{
+			L.D("MsgDecoder非游戏服务器连接关闭！不处理");
+			return;
+		}
+		if (e.getCause().getMessage().contains("imed out")) {
+			L.D("网络连接超时入口 MsgDecoder异常imed out");
+			SceneMgr.getInstance().connectTimeOut();
+		}
+		isMsgDecoderException = true;
+		if (GameClient.getInstance().isConnectGameServer) {
+			if (e.getCause().getMessage().contains("ailed to connect"))// 切换游戏服务器
+			{
+				L.D("网络连接失败");
+				GameServerList.getInstatnce().sortGameServer(
+						GameServerList.getInstatnce().getCurGameServer());
+				GameClient.getInstance().connectGameServer(GameClient.GAME_IP,
+						GameClient.GAME_PORT);
+			}
+		}
+		if (e.getCause().getMessage().contains("roken pipe")) {
+			SceneMgr.getInstance().connectSocket();
+		}
+	}
+
+	public void channelDisconnected(ChannelHandlerContext ctx,
+			ChannelStateEvent e) {
+		if(ctx.getChannel()!=GameClient.getInstance().gameChannel)
+		{
+			L.D("非游戏服务器连接关闭！不处理");
+			return;
+		}
+		
+		Log.d("连接服务器", "已连接过后，断开连接！"+GameClient.getInstance().isConnectGameServer);
+		if (GameClient.getInstance().isConnectGameServer) {
+			GameServerList.getInstatnce().sortGameServer(
+					GameServerList.getInstatnce().getCurGameServer());
+			GameClient.getInstance().connectGameServer(GameClient.GAME_IP,
+					GameClient.GAME_PORT);
+		}
+	
+	}
+}

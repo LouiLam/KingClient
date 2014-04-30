@@ -1,0 +1,78 @@
+package com.zjd.universal.net;
+
+import java.nio.ByteOrder;
+
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.ChannelStateEvent;
+import org.jboss.netty.channel.ExceptionEvent;
+import org.jboss.netty.channel.MessageEvent;
+import org.jboss.netty.channel.SimpleChannelHandler;
+
+import com.zjd.universal.scene.SceneMgr;
+import com.zjd.universal.utils.Config;
+import com.zjd.universal.utils.L;
+import com.zjd.universal.utils.NetCommun;
+
+public class MsgHandler extends SimpleChannelHandler {
+
+	@Override
+	public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) {
+
+	}
+
+	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
+			throws Exception {
+		Channel channel = (Channel) e.getChannel();
+		ChannelBuffer channelBuffer = (ChannelBuffer) e.getMessage();
+
+		channelBuffer.skipBytes(4);
+		byte[] wMainCmdIDBytes = new byte[NetCommun.WORD];
+		byte[] wSubCmdIDBytes = new byte[NetCommun.WORD];
+		channelBuffer.readBytes(wMainCmdIDBytes);
+		channelBuffer.readBytes(wSubCmdIDBytes);
+		int wMainCmdID = ChannelBuffers.wrappedBuffer(ByteOrder.LITTLE_ENDIAN,
+				wMainCmdIDBytes).getUnsignedShort(0);
+
+		int wSubCmdID = ChannelBuffers.wrappedBuffer(ByteOrder.LITTLE_ENDIAN,
+				wSubCmdIDBytes).getUnsignedShort(0);
+		
+		Message msg = null;
+		switch (Config.curServerType) {
+		case GameServer:
+			if(ctx.getChannel()!=GameClient.getInstance().gameChannel)
+			{
+				L.D("MsgHandler非当前游戏服务器连接！不处理");
+				ctx.getChannel().close();
+				return;
+			}
+			msg =GameClient.getInstance().getGSFactory().getMessage(wMainCmdID, wSubCmdID);
+			if(msg==null)
+			System.out.println( "GameServer:"+"wMainCmdID:" + wMainCmdID + ",wSubCmdID:" + wSubCmdID+"----------discard");
+			else 
+			{System.out.println( "GameServer:"+"wMainCmdID:" + wMainCmdID + ",wSubCmdID:" + wSubCmdID);}
+			break;
+		case LoginServer:
+			msg = LoginServerMessageFactory.getMessage(wMainCmdID, wSubCmdID);
+			if(msg==null){System.out.println("LoginServer:"+"wMainCmdID:" + wMainCmdID + ",wSubCmdID:" + wSubCmdID+"----------discard");}
+			else
+			{
+				System.out.println("LoginServer:"+"wMainCmdID:" + wMainCmdID + ",wSubCmdID:" + wSubCmdID);
+			}
+			break;
+		case NULL:
+			throw new Error(
+					"MessageFactory Config.curServerType==NULL");
+		}
+		if (msg != null) 
+		{
+			msg.handle(channelBuffer, channel);
+		}
+	}
+	@Override
+	public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) {
+		L.D("channelClosed()");
+	}
+}
