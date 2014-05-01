@@ -13,7 +13,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -34,27 +35,41 @@ import send.JoinPKMessage1003;
 import send.StartGamePKMessage1004;
 
 import com.zjd.universal.net.GameClient;
+import org.eclipse.swt.browser.Browser;
 
-public class PKUI extends ApplicationWindow {
+public class IndexDemo extends ApplicationWindow {
 	private Table table;
 	private Label faqi[] = new Label[5];
 	private Label yingzhan[] = new Label[5];
-	private Button btn_pk;
-	private Button btn_start_game,btn_end_game;
+	
+	private Button btn_start_game,btn_end_game,btn_create_tz;
+	private Image image[]=new Image[5];
+	private TabItem tabItem[]=new TabItem[5];
+	private String tabItemText[]={"首页","个人设置","挑战记录","充值管理","礼品兑换"};
+	private Image image_join_tz,image_join_yz,image_create_tz,image_query,image_end_game,image_start_game;
 
 	/**
 	 * Create the application window.
 	 */
-	public PKUI() {
+	public IndexDemo() {
 		super(null);
 		createActions();
-		addStatusLine();
+		for (int i = 0; i < 5; i++) {
+			image[i]= new Image(Display.getDefault(),"tab"+i+".png");;
+		}
+		image_join_tz=new Image(Display.getDefault(), "join_tz.jpg");
+		image_join_yz=new Image(Display.getDefault(),"join_yz.jpg");
+		image_create_tz=new Image(Display.getDefault(),"create_tz.png");
+		image_query=new Image(Display.getDefault(),"query.png");
+		image_end_game=new Image(Display.getDefault(),"end_game.png");
+		image_start_game=new Image(Display.getDefault(),"start_game.png");
+		setShellStyle(SWT.CLOSE | SWT.TITLE);
 	}
 
 	public void PKCreateSuccess(String name, int type) {
 		if (name.equals(KingLogin.name)) {
 			PKUser.type = type;
-			MessageBox mb = new MessageBox(PKUI.this.getShell(),
+			MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("挑战发起成功，作为发起人，你现在不能加入其他挑战房间！");
 			mb.open();
@@ -63,7 +78,7 @@ public class PKUI extends ApplicationWindow {
 				{table.getChildren()[i].setEnabled(false);}
 			}
 			
-			btn_pk.setEnabled(false);
+			btn_create_tz.setEnabled(false);
 			faqi[0].setText(KingLogin.name);
 			for (int i = 0; i < PKUser.type; i++) {
 				faqi[i].setVisible(true);
@@ -75,7 +90,7 @@ public class PKUI extends ApplicationWindow {
 	public void PKJoinSuccess(String name, int type) {
 		if (name.equals(KingLogin.name)) {
 			PKUser.type = type;
-			MessageBox mb = new MessageBox(PKUI.this.getShell(),
+			MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("加入成功，作为加入人，你现在不能加入其他挑战房间！");
 			mb.open();
@@ -83,7 +98,7 @@ public class PKUI extends ApplicationWindow {
 				if(table.getChildren()[i] instanceof Button)
 				{table.getChildren()[i].setEnabled(false);}
 			}
-			btn_pk.setEnabled(false);
+			btn_create_tz.setEnabled(false);
 
 			for (int i = 0; i < PKUser.type; i++) {
 				faqi[i].setVisible(true);
@@ -100,23 +115,29 @@ public class PKUI extends ApplicationWindow {
 	@Override
 	protected Control createContents(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
-		container.setFont(SWTResourceManager.getFont("宋体", 9, SWT.NORMAL));
-
-		btn_pk = new Button(container, SWT.NONE);
-		btn_pk.addSelectionListener(new SelectionAdapter() {
+		container.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+		table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION);
+		table.setLinesVisible(false);
+		table.setHeaderVisible(true);
+		table.setBounds(10, 64, 900, 500);
+		table.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+		TableColumn column = new TableColumn(table, SWT.NONE);
+		column.setWidth(460);
+		TableColumn column1 = new TableColumn(table, SWT.NONE);
+		column1.setWidth(106);
+		TableColumn column2 = new TableColumn(table, SWT.NONE);
+		column2.setWidth(106);
+		btn_create_tz = new Button(container, SWT.NONE);
+		btn_create_tz.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				PKDia pkDia = new PKDia(PKUI.this.getShell());
+				PKDia pkDia = new PKDia(IndexDemo.this.getShell());
 				pkDia.open();
 			}
 		});
-		btn_pk.setBounds(727, 10, 116, 91);
-		btn_pk.setText("\u53D1\u8D77\u6311\u6218");
-
-		// final List list = new List(container, SWT.V_SCROLL);
-		// list.setBounds(10, 10, 582, 242);
-		// Font font = new Font(parent.getDisplay(), "Arial", 12, SWT.NORMAL);
-		// list.setFont(font);
+		btn_create_tz.setBounds(10, 10, 193, 38);
+		btn_create_tz.setImage(image_create_tz);
+		
 
 		Group group = new Group(container, SWT.NONE);
 		group.setText("发起方");
@@ -165,21 +186,11 @@ public class PKUI extends ApplicationWindow {
 			yingzhan[i].setVisible(false);
 		}
 
-		table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION);
-		table.setLinesVisible(true);
-		table.setBounds(10, 10, 629, 237);
-		Font font = new Font(parent.getDisplay(), "Arial", 12, SWT.NORMAL);
-		table.setFont(font);
-		TableColumn column = new TableColumn(table, SWT.NONE);
-		column.setWidth(460);
-		TableColumn column1 = new TableColumn(table, SWT.NONE);
-		column1.setWidth(80);
-		TableColumn column2 = new TableColumn(table, SWT.NONE);
-		column2.setWidth(80);
+		
 
 		btn_start_game = new Button(container, SWT.NONE);
-		btn_start_game.setText("开始游戏");
-		btn_start_game.setBounds(727, 329, 116, 91);
+		btn_start_game.setImage(image_start_game);
+		btn_start_game.setBounds(408, 10, 193, 38);
 		btn_start_game.setEnabled(false);
 		btn_start_game.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -190,21 +201,28 @@ public class PKUI extends ApplicationWindow {
 			}
 		});
 		
-		Button button = new Button(container, SWT.NONE);
-		button.addSelectionListener(new SelectionAdapter() {
+		Button query = new Button(container, SWT.NONE);
+		query.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				QueryDia pkDia = new QueryDia(PKUI.this.getShell());
+				QueryDia pkDia = new QueryDia(IndexDemo.this.getShell());
 				pkDia.open();
 			}
 		});
-		button.setText("查询");
-		button.setBounds(727, 175, 116, 91);
+		query.setImage(image_query);
+		query.setBounds(209, 10, 193, 38);
 		
 		 btn_end_game = new Button(container, SWT.NONE);
-		btn_end_game.setText("结束游戏");
+		 btn_end_game.setImage(image_end_game);
 		btn_end_game.setEnabled(false);
-		btn_end_game.setBounds(727, 444, 116, 91);
+		btn_end_game.setBounds(607, 10, 193, 38);
+		
+		Browser browser = new Browser(container, SWT.BORDER);
+		browser.setUrl("www.baidu.com");
+		browser.setBounds(0, 0, 300, 200);
+		
+		
+		
 		btn_end_game.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -213,17 +231,12 @@ public class PKUI extends ApplicationWindow {
 				btn_end_game.setEnabled(false);
 			}
 		});
-		
-	
-		GameClient.getInstance().onCreate();
-		GameClient.getInstance().connectGameServer(GameClient.GAME_IP,
-				GameClient.GAME_PORT);
 		return container;
-	}
+  }
 
 	@Override
 	protected void handleShellCloseEvent() {
-		MessageBox mb = new MessageBox(PKUI.this.getShell(),
+		MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK | SWT.CANCEL);
 		mb.setMessage("确定要关闭吗?");//
 		int rc=mb.open();
@@ -284,7 +297,7 @@ public class PKUI extends ApplicationWindow {
 	 */
 	public static void main(String args[]) {
 		 try {
-		 PKUI window = new PKUI();
+		 IndexDemo window = new IndexDemo();
 		 window.setBlockOnOpen(true);
 		 window.open();
 		 Display.getCurrent().dispose();
@@ -311,7 +324,7 @@ public class PKUI extends ApplicationWindow {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(899, 684);
+		return new Point(1024, 768);
 	}
 
 	public void RefreshLables(PKUser[] users) {
@@ -336,7 +349,7 @@ public class PKUI extends ApplicationWindow {
 	}
 
 	public void PopErrorCreateMessage() {
-		MessageBox mb = new MessageBox(PKUI.this.getShell(),
+		MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
 		mb.setMessage("创建房间失败");//
 		mb.open();
@@ -344,7 +357,7 @@ public class PKUI extends ApplicationWindow {
 
 	public void PopErrorJoinMessage(String name) {
 		if (name.equals(KingLogin.name)) {
-			MessageBox mb = new MessageBox(PKUI.this.getShell(),
+			MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("加入房间房间失败,阵营人数已满，或房间无效");//
 			mb.open();
@@ -353,7 +366,7 @@ public class PKUI extends ApplicationWindow {
 	}
 
 	public void btn_start_gameEnable() {
-		MessageBox mb = new MessageBox(PKUI.this.getShell(),
+		MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
 		mb.setMessage("房间已满 你可以开始游戏了");//
 		mb.open();
@@ -363,7 +376,7 @@ public class PKUI extends ApplicationWindow {
 		if(status==0)
 		{
 			
-			MessageBox mb = new MessageBox(PKUI.this.getShell(),
+			MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
 			if(name.equals(KingLogin.name))
 		{mb.setMessage("现在你有操作权限可以结束游戏了");
@@ -378,7 +391,7 @@ public class PKUI extends ApplicationWindow {
 		}
 		else
 		{
-			MessageBox mb = new MessageBox(PKUI.this.getShell(),
+			MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("开始游戏失败");//
 			mb.open();
@@ -388,7 +401,7 @@ public class PKUI extends ApplicationWindow {
 	public void EndGameResult(int status) {
 		if(status==0)
 		{
-			MessageBox mb = new MessageBox(PKUI.this.getShell(),
+			MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
 		mb.setMessage("房主结束游戏成功，房间解散");//
 		mb.open();
@@ -401,11 +414,11 @@ public class PKUI extends ApplicationWindow {
 			faqi[i].setText("空位");
 			faqi[i].setVisible(false);
 		}
-		btn_pk.setEnabled(true);
+		btn_create_tz.setEnabled(true);
 		}
 		else
 		{
-			MessageBox mb = new MessageBox(PKUI.this.getShell(),
+			MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("结束游戏失败");//
 			mb.open();
@@ -441,11 +454,11 @@ public class PKUI extends ApplicationWindow {
 			
 			
 			editor = new TableEditor(table);
-			Button btn1 = new Button(table, SWT.NONE);
-			btn1.setText("加入发起方");
-			btn1.pack();
-			btn1.setData(i);
-			btn1.addSelectionListener(new SelectionAdapter() {
+			Button join_tz = new Button(table, SWT.NONE);
+			join_tz.setText("加入发起方");
+			join_tz.pack();
+			join_tz.setData(i);
+			join_tz.addSelectionListener(new SelectionAdapter() {
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -461,19 +474,19 @@ public class PKUI extends ApplicationWindow {
 					widgetSelected(e);
 				}
 			});
-			editor.minimumWidth = btn1.getSize().x;
-			editor.minimumHeight = btn1.getSize().y;
+			editor.minimumWidth = join_tz.getSize().x;
+			editor.minimumHeight = join_tz.getSize().y;
 			editor.grabHorizontal = true;
-			editor.setEditor(btn1, items[i], 1);
-			listControl.add(btn1);
+			editor.setEditor(join_tz, items[i], 1);
+			listControl.add(join_tz);
 			
 			
 			editor = new TableEditor(table);
-			Button btn = new Button(table, SWT.NONE);
-			btn.setText("加入应战方");
-			btn.pack();
-			btn.setData(i);
-			btn.addSelectionListener(new SelectionAdapter() {
+			Button join_yz = new Button(table, SWT.NONE);
+			join_yz.setText("加入应战方");
+			join_yz.pack();
+			join_yz.setData(i);
+			join_yz.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					int index = (int) ((Button) e.getSource()).getData();
@@ -487,11 +500,11 @@ public class PKUI extends ApplicationWindow {
 					widgetSelected(e);
 				}
 			});
-			editor.minimumWidth = btn1.getSize().x;
-			editor.minimumHeight = btn1.getSize().y;
+			editor.minimumWidth = join_yz.getSize().x;
+			editor.minimumHeight = join_yz.getSize().y;
 			editor.grabHorizontal = true;
-			editor.setEditor(btn, items[i], 2);
-			listControl.add(btn);
+			editor.setEditor(join_yz, items[i], 2);
+			listControl.add(join_yz);
 		}
 
 	}

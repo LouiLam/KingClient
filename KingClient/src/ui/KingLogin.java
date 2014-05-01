@@ -1,8 +1,13 @@
 package ui;
+
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import object.Account;
 import object.PKUser;
+import object.ReadFile;
+import object.WriteFile;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -37,25 +42,32 @@ import org.json.JSONObject;
 public class KingLogin extends ApplicationWindow {
 	public static String name;
 	public static KingMain pkui;
-	Image image,image_reg,image_login;
+	Image image, image_reg, image_login;
+	Button btn_isAutoSave;
+	String autoSave="0";
 	/**
 	 * Create the application window,
 	 */
 	public KingLogin() {
 		super(null);
-		 image = new Image(Display.getDefault(),"1.jpg");
-		 image_reg = new Image(Display.getDefault(),"reg.png");
-		 image_login = new Image(Display.getDefault(),"login.png");
+		ReadFile.init();
+		image = new Image(Display.getDefault(), "1.jpg");
+		image_reg = new Image(Display.getDefault(), "reg.png");
+		image_login = new Image(Display.getDefault(), "login.png");
 		setShellStyle(SWT.CLOSE | SWT.TITLE);
-//		createActions();
-//		addCoolBar(SWT.FLAT);
-//		addMenuBar();
-//		addStatusLine();
+		// createActions();
+		// addCoolBar(SWT.FLAT);
+		// addMenuBar();
+		// addStatusLine();
 	}
-	protected boolean showTopSeperator() {return false;}
+
+	protected boolean showTopSeperator() {
+		return false;
+	}
+
 	Text pwd_text;
 	Combo combo;
-	
+
 	/**
 	 * Create contents of the application window.
 	 * 
@@ -63,31 +75,62 @@ public class KingLogin extends ApplicationWindow {
 	 */
 	@Override
 	protected Control createContents(Composite parent) {
-		
-//		parent.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_GREEN));
+		parent.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+
+		// parent.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_GREEN));
 		Composite container = new Composite(parent, SWT.NONE);
 		getShell().setImage(image);
-		parent.setBackgroundMode(SWT.INHERIT_DEFAULT); 
+		parent.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		parent.setBackgroundImage(image);
 		Label id = new Label(container, SWT.NONE);
 		id.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 		id.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		id.setBounds(36, 117, 54, 12);
-		id.setText("用户帐号："); // �ʺ�:
-		combo = new Combo(container, SWT.NONE); // �ʺ������
+		id.setText("用户帐号：");
+		combo = new Combo(container, SWT.NONE);
+		combo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				int index=((Combo)e.getSource()).getSelectionIndex();
+				if(!ReadFile.accounts.get(index).isAutoSave.equals("0"))
+				{
+					pwd_text.setText(ReadFile.accounts.get(index).password);
+					btn_isAutoSave.setSelection(true);
+				}
+				else
+				{
+					pwd_text.setText("");
+					btn_isAutoSave.setSelection(false);
+				}
+			}
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				widgetDefaultSelected(e);
+			}
+		});
 		combo.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 		combo.setBounds(103, 114, 190, 20);
 		combo.setTextLimit(20);
+
 		Label pwd = new Label(container, SWT.NONE);
 		pwd.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-		pwd.setText("登录密码：");// ����:
+		pwd.setText("登录密码：");
 		pwd.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		pwd.setBounds(36, 167, 54, 12);
-		
-		pwd_text = new Text(container, SWT.BORDER | SWT.PASSWORD);// ���������
+
+		pwd_text = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		pwd_text.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 		pwd_text.setBounds(103, 164, 190, 20);
 		pwd_text.setTextLimit(36);
+		for (Account obj : ReadFile.accounts) {
+			combo.add(obj.id);
+		
+		}
+		combo.select(combo.getItemCount()-1);
+		if(!ReadFile.accounts.get(combo.getItemCount()-1).isAutoSave.equals("0"))
+		{
+			pwd_text.setText(ReadFile.accounts.get(combo.getItemCount()-1).password);
+		}
 		Button reg = new Button(container, SWT.FLAT);
 		reg.setImage(image_reg);
 		reg.addSelectionListener(new SelectionAdapter() {
@@ -102,9 +145,8 @@ public class KingLogin extends ApplicationWindow {
 				regDia.open();
 			}
 		});
-		reg.setBounds(10, 212, 138, 37);
-//		reg.setText("\u6CE8\u518C");// ע��
-		Button login = new Button(container,  SWT.NONE);
+		reg.setBounds(10, 218, 138, 37);
+		Button login = new Button(container, SWT.NONE);
 		login.setImage(image_login);
 		login.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -119,20 +161,18 @@ public class KingLogin extends ApplicationWindow {
 					mb.open();
 					return;
 				}
-				name=combo.getText();
+				name = combo.getText();
 				httpPost();
-			
-				
-			
-//				Display.getDefault().asyncExec(new Runnable() {
-//					
-//					@Override
-//					public void run() {
-//					
-//					
-//					}
-//				});
-				
+
+				// Display.getDefault().asyncExec(new Runnable() {
+				//
+				// @Override
+				// public void run() {
+				//
+				//
+				// }
+				// });
+
 			}
 
 			@Override
@@ -140,26 +180,30 @@ public class KingLogin extends ApplicationWindow {
 				widgetSelected(e);
 			}
 		});
-		login.setBounds(205, 212, 138, 37);
-		
-		 final Button btnNewButton = new Button(container, SWT.CHECK);
-		btnNewButton.addSelectionListener(new SelectionAdapter() {
+		login.setBounds(206, 218, 138, 37);
+
+		 btn_isAutoSave = new Button(container, SWT.CHECK);
+		btn_isAutoSave.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+		btn_isAutoSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(btnNewButton.getSelection())
-				{
-					System.out.println("选中");
-				}
-				else
-				{
-					System.out.println("未选中");
+				if (btn_isAutoSave.getSelection()) {
+					autoSave = "1";
+				} else {
+					autoSave="0";
 				}
 			}
 		});
-		btnNewButton.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		btnNewButton.setBounds(103, 190, 72, 22);
-		btnNewButton.setText("记住密码");
-		Label lblNewLabel = new Label(container, SWT.NONE);
+		btn_isAutoSave
+				.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		btn_isAutoSave.setBounds(103, 190, 72, 22);
+		btn_isAutoSave.setText("记住密码");
+		if(!ReadFile.accounts.get(combo.getItemCount()-1).isAutoSave.equals("0"))
+		{
+			btn_isAutoSave.setSelection(true);
+		}
+		Label lblNewLabel = new Label(container, SWT.WRAP);
+		lblNewLabel.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 		lblNewLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblNewLabel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -169,16 +213,8 @@ public class KingLogin extends ApplicationWindow {
 		});
 		lblNewLabel.setBounds(221, 194, 54, 12);
 		lblNewLabel.setText("忘记密码");
-//		login.setText("\u767B\u5F55");// ��¼
 
 		return container;
-	}
-
-	/**
-	 * Create the actions.
-	 */
-	private void createActions() {
-		// Create the actions
 	}
 
 	/**
@@ -198,7 +234,7 @@ public class KingLogin extends ApplicationWindow {
 	 * @param args
 	 */
 	public static void main(String args[]) {
-	
+
 		try {
 			KingLogin window = new KingLogin();
 			window.setBlockOnOpen(true);
@@ -209,7 +245,7 @@ public class KingLogin extends ApplicationWindow {
 				System.exit(0);
 			}
 			System.exit(0);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -249,27 +285,44 @@ public class KingLogin extends ApplicationWindow {
 			if (httppHttpResponse2.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				String entity = EntityUtils.toString(httppHttpResponse2
 						.getEntity());
-				
-				JSONObject  obj=new JSONObject(entity);
-				int value=Integer.parseInt(obj.get("value")+"");
+
+				JSONObject obj = new JSONObject(entity);
+				int value = Integer.parseInt(obj.get("value") + "");
 				MessageBox mb = new MessageBox(KingLogin.this.getShell(),
 						SWT.ICON_INFORMATION | SWT.OK);
-				mb.setMessage(obj.get("msg")+"");
+				mb.setMessage(obj.get("msg") + "");
 				mb.open();
-				if(value==1)
-				{
-				PKUser.uid=Integer.parseInt((String) obj.get("uid"));
-				Display.getCurrent().dispose();
-				pkui = new KingMain();
-				pkui.setBlockOnOpen(true);
-				pkui.open();}
-				
-			}
-			else
-			{
+				if (value == 1) {
+					// 登录成功就写入帐号信息
+				    PrintWriter out =WriteFile. openWriter("account.txt");
+				    boolean temp=false;
+				    for (Account account : ReadFile.accounts) {
+				    	if(account.id.equals(combo.getText()))
+				    	{
+				    		account.password= pwd_text.getText();
+				    		account.isAutoSave= autoSave;
+				    		temp=true;
+				    	}
+					}
+				    if(!temp)
+				    { ReadFile.accounts.add(new Account( combo.getText(), pwd_text.getText(), autoSave));}
+				    for (Account account : ReadFile.accounts) {
+				    	WriteFile.writeMovie(account, out);
+					}
+				    out.close();
+					PKUser.uid = Integer.parseInt((String) obj.get("uid"));
+					Display.getCurrent().dispose();
+					pkui = new KingMain();
+					pkui.setBlockOnOpen(true);
+					pkui.open();
+					
+				}
+
+			} else {
 				MessageBox mb = new MessageBox(KingLogin.this.getShell(),
-				SWT.ICON_INFORMATION | SWT.OK);
-				mb.setMessage("error!StatusCode:"+httppHttpResponse2.getStatusLine().getStatusCode());// http״̬�����
+						SWT.ICON_INFORMATION | SWT.OK);
+				mb.setMessage("error!StatusCode:"
+						+ httppHttpResponse2.getStatusLine().getStatusCode());// http״̬�����
 				mb.open();
 			}
 			httppHttpResponse2.close();

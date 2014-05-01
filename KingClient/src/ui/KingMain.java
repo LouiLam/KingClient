@@ -10,10 +10,10 @@ import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
@@ -24,10 +24,11 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import send.EndGamePKMessage1005;
@@ -35,28 +36,36 @@ import send.JoinPKMessage1003;
 import send.StartGamePKMessage1004;
 
 import com.zjd.universal.net.GameClient;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 
 public class KingMain extends ApplicationWindow {
 	private Table table;
 	private Label faqi[] = new Label[5];
 	private Label yingzhan[] = new Label[5];
-	private Button btn_pk;
-	private Button btn_start_game,btn_end_game;
+	private Button btn_start_game,btn_end_game,btn_create_tz;
 	private Image image[]=new Image[5];
 	private TabItem tabItem[]=new TabItem[5];
 	private String tabItemText[]={"首页","个人设置","挑战记录","充值管理","礼品兑换"};
+	private String urlText[]={"http://woowgo.com/yxlm/setting.html","http://woowgo.com/yxlm/lszj.html","http://www.163.com","http://www.sina.com"};
+	
+	private Image image_join_tz,image_join_yz,image_create_tz,image_query,image_end_game,image_start_game,image_table_bg;
 	/**
 	 * Create the application window.
 	 */
 	public KingMain() {
 		super(null);
 		createActions();
-		addStatusLine();
+//		addStatusLine();
 		for (int i = 0; i < 5; i++) {
 			image[i]= new Image(Display.getDefault(),"tab"+i+".png");;
 		}
+		image_join_tz=new Image(Display.getDefault(), "join_tz.jpg");
+		image_join_yz=new Image(Display.getDefault(),"join_yz.jpg");
+		image_create_tz=new Image(Display.getDefault(),"create_tz.png");
+		image_query=new Image(Display.getDefault(),"query.png");
+		image_end_game=new Image(Display.getDefault(),"end_game.png");
+		image_start_game=new Image(Display.getDefault(),"start_game.png");
+		image_table_bg=new Image(Display.getDefault(),"green.jpg");
+		setShellStyle(SWT.CLOSE | SWT.TITLE);
 	}
 
 	public void PKCreateSuccess(String name, int type) {
@@ -71,7 +80,7 @@ public class KingMain extends ApplicationWindow {
 				{table.getChildren()[i].setEnabled(false);}
 			}
 			
-			btn_pk.setEnabled(false);
+			btn_create_tz.setEnabled(false);
 			faqi[0].setText(KingLogin.name);
 			for (int i = 0; i < PKUser.type; i++) {
 				faqi[i].setVisible(true);
@@ -91,7 +100,7 @@ public class KingMain extends ApplicationWindow {
 				if(table.getChildren()[i] instanceof Button)
 				{table.getChildren()[i].setEnabled(false);}
 			}
-			btn_pk.setEnabled(false);
+			btn_create_tz.setEnabled(false);
 
 			for (int i = 0; i < PKUser.type; i++) {
 				faqi[i].setVisible(true);
@@ -109,6 +118,7 @@ public class KingMain extends ApplicationWindow {
 	protected Control createContents(Composite parent) {
 		
 		  final TabFolder tabFolder = new TabFolder(parent, SWT.None);
+		  tabFolder.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 			tabFolder.setBounds(10, 0, 881, 649);
 		    // Create each tab and set its text, tool tip text,
 		    // image, and control
@@ -119,7 +129,10 @@ public class KingMain extends ApplicationWindow {
 				tabItem[i].setImage(image[i]);
 				if(i==0)
 				{tabItem[i].setControl(getTabControlOne(tabFolder));}
-				
+				else
+				{
+					tabItem[i].setControl(getTabContrlOther(tabFolder, urlText[i-1]));
+				}
 			}
 
 		    // Select the third tab (index is zero-based)
@@ -141,6 +154,23 @@ public class KingMain extends ApplicationWindow {
 				GameClient.GAME_PORT);
 		return tabFolder;
 	}
+	private Control getTabContrlOther(TabFolder tabFolder,String url)
+	{
+		Composite container = new Composite(tabFolder, SWT.NONE);
+		Browser browser = new Browser(container, SWT.BORDER);
+		browser.setUrl(url);
+		browser.setBounds(0, 0, 1024, 768);
+//		  GridData layoutData = new GridData(GridData.FILL_BOTH);
+//		    layoutData.horizontalSpan = 2;
+//		    layoutData.verticalSpan = 2;
+//		    browser.setLayoutData(tabFolder.getLayoutData());
+//		 browser.setBounds(5,30,1024,768);
+		 browser.setJavascriptEnabled(true);
+//		 btn_start_game = new Button(container, SWT.NONE);
+//		btn_start_game.setImage(image_start_game);
+//		btn_start_game.setBounds(408, 10, 193, 38);
+		    return container;
+	}
 	 /**
 	   * Gets the control for tab one
 	   * 
@@ -149,22 +179,47 @@ public class KingMain extends ApplicationWindow {
 	   */
 	  private Control getTabControlOne(TabFolder tabFolder) {
 			Composite container = new Composite(tabFolder, SWT.NONE);
-			container.setFont(SWTResourceManager.getFont("宋体", 9, SWT.NORMAL));
-			btn_pk = new Button(container, SWT.NONE);
-			btn_pk.addSelectionListener(new SelectionAdapter() {
+			container.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			table = new Table(container, SWT.BORDER|SWT.MULTI );
+			table.setLinesVisible(false);
+			table.setHeaderVisible(true);
+			table.setBounds(10, 64, 900, 500);
+			table.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			TableColumn column = new TableColumn(table, SWT.NONE);
+			column.setWidth(100);
+			column.setText("房主");
+			column = new TableColumn(table, SWT.CENTER);
+			column.setWidth(100);
+			column.setText("标题");
+			column = new TableColumn(table, SWT.CENTER);
+			column.setWidth(150);
+			column.setText("游戏区");
+			column = new TableColumn(table, SWT.CENTER);
+			column.setWidth(120);
+			column.setText("挑战图");
+			column = new TableColumn(table, SWT.CENTER);
+			column.setWidth(100);
+			column.setText("对战人数");
+			column = new TableColumn(table, SWT.CENTER);
+			column.setWidth(100);
+			column.setText("挑战点");
+			column= new TableColumn(table, SWT.CENTER);//挑战方
+			column.setWidth(108);
+			column.setText("挑战方");
+			column = new TableColumn(table, SWT.CENTER);//应战方
+			column.setWidth(108);
+			column.setText("应战方");
+			btn_create_tz = new Button(container, SWT.CENTER);
+			btn_create_tz.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					PKDia pkDia = new PKDia(KingMain.this.getShell());
 					pkDia.open();
 				}
 			});
-			btn_pk.setBounds(727, 10, 116, 91);
-			btn_pk.setText("\u53D1\u8D77\u6311\u6218");
-
-			// final List list = new List(container, SWT.V_SCROLL);
-			// list.setBounds(10, 10, 582, 242);
-			// Font font = new Font(parent.getDisplay(), "Arial", 12, SWT.NORMAL);
-			// list.setFont(font);
+			btn_create_tz.setBounds(10, 10, 193, 38);
+			btn_create_tz.setImage(image_create_tz);
+			
 
 			Group group = new Group(container, SWT.NONE);
 			group.setText("发起方");
@@ -213,21 +268,11 @@ public class KingMain extends ApplicationWindow {
 				yingzhan[i].setVisible(false);
 			}
 
-			table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION);
-			table.setLinesVisible(true);
-			table.setBounds(10, 10, 629, 237);
-			Font font = new Font(tabFolder.getDisplay(), "Arial", 12, SWT.NORMAL);
-			table.setFont(font);
-			TableColumn column = new TableColumn(table, SWT.NONE);
-			column.setWidth(460);
-			TableColumn column1 = new TableColumn(table, SWT.NONE);
-			column1.setWidth(80);
-			TableColumn column2 = new TableColumn(table, SWT.NONE);
-			column2.setWidth(80);
+			
 
 			btn_start_game = new Button(container, SWT.NONE);
-			btn_start_game.setText("开始游戏");
-			btn_start_game.setBounds(727, 329, 116, 91);
+			btn_start_game.setImage(image_start_game);
+			btn_start_game.setBounds(408, 10, 193, 38);
 			btn_start_game.setEnabled(false);
 			btn_start_game.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -238,21 +283,21 @@ public class KingMain extends ApplicationWindow {
 				}
 			});
 			
-			Button button = new Button(container, SWT.NONE);
-			button.addSelectionListener(new SelectionAdapter() {
+			Button query = new Button(container, SWT.NONE);
+			query.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					QueryDia pkDia = new QueryDia(KingMain.this.getShell());
 					pkDia.open();
 				}
 			});
-			button.setText("查询");
-			button.setBounds(727, 175, 116, 91);
+			query.setImage(image_query);
+			query.setBounds(209, 10, 193, 38);
 			
 			 btn_end_game = new Button(container, SWT.NONE);
-			btn_end_game.setText("结束游戏");
+			 btn_end_game.setImage(image_end_game);
 			btn_end_game.setEnabled(false);
-			btn_end_game.setBounds(727, 444, 116, 91);
+			btn_end_game.setBounds(607, 10, 193, 38);
 			
 			
 			btn_end_game.addSelectionListener(new SelectionAdapter() {
@@ -327,15 +372,15 @@ public class KingMain extends ApplicationWindow {
 	 * @param args
 	 */
 	public static void main(String args[]) {
-		// try {
-		// PKUI window = new PKUI();
-		// window.setBlockOnOpen(true);
-		// window.open();
-		// Display.getCurrent().dispose();
-		// System.exit(0);
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
+//		 try {
+//			 KingMain window = new KingMain();
+//		 window.setBlockOnOpen(true);
+//		 window.open();
+//		 Display.getCurrent().dispose();
+//		 System.exit(0);
+//		 } catch (Exception e) {
+//		 e.printStackTrace();
+//		 }
 	}
 
 	/**
@@ -355,7 +400,7 @@ public class KingMain extends ApplicationWindow {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(899, 684);
+		return new Point(1024, 768);
 	}
 
 	public void RefreshLables(PKUser[] users) {
@@ -445,7 +490,7 @@ public class KingMain extends ApplicationWindow {
 			faqi[i].setText("空位");
 			faqi[i].setVisible(false);
 		}
-		btn_pk.setEnabled(true);
+		btn_create_tz.setEnabled(true);
 		}
 		else
 		{
@@ -465,31 +510,77 @@ public class KingMain extends ApplicationWindow {
 		for (int i = 0; i < listControl.size(); i++) {
 			listControl.get(i).dispose();
 		}
+		table.setBackgroundMode(SWT.INHERIT_DEFAULT);
+		table.setBackgroundImage(image_table_bg);
 		listControl.clear();
 		for (int i = 0; i < PKManager.getInstance().getPKNum(); i++) {
-			new TableItem(table, SWT.NONE);
+			TableItem item=new TableItem(table, SWT.NONE);
 		}
 		TableItem[] items = table.getItems();
 		for (int i = 0; i < items.length; i++) {
+			
 			TableEditor editor = new TableEditor(table);
-
-			editor = new TableEditor(table);
-			Text text = new Text(table, SWT.NONE);
-			text.setText(PKManager.getInstance().getPKByIndex(i).toString());
-			text.setEditable(false);
-			text.setBackground(table.getBackground());
+			Label textName = new Label(table, SWT.CENTER);
+			textName.setText(PKManager.getInstance().getPKByIndex(i).name);
+//			text.setEditable(false);
+//			text.setBackground(table.getBackground());
+			textName.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
-			editor.setEditor(text, items[i], 0);
-			text.setToolTipText(PKManager.getInstance().getPKByIndex(i).toString());
-			listControl.add(text);
+			editor.setEditor(textName, items[i], 0);
+			textName.setToolTipText(PKManager.getInstance().getPKByIndex(i).name);
+			listControl.add(textName);
 			
 			
 			editor = new TableEditor(table);
-			Button btn1 = new Button(table, SWT.NONE);
-			btn1.setText("加入发起方");
-			btn1.pack();
-			btn1.setData(i);
-			btn1.addSelectionListener(new SelectionAdapter() {
+			Label textTitle = new Label(table, SWT.CENTER);
+			textTitle.setText(PKManager.getInstance().getPKByIndex(i).title);
+			textTitle.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			editor.grabHorizontal = true;
+			editor.setEditor(textTitle, items[i], 1);
+			textTitle.setToolTipText(PKManager.getInstance().getPKByIndex(i).title);
+			listControl.add(textTitle);
+			
+			editor = new TableEditor(table);
+			Label textArea = new Label(table, SWT.CENTER);
+			textArea.setText(PKManager.getInstance().getPKByIndex(i).area);
+			textArea.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			editor.grabHorizontal = true;
+			editor.setEditor(textArea, items[i], 2);
+			textArea.setToolTipText(PKManager.getInstance().getPKByIndex(i).area);
+			listControl.add(textArea);
+			
+			editor = new TableEditor(table);
+			Label textMap = new Label(table, SWT.CENTER);
+			textMap.setText(PKManager.getInstance().getPKByIndex(i).map);
+			textMap.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			editor.grabHorizontal = true;
+			editor.setEditor(textMap, items[i], 3);
+			textMap.setToolTipText(PKManager.getInstance().getPKByIndex(i).map);
+			listControl.add(textMap);
+			
+			editor = new TableEditor(table);
+			Label textType = new Label(table, SWT.CENTER);
+			textType.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			textType.setText(PKManager.getInstance().getPKByIndex(i).type+"v"+PKManager.getInstance().getPKByIndex(i).type);
+			editor.grabHorizontal = true;
+			editor.setEditor(textType, items[i], 4);
+			textType.setToolTipText(PKManager.getInstance().getPKByIndex(i).type+"v"+PKManager.getInstance().getPKByIndex(i).type);
+			listControl.add(textType);
+			
+			editor = new TableEditor(table);
+			Label textPoint = new Label(table, SWT.CENTER);
+			textPoint.setText(PKManager.getInstance().getPKByIndex(i).point+"");
+			textPoint.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			editor.grabHorizontal = true;
+			editor.setEditor(textPoint, items[i], 5);
+			textPoint.setToolTipText(PKManager.getInstance().getPKByIndex(i).point+"");
+			listControl.add(textPoint);
+			
+			editor = new TableEditor(table);
+			Button join_tz = new Button(table, SWT.CENTER);
+			join_tz.setImage(image_join_tz);
+			join_tz.setData(i);
+			join_tz.addSelectionListener(new SelectionAdapter() {
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -505,19 +596,18 @@ public class KingMain extends ApplicationWindow {
 					widgetSelected(e);
 				}
 			});
-			editor.minimumWidth = btn1.getSize().x;
-			editor.minimumHeight = btn1.getSize().y;
+			editor.minimumWidth = join_tz.getSize().x;
+			editor.minimumHeight = join_tz.getSize().y;
 			editor.grabHorizontal = true;
-			editor.setEditor(btn1, items[i], 1);
-			listControl.add(btn1);
+			editor.setEditor(join_tz, items[i], 6);
+			listControl.add(join_tz);
 			
 			
 			editor = new TableEditor(table);
-			Button btn = new Button(table, SWT.NONE);
-			btn.setText("加入应战方");
-			btn.pack();
-			btn.setData(i);
-			btn.addSelectionListener(new SelectionAdapter() {
+			Button join_yz = new Button(table, SWT.CENTER);
+			join_yz.setImage(image_join_yz);
+			join_yz.setData(i);
+			join_yz.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					int index = (int) ((Button) e.getSource()).getData();
@@ -531,11 +621,11 @@ public class KingMain extends ApplicationWindow {
 					widgetSelected(e);
 				}
 			});
-			editor.minimumWidth = btn1.getSize().x;
-			editor.minimumHeight = btn1.getSize().y;
+			editor.minimumWidth = join_yz.getSize().x;
+			editor.minimumHeight = join_yz.getSize().y;
 			editor.grabHorizontal = true;
-			editor.setEditor(btn, items[i], 2);
-			listControl.add(btn);
+			editor.setEditor(join_yz, items[i], 7);
+			listControl.add(join_yz);
 		}
 
 	}
