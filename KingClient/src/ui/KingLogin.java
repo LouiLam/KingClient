@@ -2,7 +2,7 @@ package ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import obj.PKUser;
+import object.PKUser;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;

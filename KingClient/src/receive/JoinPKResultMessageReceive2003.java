@@ -2,7 +2,7 @@ package receive;
 
 import java.io.UnsupportedEncodingException;
 
-import obj.PKUser;
+import object.PKUser;
 
 import org.eclipse.swt.widgets.Display;
 import org.jboss.netty.buffer.ChannelBuffer;

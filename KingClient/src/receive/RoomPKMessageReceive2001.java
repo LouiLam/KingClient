@@ -2,8 +2,8 @@ package receive;
 
 import java.io.UnsupportedEncodingException;
 
-import obj.PK;
-import obj.PKManager;
+import object.PK;
+import object.PKManager;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;

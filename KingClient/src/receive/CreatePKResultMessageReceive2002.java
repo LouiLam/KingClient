@@ -2,9 +2,9 @@ package receive;
 
 import java.io.UnsupportedEncodingException;
 
-import obj.PK;
-import obj.PKManager;
-import obj.PKUser;
+import object.PK;
+import object.PKManager;
+import object.PKUser;
 
 import org.eclipse.swt.widgets.Display;
 import org.jboss.netty.buffer.ChannelBuffer;

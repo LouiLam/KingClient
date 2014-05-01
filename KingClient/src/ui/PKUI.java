@@ -2,8 +2,8 @@ package ui;
 
 import java.util.ArrayList;
 
-import obj.PKManager;
-import obj.PKUser;
+import object.PKManager;
+import object.PKUser;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.StatusLineManager;

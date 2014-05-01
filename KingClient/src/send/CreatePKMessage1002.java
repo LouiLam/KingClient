@@ -3,8 +3,8 @@ package send;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import obj.PK;
-import obj.PKUser;
+import object.PK;
+import object.PKUser;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;

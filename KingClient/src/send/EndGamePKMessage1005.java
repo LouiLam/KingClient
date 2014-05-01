@@ -1,6 +1,6 @@
 package send;
 
-import obj.PKUser;
+import object.PKUser;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
