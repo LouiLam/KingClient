@@ -14,6 +14,7 @@ import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -34,27 +35,34 @@ import send.JoinPKMessage1003;
 import send.StartGamePKMessage1004;
 
 import com.zjd.universal.net.GameClient;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 
-public class PKUI extends ApplicationWindow {
+public class KingMain extends ApplicationWindow {
 	private Table table;
 	private Label faqi[] = new Label[5];
 	private Label yingzhan[] = new Label[5];
 	private Button btn_pk;
 	private Button btn_start_game,btn_end_game;
-
+	private Image image[]=new Image[5];
+	private TabItem tabItem[]=new TabItem[5];
+	private String tabItemText[]={"首页","个人设置","挑战记录","充值管理","礼品兑换"};
 	/**
 	 * Create the application window.
 	 */
-	public PKUI() {
+	public KingMain() {
 		super(null);
 		createActions();
 		addStatusLine();
+		for (int i = 0; i < 5; i++) {
+			image[i]= new Image(Display.getDefault(),"tab"+i+".png");;
+		}
 	}
 
 	public void PKCreateSuccess(String name, int type) {
 		if (name.equals(KingLogin.name)) {
 			PKUser.type = type;
-			MessageBox mb = new MessageBox(PKUI.this.getShell(),
+			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("挑战发起成功，作为发起人，你现在不能加入其他挑战房间！");
 			mb.open();
@@ -75,7 +83,7 @@ public class PKUI extends ApplicationWindow {
 	public void PKJoinSuccess(String name, int type) {
 		if (name.equals(KingLogin.name)) {
 			PKUser.type = type;
-			MessageBox mb = new MessageBox(PKUI.this.getShell(),
+			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("加入成功，作为加入人，你现在不能加入其他挑战房间！");
 			mb.open();
@@ -99,131 +107,167 @@ public class PKUI extends ApplicationWindow {
 	 */
 	@Override
 	protected Control createContents(Composite parent) {
-		Composite container = new Composite(parent, SWT.NONE);
-		container.setFont(SWTResourceManager.getFont("宋体", 9, SWT.NORMAL));
-
-		btn_pk = new Button(container, SWT.NONE);
-		btn_pk.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				PKDia pkDia = new PKDia(PKUI.this.getShell());
-				pkDia.open();
-			}
-		});
-		btn_pk.setBounds(727, 10, 116, 91);
-		btn_pk.setText("\u53D1\u8D77\u6311\u6218");
-
-		// final List list = new List(container, SWT.V_SCROLL);
-		// list.setBounds(10, 10, 582, 242);
-		// Font font = new Font(parent.getDisplay(), "Arial", 12, SWT.NORMAL);
-		// list.setFont(font);
-
-		Group group = new Group(container, SWT.NONE);
-		group.setText("发起方");
-		group.setBounds(10, 273, 243, 262);
-
-		faqi[0] = new Label(group, SWT.NONE);
-		faqi[0].setBounds(10, 32, 54, 12);
-
-		faqi[1] = new Label(group, SWT.NONE);
-		faqi[1].setBounds(10, 78, 54, 12);
-
-		faqi[2] = new Label(group, SWT.NONE);
-		faqi[2].setBounds(10, 126, 54, 12);
-
-		faqi[3] = new Label(group, SWT.NONE);
-		faqi[3].setBounds(10, 177, 54, 12);
-
-		faqi[4] = new Label(group, SWT.NONE);
-		faqi[4].setBounds(10, 226, 54, 12);
-
-		for (int i = 0; i < faqi.length; i++) {
-			faqi[i].setText("空位");
-			faqi[i].setVisible(false);
-		}
-		Group group_1 = new Group(container, SWT.NONE);
-		group_1.setText("应战方");
-		group_1.setBounds(349, 273, 243, 262);
-
-		yingzhan[0] = new Label(group_1, SWT.NONE);
-		yingzhan[0].setBounds(10, 32, 54, 12);
-
-		yingzhan[1] = new Label(group_1, SWT.NONE);
-		yingzhan[1].setBounds(10, 78, 54, 12);
-
-		yingzhan[2] = new Label(group_1, SWT.NONE);
-		yingzhan[2].setBounds(10, 126, 54, 12);
-
-		yingzhan[3] = new Label(group_1, SWT.NONE);
-		yingzhan[3].setBounds(10, 177, 54, 12);
-
-		yingzhan[4] = new Label(group_1, SWT.NONE);
-		yingzhan[4].setBounds(10, 226, 54, 12);
-
-		for (int i = 0; i < faqi.length; i++) {
-			yingzhan[i].setText("空位");
-			yingzhan[i].setVisible(false);
-		}
-
-		table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION);
-		table.setLinesVisible(true);
-		table.setBounds(10, 10, 629, 237);
-		Font font = new Font(parent.getDisplay(), "Arial", 12, SWT.NORMAL);
-		table.setFont(font);
-		TableColumn column = new TableColumn(table, SWT.NONE);
-		column.setWidth(460);
-		TableColumn column1 = new TableColumn(table, SWT.NONE);
-		column1.setWidth(80);
-		TableColumn column2 = new TableColumn(table, SWT.NONE);
-		column2.setWidth(80);
-
-		btn_start_game = new Button(container, SWT.NONE);
-		btn_start_game.setText("开始游戏");
-		btn_start_game.setBounds(727, 329, 116, 91);
-		btn_start_game.setEnabled(false);
-		btn_start_game.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				GameClient.getInstance().sendMessageToGameServer(
-						new StartGamePKMessage1004());
-				btn_start_game.setEnabled(false);
-			}
-		});
 		
-		Button button = new Button(container, SWT.NONE);
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				QueryDia pkDia = new QueryDia(PKUI.this.getShell());
-				pkDia.open();
+		  final TabFolder tabFolder = new TabFolder(parent, SWT.None);
+			tabFolder.setBounds(10, 0, 881, 649);
+		    // Create each tab and set its text, tool tip text,
+		    // image, and control
+			for (int i = 0; i < 5; i++) {
+				tabItem[i] = new TabItem(tabFolder, SWT.NONE);
+				tabItem[i].setText(tabItemText[i]);
+				tabItem[i].setToolTipText("提示文本");
+				tabItem[i].setImage(image[i]);
+				if(i==0)
+				{tabItem[i].setControl(getTabControlOne(tabFolder));}
+				
 			}
-		});
-		button.setText("查询");
-		button.setBounds(727, 175, 116, 91);
+
+		    // Select the third tab (index is zero-based)
+		    tabFolder.setSelection(0);
+
+		    // Add an event listener to write the selected tab to stdout
+		    tabFolder.addSelectionListener(new SelectionAdapter() {
+		      public void widgetSelected(org.eclipse.swt.events.SelectionEvent event) {
+		        System.out.println(tabFolder.getSelection()[0].getText() + " selected");
+		      }
+		    });
 		
-		 btn_end_game = new Button(container, SWT.NONE);
-		btn_end_game.setText("结束游戏");
-		btn_end_game.setEnabled(false);
-		btn_end_game.setBounds(727, 444, 116, 91);
-		btn_end_game.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				GameClient.getInstance().sendMessageToGameServer(
-						new EndGamePKMessage1005());
-				btn_end_game.setEnabled(false);
-			}
-		});
+		
+
 		
 	
 		GameClient.getInstance().onCreate();
 		GameClient.getInstance().connectGameServer(GameClient.GAME_IP,
 				GameClient.GAME_PORT);
-		return container;
+		return tabFolder;
 	}
+	 /**
+	   * Gets the control for tab one
+	   * 
+	   * @param tabFolder the parent tab folder
+	   * @return Control
+	   */
+	  private Control getTabControlOne(TabFolder tabFolder) {
+			Composite container = new Composite(tabFolder, SWT.NONE);
+			container.setFont(SWTResourceManager.getFont("宋体", 9, SWT.NORMAL));
+			btn_pk = new Button(container, SWT.NONE);
+			btn_pk.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					PKDia pkDia = new PKDia(KingMain.this.getShell());
+					pkDia.open();
+				}
+			});
+			btn_pk.setBounds(727, 10, 116, 91);
+			btn_pk.setText("\u53D1\u8D77\u6311\u6218");
 
+			// final List list = new List(container, SWT.V_SCROLL);
+			// list.setBounds(10, 10, 582, 242);
+			// Font font = new Font(parent.getDisplay(), "Arial", 12, SWT.NORMAL);
+			// list.setFont(font);
+
+			Group group = new Group(container, SWT.NONE);
+			group.setText("发起方");
+			group.setBounds(10, 273, 243, 262);
+
+			faqi[0] = new Label(group, SWT.NONE);
+			faqi[0].setBounds(10, 32, 54, 12);
+
+			faqi[1] = new Label(group, SWT.NONE);
+			faqi[1].setBounds(10, 78, 54, 12);
+
+			faqi[2] = new Label(group, SWT.NONE);
+			faqi[2].setBounds(10, 126, 54, 12);
+
+			faqi[3] = new Label(group, SWT.NONE);
+			faqi[3].setBounds(10, 177, 54, 12);
+
+			faqi[4] = new Label(group, SWT.NONE);
+			faqi[4].setBounds(10, 226, 54, 12);
+
+			for (int i = 0; i < faqi.length; i++) {
+				faqi[i].setText("空位");
+				faqi[i].setVisible(false);
+			}
+			Group group_1 = new Group(container, SWT.NONE);
+			group_1.setText("应战方");
+			group_1.setBounds(349, 273, 243, 262);
+
+			yingzhan[0] = new Label(group_1, SWT.NONE);
+			yingzhan[0].setBounds(10, 32, 54, 12);
+
+			yingzhan[1] = new Label(group_1, SWT.NONE);
+			yingzhan[1].setBounds(10, 78, 54, 12);
+
+			yingzhan[2] = new Label(group_1, SWT.NONE);
+			yingzhan[2].setBounds(10, 126, 54, 12);
+
+			yingzhan[3] = new Label(group_1, SWT.NONE);
+			yingzhan[3].setBounds(10, 177, 54, 12);
+
+			yingzhan[4] = new Label(group_1, SWT.NONE);
+			yingzhan[4].setBounds(10, 226, 54, 12);
+
+			for (int i = 0; i < faqi.length; i++) {
+				yingzhan[i].setText("空位");
+				yingzhan[i].setVisible(false);
+			}
+
+			table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION);
+			table.setLinesVisible(true);
+			table.setBounds(10, 10, 629, 237);
+			Font font = new Font(tabFolder.getDisplay(), "Arial", 12, SWT.NORMAL);
+			table.setFont(font);
+			TableColumn column = new TableColumn(table, SWT.NONE);
+			column.setWidth(460);
+			TableColumn column1 = new TableColumn(table, SWT.NONE);
+			column1.setWidth(80);
+			TableColumn column2 = new TableColumn(table, SWT.NONE);
+			column2.setWidth(80);
+
+			btn_start_game = new Button(container, SWT.NONE);
+			btn_start_game.setText("开始游戏");
+			btn_start_game.setBounds(727, 329, 116, 91);
+			btn_start_game.setEnabled(false);
+			btn_start_game.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					GameClient.getInstance().sendMessageToGameServer(
+							new StartGamePKMessage1004());
+					btn_start_game.setEnabled(false);
+				}
+			});
+			
+			Button button = new Button(container, SWT.NONE);
+			button.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					QueryDia pkDia = new QueryDia(KingMain.this.getShell());
+					pkDia.open();
+				}
+			});
+			button.setText("查询");
+			button.setBounds(727, 175, 116, 91);
+			
+			 btn_end_game = new Button(container, SWT.NONE);
+			btn_end_game.setText("结束游戏");
+			btn_end_game.setEnabled(false);
+			btn_end_game.setBounds(727, 444, 116, 91);
+			
+			
+			btn_end_game.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					GameClient.getInstance().sendMessageToGameServer(
+							new EndGamePKMessage1005());
+					btn_end_game.setEnabled(false);
+				}
+			});
+			return container;
+	  }
 	@Override
 	protected void handleShellCloseEvent() {
-		MessageBox mb = new MessageBox(PKUI.this.getShell(),
+		MessageBox mb = new MessageBox(KingMain.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK | SWT.CANCEL);
 		mb.setMessage("确定要关闭吗?");//
 		int rc=mb.open();
@@ -283,15 +327,15 @@ public class PKUI extends ApplicationWindow {
 	 * @param args
 	 */
 	public static void main(String args[]) {
-		 try {
-		 PKUI window = new PKUI();
-		 window.setBlockOnOpen(true);
-		 window.open();
-		 Display.getCurrent().dispose();
-		 System.exit(0);
-		 } catch (Exception e) {
-		 e.printStackTrace();
-		 }
+		// try {
+		// PKUI window = new PKUI();
+		// window.setBlockOnOpen(true);
+		// window.open();
+		// Display.getCurrent().dispose();
+		// System.exit(0);
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
 	}
 
 	/**
@@ -336,7 +380,7 @@ public class PKUI extends ApplicationWindow {
 	}
 
 	public void PopErrorCreateMessage() {
-		MessageBox mb = new MessageBox(PKUI.this.getShell(),
+		MessageBox mb = new MessageBox(KingMain.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
 		mb.setMessage("创建房间失败");//
 		mb.open();
@@ -344,7 +388,7 @@ public class PKUI extends ApplicationWindow {
 
 	public void PopErrorJoinMessage(String name) {
 		if (name.equals(KingLogin.name)) {
-			MessageBox mb = new MessageBox(PKUI.this.getShell(),
+			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("加入房间房间失败,阵营人数已满，或房间无效");//
 			mb.open();
@@ -353,7 +397,7 @@ public class PKUI extends ApplicationWindow {
 	}
 
 	public void btn_start_gameEnable() {
-		MessageBox mb = new MessageBox(PKUI.this.getShell(),
+		MessageBox mb = new MessageBox(KingMain.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
 		mb.setMessage("房间已满 你可以开始游戏了");//
 		mb.open();
@@ -363,7 +407,7 @@ public class PKUI extends ApplicationWindow {
 		if(status==0)
 		{
 			
-			MessageBox mb = new MessageBox(PKUI.this.getShell(),
+			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
 			if(name.equals(KingLogin.name))
 		{mb.setMessage("现在你有操作权限可以结束游戏了");
@@ -378,7 +422,7 @@ public class PKUI extends ApplicationWindow {
 		}
 		else
 		{
-			MessageBox mb = new MessageBox(PKUI.this.getShell(),
+			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("开始游戏失败");//
 			mb.open();
@@ -388,7 +432,7 @@ public class PKUI extends ApplicationWindow {
 	public void EndGameResult(int status) {
 		if(status==0)
 		{
-			MessageBox mb = new MessageBox(PKUI.this.getShell(),
+			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
 		mb.setMessage("房主结束游戏成功，房间解散");//
 		mb.open();
@@ -405,7 +449,7 @@ public class PKUI extends ApplicationWindow {
 		}
 		else
 		{
-			MessageBox mb = new MessageBox(PKUI.this.getShell(),
+			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("结束游戏失败");//
 			mb.open();

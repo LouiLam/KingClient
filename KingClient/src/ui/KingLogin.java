@@ -16,11 +16,12 @@ import org.apache.http.util.EntityUtils;
 import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -30,11 +31,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.SWTResourceManager;
 import org.json.JSONObject;
 
 public class KingLogin extends ApplicationWindow {
 	public static String name;
-	public static PKUI pkui;
+	public static KingMain pkui;
 	Image image,image_reg,image_login;
 	/**
 	 * Create the application window,
@@ -68,17 +70,23 @@ public class KingLogin extends ApplicationWindow {
 		parent.setBackgroundMode(SWT.INHERIT_DEFAULT); 
 		parent.setBackgroundImage(image);
 		Label id = new Label(container, SWT.NONE);
-		id.setBounds(84, 51, 54, 12);
-		id.setText("\u5E10\u53F7\uFF1A"); // �ʺ�:
+		id.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+		id.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		id.setBounds(36, 117, 54, 12);
+		id.setText("用户帐号："); // �ʺ�:
 		combo = new Combo(container, SWT.NONE); // �ʺ������
-		combo.setBounds(151, 48, 142, 20);
+		combo.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+		combo.setBounds(103, 114, 190, 20);
 		combo.setTextLimit(20);
 		Label pwd = new Label(container, SWT.NONE);
-		pwd.setText("\u5BC6\u7801\uFF1A");// ����:
-		pwd.setBounds(84, 101, 54, 12);
+		pwd.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+		pwd.setText("登录密码：");// ����:
+		pwd.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		pwd.setBounds(36, 167, 54, 12);
 		
 		pwd_text = new Text(container, SWT.BORDER | SWT.PASSWORD);// ���������
-		pwd_text.setBounds(151, 96, 142, 20);
+		pwd_text.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+		pwd_text.setBounds(103, 164, 190, 20);
 		pwd_text.setTextLimit(36);
 		Button reg = new Button(container, SWT.FLAT);
 		reg.setImage(image_reg);
@@ -94,7 +102,7 @@ public class KingLogin extends ApplicationWindow {
 				regDia.open();
 			}
 		});
-		reg.setBounds(30, 143, 138, 37);
+		reg.setBounds(10, 212, 138, 37);
 //		reg.setText("\u6CE8\u518C");// ע��
 		Button login = new Button(container,  SWT.NONE);
 		login.setImage(image_login);
@@ -132,8 +140,35 @@ public class KingLogin extends ApplicationWindow {
 				widgetSelected(e);
 			}
 		});
-		login.setBounds(205, 143, 138, 37);
-	
+		login.setBounds(205, 212, 138, 37);
+		
+		 final Button btnNewButton = new Button(container, SWT.CHECK);
+		btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(btnNewButton.getSelection())
+				{
+					System.out.println("选中");
+				}
+				else
+				{
+					System.out.println("未选中");
+				}
+			}
+		});
+		btnNewButton.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		btnNewButton.setBounds(103, 190, 72, 22);
+		btnNewButton.setText("记住密码");
+		Label lblNewLabel = new Label(container, SWT.NONE);
+		lblNewLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblNewLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				System.out.println("鼠标点击");
+			}
+		});
+		lblNewLabel.setBounds(221, 194, 54, 12);
+		lblNewLabel.setText("忘记密码");
 //		login.setText("\u767B\u5F55");// ��¼
 
 		return container;
@@ -188,7 +223,7 @@ public class KingLogin extends ApplicationWindow {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("\u6211\u662F\u738B\u8005");
+		newShell.setText("欢迎您登录我是王者");
 	}
 
 	/**
@@ -196,7 +231,7 @@ public class KingLogin extends ApplicationWindow {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(359, 261);
+		return new Point(360, 293);
 	}
 
 	public void httpPost() {
@@ -225,7 +260,7 @@ public class KingLogin extends ApplicationWindow {
 				{
 				PKUser.uid=Integer.parseInt((String) obj.get("uid"));
 				Display.getCurrent().dispose();
-				pkui = new PKUI();
+				pkui = new KingMain();
 				pkui.setBlockOnOpen(true);
 				pkui.open();}
 				

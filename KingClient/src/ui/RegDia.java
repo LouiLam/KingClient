@@ -42,6 +42,7 @@ public class RegDia extends Dialog {
 	public RegDia(Shell parentShell) {
 		super(parentShell);
 		setShellStyle(SWT.DIALOG_TRIM);
+//		getShell().setImage(parentShell.getImage());
 	}
 
 	@Override
@@ -59,10 +60,13 @@ public class RegDia extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
+		
+		
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.numColumns = 3;
 
 		Label lblNewLabel = new Label(container, SWT.NONE);
+		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel.setText("\u7528\u6237\u540D\uFF1A");
 		new Label(container, SWT.NONE);
 
@@ -73,6 +77,7 @@ public class RegDia extends Dialog {
 		id_text.setToolTipText("\u5e10\u53f7\u6700\u957f20\u4e2a\u5b57\u7b26\uff0c\u4e2d\u6587\u4e3a2\u4e2a\u5b57\u7b26");// �ʺ��20���ַ�����Ϊ2���ַ�
 
 		Label lblNewLabel_1 = new Label(container, SWT.NONE);
+		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_1.setText("\u767B\u5F55\u5BC6\u7801\uFF1A");
 		new Label(container, SWT.NONE);
 
@@ -83,6 +88,7 @@ public class RegDia extends Dialog {
 		pwd_text.setToolTipText("\u5bc6\u7801\u6700\u957f36\u4e2a\u5b57\u7b26");
 
 		Label lblNewLabel_2 = new Label(container, SWT.NONE);
+		lblNewLabel_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_2.setText("\u786E\u8BA4\u5BC6\u7801\uFF1A");
 		new Label(container, SWT.NONE);
 
@@ -91,6 +97,7 @@ public class RegDia extends Dialog {
 				false, 1, 1));
 		pwdok_text.setTextLimit(36);
 		Label label = new Label(container, SWT.NONE);
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		label.setText("\u90AE\u7BB1\uFF1A");
 		new Label(container, SWT.NONE);
 
@@ -99,6 +106,7 @@ public class RegDia extends Dialog {
 				1));
 
 		Label lblNewLabel_3 = new Label(container, SWT.NONE);
+		lblNewLabel_3.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_3.setText("QQ\uFF1A");
 
 		new Label(container, SWT.NONE);
@@ -110,6 +118,7 @@ public class RegDia extends Dialog {
 		text_4.setEditable(false);
 
 		Label lblNewLabel_4 = new Label(container, SWT.NONE);
+		lblNewLabel_4.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_4.setText("\u624B\u673A\uFF1A");
 		new Label(container, SWT.NONE);
 
@@ -159,7 +168,7 @@ public class RegDia extends Dialog {
 		button.setText("\u6CE8\u518C");
 		Button button_1 = createButton(parent, IDialogConstants.CANCEL_ID,
 				IDialogConstants.CANCEL_LABEL, false);
-		button_1.setText("\u53D6\u6D88");
+		button_1.setText("退出");
 	}
 
 	/**
