@@ -1,10 +1,14 @@
 package receive;
 
+import object.JfaceWindowManager;
+
 import org.eclipse.swt.widgets.Display;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 
 import ui.KingLogin;
+import ui.KingMain;
+import ui.WaitDia;
 
 /**
  * 离开房间
@@ -54,7 +58,9 @@ public class LeavePKResultMessageRecevie2004 extends SocketMessageReceived {
 
 			@Override
 			public void run() {
-				KingLogin.pkui.leaveLables(camp,seatID);
+				if(JfaceWindowManager.getCurWindow() instanceof WaitDia)
+				{WaitDia waitDia=(WaitDia) JfaceWindowManager.getCurWindow();
+				waitDia.leaveLables(camp,seatID);}
 			}
 		});
 

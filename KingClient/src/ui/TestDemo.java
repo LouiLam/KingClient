@@ -37,7 +37,7 @@ import send.StartGamePKMessage1004;
 import com.zjd.universal.net.GameClient;
 import org.eclipse.swt.browser.Browser;
 
-public class IndexDemo extends ApplicationWindow {
+public class TestDemo extends ApplicationWindow {
 	private Table table;
 	private Label faqi[] = new Label[5];
 	private Label yingzhan[] = new Label[5];
@@ -51,7 +51,7 @@ public class IndexDemo extends ApplicationWindow {
 	/**
 	 * Create the application window.
 	 */
-	public IndexDemo() {
+	public TestDemo() {
 		super(null);
 		createActions();
 		for (int i = 0; i < 5; i++) {
@@ -69,7 +69,7 @@ public class IndexDemo extends ApplicationWindow {
 	public void PKCreateSuccess(String name, int type) {
 		if (name.equals(KingLogin.name)) {
 			PKUser.type = type;
-			MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
+			MessageBox mb = new MessageBox(TestDemo.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("挑战发起成功，作为发起人，你现在不能加入其他挑战房间！");
 			mb.open();
@@ -90,7 +90,7 @@ public class IndexDemo extends ApplicationWindow {
 	public void PKJoinSuccess(String name, int type) {
 		if (name.equals(KingLogin.name)) {
 			PKUser.type = type;
-			MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
+			MessageBox mb = new MessageBox(TestDemo.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("加入成功，作为加入人，你现在不能加入其他挑战房间！");
 			mb.open();
@@ -131,7 +131,7 @@ public class IndexDemo extends ApplicationWindow {
 		btn_create_tz.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				PKDia pkDia = new PKDia(IndexDemo.this.getShell());
+				PKDia pkDia = new PKDia(TestDemo.this.getShell());
 				pkDia.open();
 			}
 		});
@@ -205,7 +205,7 @@ public class IndexDemo extends ApplicationWindow {
 		query.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				QueryDia pkDia = new QueryDia(IndexDemo.this.getShell());
+				QueryDia pkDia = new QueryDia(TestDemo.this.getShell());
 				pkDia.open();
 			}
 		});
@@ -236,7 +236,7 @@ public class IndexDemo extends ApplicationWindow {
 
 	@Override
 	protected void handleShellCloseEvent() {
-		MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
+		MessageBox mb = new MessageBox(TestDemo.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK | SWT.CANCEL);
 		mb.setMessage("确定要关闭吗?");//
 		int rc=mb.open();
@@ -297,7 +297,7 @@ public class IndexDemo extends ApplicationWindow {
 	 */
 	public static void main(String args[]) {
 		 try {
-		 IndexDemo window = new IndexDemo();
+		 TestDemo window = new TestDemo();
 		 window.setBlockOnOpen(true);
 		 window.open();
 		 Display.getCurrent().dispose();
@@ -349,7 +349,7 @@ public class IndexDemo extends ApplicationWindow {
 	}
 
 	public void PopErrorCreateMessage() {
-		MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
+		MessageBox mb = new MessageBox(TestDemo.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
 		mb.setMessage("创建房间失败");//
 		mb.open();
@@ -357,7 +357,7 @@ public class IndexDemo extends ApplicationWindow {
 
 	public void PopErrorJoinMessage(String name) {
 		if (name.equals(KingLogin.name)) {
-			MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
+			MessageBox mb = new MessageBox(TestDemo.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("加入房间房间失败,阵营人数已满，或房间无效");//
 			mb.open();
@@ -366,7 +366,7 @@ public class IndexDemo extends ApplicationWindow {
 	}
 
 	public void btn_start_gameEnable() {
-		MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
+		MessageBox mb = new MessageBox(TestDemo.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
 		mb.setMessage("房间已满 你可以开始游戏了");//
 		mb.open();
@@ -376,7 +376,7 @@ public class IndexDemo extends ApplicationWindow {
 		if(status==0)
 		{
 			
-			MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
+			MessageBox mb = new MessageBox(TestDemo.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
 			if(name.equals(KingLogin.name))
 		{mb.setMessage("现在你有操作权限可以结束游戏了");
@@ -391,7 +391,7 @@ public class IndexDemo extends ApplicationWindow {
 		}
 		else
 		{
-			MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
+			MessageBox mb = new MessageBox(TestDemo.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("开始游戏失败");//
 			mb.open();
@@ -401,7 +401,7 @@ public class IndexDemo extends ApplicationWindow {
 	public void EndGameResult(int status) {
 		if(status==0)
 		{
-			MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
+			MessageBox mb = new MessageBox(TestDemo.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
 		mb.setMessage("房主结束游戏成功，房间解散");//
 		mb.open();
@@ -418,7 +418,7 @@ public class IndexDemo extends ApplicationWindow {
 		}
 		else
 		{
-			MessageBox mb = new MessageBox(IndexDemo.this.getShell(),
+			MessageBox mb = new MessageBox(TestDemo.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("结束游戏失败");//
 			mb.open();

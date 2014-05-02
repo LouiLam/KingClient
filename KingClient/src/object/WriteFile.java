@@ -31,6 +31,7 @@ public class WriteFile {
     line += "\t" + m.password;
     line += "\t" + m.isAutoSave;
     out.println(line);
+    System.out.println(line);
   }
 
 

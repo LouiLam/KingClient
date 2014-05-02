@@ -3,6 +3,7 @@ package ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import object.JfaceWindowManager;
 import object.PK;
 
 import org.apache.http.HttpStatus;
@@ -50,6 +51,7 @@ public class PKDia extends Dialog {
 	 */
 	public PKDia(Shell parentShell) {
 		super(parentShell);
+		setWindowManager(JfaceWindowManager.wm);
 	}
 
 	/**

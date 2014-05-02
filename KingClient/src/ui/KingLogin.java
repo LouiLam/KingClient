@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import object.Account;
+import object.JfaceWindowManager;
 import object.PKUser;
 import object.ReadFile;
 import object.WriteFile;
@@ -41,7 +42,6 @@ import org.json.JSONObject;
 
 public class KingLogin extends ApplicationWindow {
 	public static String name;
-	public static KingMain pkui;
 	Image image, image_reg, image_login;
 	Button btn_isAutoSave;
 	String autoSave="0";
@@ -50,7 +50,22 @@ public class KingLogin extends ApplicationWindow {
 	 */
 	public KingLogin() {
 		super(null);
+//		InetAddress addresses;
+//		try {
+//			addresses = InetAddress.getByName("louislam0714.xicp.net");
+//			GameClient.GAME_IP=addresses.getHostAddress();
+//		System.out.println(GameClient.GAME_IP);
+//		} catch (UnknownHostException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		setWindowManager(JfaceWindowManager.wm);
+	
+		
+		
+		
 		ReadFile.init();
+		
 		image = new Image(Display.getDefault(), "1.jpg");
 		image_reg = new Image(Display.getDefault(), "reg.png");
 		image_login = new Image(Display.getDefault(), "login.png");
@@ -60,7 +75,6 @@ public class KingLogin extends ApplicationWindow {
 		// addMenuBar();
 		// addStatusLine();
 	}
-
 	protected boolean showTopSeperator() {
 		return false;
 	}
@@ -131,26 +145,23 @@ public class KingLogin extends ApplicationWindow {
 		{
 			pwd_text.setText(ReadFile.accounts.get(combo.getItemCount()-1).password);
 		}
-		Button reg = new Button(container, SWT.FLAT);
+		Label reg = new Label(container, SWT.FLAT);
 		reg.setImage(image_reg);
-		reg.addSelectionListener(new SelectionAdapter() {
+		reg.addMouseListener(new MouseAdapter() {
 			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
-			}
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void mouseDown(MouseEvent e) {
 				RegDia regDia = new RegDia(KingLogin.this.getShell());
 				regDia.open();
 			}
 		});
+
 		reg.setBounds(10, 218, 138, 37);
-		Button login = new Button(container, SWT.NONE);
+		Label login = new Label(container, SWT.NONE);
 		login.setImage(image_login);
-		login.addSelectionListener(new SelectionAdapter() {
+		
+		login.addMouseListener(new MouseAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void mouseDown(MouseEvent e) {
 				if (combo.getText() == null
 						|| combo.getText().trim().length() == 0
 						|| pwd_text.getText() == null
@@ -174,11 +185,6 @@ public class KingLogin extends ApplicationWindow {
 				// });
 
 			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
-			}
 		});
 		login.setBounds(206, 218, 138, 37);
 
@@ -201,6 +207,7 @@ public class KingLogin extends ApplicationWindow {
 		if(!ReadFile.accounts.get(combo.getItemCount()-1).isAutoSave.equals("0"))
 		{
 			btn_isAutoSave.setSelection(true);
+			autoSave="1";
 		}
 		Label lblNewLabel = new Label(container, SWT.WRAP);
 		lblNewLabel.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
@@ -311,10 +318,11 @@ public class KingLogin extends ApplicationWindow {
 					}
 				    out.close();
 					PKUser.uid = Integer.parseInt((String) obj.get("uid"));
+//					JfaceWindowManager.getCurWindow().close();
 					Display.getCurrent().dispose();
-					pkui = new KingMain();
-					pkui.setBlockOnOpen(true);
-					pkui.open();
+					KingMain kingMain = new KingMain();
+					kingMain.setBlockOnOpen(true);
+					kingMain.open();
 					
 				}
 

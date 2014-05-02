@@ -2,6 +2,7 @@ package receive;
 
 import java.io.UnsupportedEncodingException;
 
+import object.JfaceWindowManager;
 import object.PK;
 import object.PKManager;
 import object.PKUser;
@@ -10,7 +11,7 @@ import org.eclipse.swt.widgets.Display;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 
-import ui.KingLogin;
+import ui.KingMain;
 
 
 
@@ -31,7 +32,8 @@ public class CreatePKResultMessageReceive2002 extends SocketMessageReceived {
 						
 						@Override
 						public void run() {
-							KingLogin.pkui.PopErrorCreateMessage();
+							KingMain kingMain=(KingMain) JfaceWindowManager.getCurWindow();
+							kingMain.PopErrorCreateMessage();
 						}
 					});
 					return ;
@@ -79,8 +81,9 @@ public class CreatePKResultMessageReceive2002 extends SocketMessageReceived {
 				
 				@Override
 				public void run() {
-					KingLogin.pkui.RefreshTable();
-					KingLogin.pkui.PKCreateSuccess(name,type);
+					KingMain kingMain=(KingMain) JfaceWindowManager.getCurWindow();
+					kingMain.RefreshTable();
+					kingMain.PKCreateSuccess(name,type);
 				}
 			});
 		

@@ -3,6 +3,8 @@ package ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import object.JfaceWindowManager;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -50,6 +52,7 @@ public class QueryDia extends Dialog {
 	 */
 	public QueryDia(Shell parentShell) {
 		super(parentShell);
+		setWindowManager(JfaceWindowManager.wm);
 	}
 	/**
 	 * Create contents of the dialog.

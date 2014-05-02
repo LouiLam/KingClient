@@ -2,6 +2,8 @@ package ui;
 
 import java.util.Calendar;
 
+import object.JfaceWindowManager;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -27,6 +29,7 @@ public class DateTimeDia extends Dialog {
 	 */
 	public DateTimeDia(Shell parentShell, Label queryTime) {
 		super(parentShell);
+		setWindowManager(JfaceWindowManager.wm);
 		this.queryTime=queryTime;
 	}
 	DateTime calendar, date, time;

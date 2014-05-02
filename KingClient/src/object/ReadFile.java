@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 public class ReadFile {
@@ -25,6 +26,8 @@ public class ReadFile {
 			
 			}
 			fr.close();
+	
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 			   Account account = new Account("test","test","0");

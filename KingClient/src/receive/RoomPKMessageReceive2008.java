@@ -1,10 +1,12 @@
 package receive;
 
+import object.JfaceWindowManager;
+
 import org.eclipse.swt.widgets.Display;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 
-import ui.KingLogin;
+import ui.KingMain;
 
 public class RoomPKMessageReceive2008 extends SocketMessageReceived {
 
@@ -16,7 +18,8 @@ public class RoomPKMessageReceive2008 extends SocketMessageReceived {
 
 			@Override
 			public void run() {
-				KingLogin.pkui.RefreshTable();
+				KingMain kingMain=(KingMain) JfaceWindowManager.getCurWindow();
+				kingMain.RefreshTable();
 			}
 		});
 

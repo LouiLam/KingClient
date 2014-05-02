@@ -2,6 +2,8 @@ package ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import object.JfaceWindowManager;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -12,6 +14,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -41,6 +44,7 @@ public class RegDia extends Dialog {
 	 */
 	public RegDia(Shell parentShell) {
 		super(parentShell);
+		setWindowManager(JfaceWindowManager.wm);
 		setShellStyle(SWT.DIALOG_TRIM);
 //		getShell().setImage(parentShell.getImage());
 	}
@@ -168,6 +172,11 @@ public class RegDia extends Dialog {
 		button.setText("\u6CE8\u518C");
 		Button button_1 = createButton(parent, IDialogConstants.CANCEL_ID,
 				IDialogConstants.CANCEL_LABEL, false);
+		button_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			}
+		});
 		button_1.setText("退出");
 	}
 
