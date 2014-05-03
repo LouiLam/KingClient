@@ -1,11 +1,16 @@
 package receive;
 
+import java.io.UnsupportedEncodingException;
+
 import object.JfaceWindowManager;
 
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 
+import ui.KingLogin;
+import ui.KingMain;
 import ui.WaitDia;
 
 /**
@@ -14,10 +19,7 @@ import ui.WaitDia;
  * @author Administrator
  * 
  */
-public class LeavePKResultMessageRecevie2004 extends SocketMessageReceived {
-
-	int camp;
-	int seatID;
+public class HostLeavePKResultMessageRecevie2009 extends SocketMessageReceived {
 	String name;
 
 	// public LeavePKResultMessageRecevie2004(String name, int camp, int seatID)
@@ -46,8 +48,15 @@ public class LeavePKResultMessageRecevie2004 extends SocketMessageReceived {
 
 	@Override
 	public void parse(ChannelBuffer buffer) {
-		camp = buffer.readShort();
-		seatID = buffer.readShort();
+		int mynamelength = buffer.readShort();
+		byte mynameBytes[] = new byte[mynamelength];
+		buffer.readBytes(mynameBytes);
+		try {
+			name = new String(mynameBytes, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -56,9 +65,17 @@ public class LeavePKResultMessageRecevie2004 extends SocketMessageReceived {
 
 			@Override
 			public void run() {
-				if(JfaceWindowManager.getCurWindow() instanceof WaitDia)
-				{WaitDia waitDia=(WaitDia) JfaceWindowManager.getCurWindow();
-				waitDia.leaveLables(camp,seatID);}
+				for (Window window : JfaceWindowManager.wm.getWindows()) {
+					if(window instanceof KingMain)
+					{KingMain mian=(KingMain) window;
+					mian.HostLeave();
+					}
+					if(window instanceof WaitDia)
+					{
+						WaitDia waitDia=(WaitDia) window;
+						waitDia.close();
+					}
+				}
 			}
 		});
 

@@ -14,7 +14,7 @@ import ui.WaitDia;
  * @author Administrator
  * 
  */
-public class LeavePKResultMessageRecevie2004 extends SocketMessageReceived {
+public class NormalLeavePKResultMessageRecevie2011 extends SocketMessageReceived {
 
 	int camp;
 	int seatID;
@@ -48,6 +48,7 @@ public class LeavePKResultMessageRecevie2004 extends SocketMessageReceived {
 	public void parse(ChannelBuffer buffer) {
 		camp = buffer.readShort();
 		seatID = buffer.readShort();
+		System.out.println("正常离开房间camp:"+camp+",seatID:"+seatID);
 	}
 
 	@Override

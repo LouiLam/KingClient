@@ -19,7 +19,7 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 	// int camp;
 	// int seatID;
 	// int pkNum;
-	String name;
+	String name,title,area;
 	PKUser users[] = new PKUser[10];
 	int type;
 	int status;
@@ -39,7 +39,28 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
+		int titlelength = buffer.readShort();
+		byte titleBytes[] = new byte[titlelength];
+		buffer.readBytes(titleBytes);
+		try {
+			title = new String(titleBytes, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int arealength = buffer.readShort();
+		byte areaBytes[] = new byte[arealength];
+		buffer.readBytes(areaBytes);
+		try {
+			area = new String(areaBytes, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		
+		
 		int pkNum = buffer.readShort();
 
 		for (int i = 0; i < pkNum; i++) {
@@ -57,7 +78,6 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 			}
 			users[i] = new PKUser(name, Camp, seatID);
 		}
-
 		Display.getDefault().asyncExec(new Runnable() {
 
 			@Override
@@ -78,9 +98,9 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 				{
 					kingMain.PopErrorJoinMessage(name);
 				} else {
-					kingMain.PKJoinSuccess(name, type,users );
+					kingMain.PKJoinSuccess(name, type,users,area,title);
 					if(waitDia!=null)
-					waitDia.RefreshLables(users);
+					{waitDia.RefreshLables(users);}
 
 				}
 

@@ -44,7 +44,6 @@ public class RoomPKMessageReceive2001 extends SocketMessageReceived {
 			// 数据库ID
 			long sql_id = buffer.readLong();
 			PK pk = new PK(name, title, area, map,des, type, point,sql_id);
-			System.out.println(pk.toString());
 			PKManager.getInstance().add(pk);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

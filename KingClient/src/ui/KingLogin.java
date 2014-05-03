@@ -292,7 +292,7 @@ public class KingLogin extends ApplicationWindow {
 			if (httppHttpResponse2.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				String entity = EntityUtils.toString(httppHttpResponse2
 						.getEntity());
-
+				System.out.println(entity);
 				JSONObject obj = new JSONObject(entity);
 				int value = Integer.parseInt(obj.get("value") + "");
 				MessageBox mb = new MessageBox(KingLogin.this.getShell(),

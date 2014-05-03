@@ -4,8 +4,11 @@ package com.zjd.universal.net;
 import receive.CanStartGamePKMessageReceive2005;
 import receive.CreatePKResultMessageReceive2002;
 import receive.EndGamePKResultMessageReceive2007;
+import receive.HostLeavePKResultMessageRecevie2009;
 import receive.JoinPKResultMessageReceive2003;
 import receive.LeavePKResultMessageRecevie2004;
+import receive.NoCanStartGamePKMessageReceive2010;
+import receive.NormalLeavePKResultMessageRecevie2011;
 import receive.RoomPKMessageReceive2001;
 import receive.RoomPKMessageReceive2008;
 import receive.SocketMessageReceived;
@@ -33,6 +36,12 @@ public class GameServerMessageFactory {
 			return new EndGamePKResultMessageReceive2007();
 		case 2008:
 			return new RoomPKMessageReceive2008();
+		case 2009:
+			return new HostLeavePKResultMessageRecevie2009();
+		case 2010:
+			return new NoCanStartGamePKMessageReceive2010();
+		case 2011:
+			return new NormalLeavePKResultMessageRecevie2011();
 		default:
 			break;
 		}

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import object.JfaceWindowManager;
 import object.PKManager;
 import object.PKUser;
+import object.State;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.StatusLineManager;
@@ -47,7 +48,7 @@ public class KingMain extends ApplicationWindow {
 			"http://woowgo.com/yxlm/cz.html", "http://woowgo.com/yxlm/dj.html" };
 
 	private Image image_join_tz, image_join_yz, image_create_tz, image_query,
-			 image_table_bg;
+			image_table_bg;
 
 	/**
 	 * Create the application window.
@@ -70,41 +71,52 @@ public class KingMain extends ApplicationWindow {
 		setShellStyle(SWT.CLOSE | SWT.TITLE);
 	}
 
-	public void PKCreateSuccess(String name, int type) {
+	public void PKCreateSuccess(String name, int type, String area, String title) {
 		if (name.equals(KingLogin.name)) {
 			PKUser.type = type;
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("挑战发起成功，作为发起人，你现在不能加入其他挑战房间！");
 			mb.open();
-			for (int i = 0; i < table.getChildren().length; i++) {
-				if (table.getChildren()[i] instanceof Button) {
-					table.getChildren()[i].setEnabled(false);
-				}
-			}
+			tableDisable();
 
 			btn_create_tz.setEnabled(false);
 
-			CreatePKWaitDia waitDia = new CreatePKWaitDia(getShell());
+			CreatePKWaitDia waitDia = new CreatePKWaitDia(getShell(), type,
+					area, title);
 			waitDia.open();
 		}
 	}
 
-	public void PKJoinSuccess(String name, int type,PKUser users[] ) {
+	public void PKJoinSuccess(String name, int type, PKUser users[],
+			String area, String title) {
 		if (name.equals(KingLogin.name)) {
 			PKUser.type = type;
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("加入成功，作为加入人，你现在不能加入其他挑战房间！");
 			mb.open();
-			for (int i = 0; i < table.getChildren().length; i++) {
-				if (table.getChildren()[i] instanceof Button) {
-					table.getChildren()[i].setEnabled(false);
-				}
-			}
+			tableDisable();
 			btn_create_tz.setEnabled(false);
-			JoinPKWaitDia waitDia = new JoinPKWaitDia(getShell(),users);
+			JoinPKWaitDia waitDia = new JoinPKWaitDia(getShell(), users, type,
+					area, title);
 			waitDia.open();
+		}
+	}
+
+	public void tableDisable() {
+		for (int i = 0; i < table.getChildren().length; i++) {
+			if (table.getChildren()[i] instanceof Button) {
+				table.getChildren()[i].setEnabled(false);
+			}
+		}
+	}
+
+	public void tableEnable() {
+		for (int i = 0; i < table.getChildren().length; i++) {
+			if (table.getChildren()[i] instanceof Button) {
+				table.getChildren()[i].setEnabled(true);
+			}
 		}
 	}
 
@@ -215,53 +227,6 @@ public class KingMain extends ApplicationWindow {
 		});
 		btn_create_tz.setBounds(10, 10, 193, 38);
 		btn_create_tz.setImage(image_create_tz);
-
-		// Group group = new Group(container, SWT.NONE);
-		// group.setText("发起方");
-		// group.setBounds(10, 273, 243, 262);
-		//
-		// faqi[0] = new Label(group, SWT.NONE);
-		// faqi[0].setBounds(10, 32, 54, 12);
-		//
-		// faqi[1] = new Label(group, SWT.NONE);
-		// faqi[1].setBounds(10, 78, 54, 12);
-		//
-		// faqi[2] = new Label(group, SWT.NONE);
-		// faqi[2].setBounds(10, 126, 54, 12);
-		//
-		// faqi[3] = new Label(group, SWT.NONE);
-		// faqi[3].setBounds(10, 177, 54, 12);
-		//
-		// faqi[4] = new Label(group, SWT.NONE);
-		// faqi[4].setBounds(10, 226, 54, 12);
-		//
-		// for (int i = 0; i < faqi.length; i++) {
-		// faqi[i].setText("空位");
-		// faqi[i].setVisible(false);
-		// }
-		// Group group_1 = new Group(container, SWT.NONE);
-		// group_1.setText("应战方");
-		// group_1.setBounds(349, 273, 243, 262);
-		//
-		// yingzhan[0] = new Label(group_1, SWT.NONE);
-		// yingzhan[0].setBounds(10, 32, 54, 12);
-		//
-		// yingzhan[1] = new Label(group_1, SWT.NONE);
-		// yingzhan[1].setBounds(10, 78, 54, 12);
-		//
-		// yingzhan[2] = new Label(group_1, SWT.NONE);
-		// yingzhan[2].setBounds(10, 126, 54, 12);
-		//
-		// yingzhan[3] = new Label(group_1, SWT.NONE);
-		// yingzhan[3].setBounds(10, 177, 54, 12);
-		//
-		// yingzhan[4] = new Label(group_1, SWT.NONE);
-		// yingzhan[4].setBounds(10, 226, 54, 12);
-		//
-		// for (int i = 0; i < faqi.length; i++) {
-		// yingzhan[i].setText("空位");
-		// yingzhan[i].setVisible(false);
-		// }
 
 		Button query = new Button(container, SWT.NONE);
 		query.addSelectionListener(new SelectionAdapter() {
@@ -387,27 +352,41 @@ public class KingMain extends ApplicationWindow {
 	}
 
 	public void btn_start_gameEnable() {
+		if (JfaceWindowManager.getCurWindow() instanceof CreatePKWaitDia) {
+			CreatePKWaitDia dia = (CreatePKWaitDia) JfaceWindowManager
+					.getCurWindow();
+			dia.btn_start_game.setEnabled(true);
+		}
 		MessageBox mb = new MessageBox(KingMain.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
 		mb.setMessage("房间已满 你可以开始游戏了");//
 		mb.open();
-		if(JfaceWindowManager.getCurWindow() instanceof CreatePKWaitDia)
-		{
-			CreatePKWaitDia dia=(CreatePKWaitDia) JfaceWindowManager.getCurWindow();
-			dia.btn_start_game.setEnabled(true);
+
+	}
+
+	public void btn_start_gameDisable() {
+		if (JfaceWindowManager.getCurWindow() instanceof CreatePKWaitDia) {
+			CreatePKWaitDia dia = (CreatePKWaitDia) JfaceWindowManager
+					.getCurWindow();
+			dia.btn_start_game.setEnabled(false);
 		}
+		MessageBox mb = new MessageBox(KingMain.this.getShell(),
+				SWT.ICON_INFORMATION | SWT.OK);
+		mb.setMessage("开始挑战前，由于有玩家退出了，请继续耐心等待");//
+		mb.open();
+
 	}
 
 	public void StartGameResult(int status, String name) {
 		if (status == 0) {
-
+			State.CurState = State.STATE_GAME_START;
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			if (name.equals(KingLogin.name)) {
 				mb.setMessage("现在你有操作权限可以结束游戏了");
-				if(JfaceWindowManager.getCurWindow() instanceof CreatePKWaitDia)
-				{
-					CreatePKWaitDia dia=(CreatePKWaitDia) JfaceWindowManager.getCurWindow();
+				if (JfaceWindowManager.getCurWindow() instanceof CreatePKWaitDia) {
+					CreatePKWaitDia dia = (CreatePKWaitDia) JfaceWindowManager
+							.getCurWindow();
 					dia.btn_end_game.setEnabled(true);
 				}
 			} else {
@@ -430,9 +409,8 @@ public class KingMain extends ApplicationWindow {
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("房主结束游戏成功，房间解散");//
 			mb.open();
-			if(JfaceWindowManager.getCurWindow() instanceof WaitDia)
-			{
-				WaitDia dia=(WaitDia) JfaceWindowManager.getCurWindow();
+			if (JfaceWindowManager.getCurWindow() instanceof WaitDia) {
+				WaitDia dia = (WaitDia) JfaceWindowManager.getCurWindow();
 				dia.close();
 			}
 			if (JfaceWindowManager.getCurWindow() instanceof WaitDia) {
@@ -441,12 +419,23 @@ public class KingMain extends ApplicationWindow {
 			}
 
 			btn_create_tz.setEnabled(true);
+			State.CurState = State.STATE_GAME_END;
 		} else {
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("结束游戏失败");//
 			mb.open();
 		}
+
+	}
+
+	// 房主退出
+	public void HostLeave() {
+		tableEnable();
+		MessageBox mb = new MessageBox(KingMain.this.getShell(),
+				SWT.ICON_INFORMATION | SWT.OK);
+		mb.setMessage("房主异常退出，挑战解散");//
+		mb.open();
 
 	}
 
@@ -541,7 +530,9 @@ public class KingMain extends ApplicationWindow {
 
 					int index = (int) ((Button) e.getSource()).getData();
 					GameClient.getInstance().sendMessageToGameServer(
-							new JoinPKMessage1003(index, 1, KingLogin.name));
+							new JoinPKMessage1003(PKManager.getInstance()
+									.getPKByIndex(index).sql_id, 1,
+									KingLogin.name));
 
 				}
 
@@ -565,7 +556,9 @@ public class KingMain extends ApplicationWindow {
 				public void widgetSelected(SelectionEvent e) {
 					int index = (int) ((Button) e.getSource()).getData();
 					GameClient.getInstance().sendMessageToGameServer(
-							new JoinPKMessage1003(index, 2, KingLogin.name));
+							new JoinPKMessage1003(PKManager.getInstance()
+									.getPKByIndex(index).sql_id, 2,
+									KingLogin.name));
 
 				}
 

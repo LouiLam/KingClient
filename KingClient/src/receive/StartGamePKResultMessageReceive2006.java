@@ -1,15 +1,16 @@
 package receive;
 
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.TimeUnit;
 
 import object.JfaceWindowManager;
+import object.TaskScheduled;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 
-import ui.KingLogin;
 import ui.KingMain;
 import ui.WaitDia;
 
@@ -34,6 +35,27 @@ public class StartGamePKResultMessageReceive2006 extends SocketMessageReceived {
 			e.printStackTrace();
 		}
 	
+		 TaskScheduled.scheduleAtFixedRate(new Runnable() {
+			
+			@Override
+			public void run() {
+				Display.getDefault().asyncExec(new Runnable() {
+					
+					@Override
+					public void run() {
+						WaitDia waitDia = null;
+						for (Window window : JfaceWindowManager.wm.getWindows()) {
+							if (window instanceof WaitDia) {
+								waitDia = (WaitDia) window;
+							}
+						}
+						if(waitDia==null){return;}
+						waitDia.showTime();
+					}
+				});
+				
+			}
+		}, 0, 1, TimeUnit.SECONDS);
 			Display.getDefault().asyncExec(new Runnable() {
 				
 				@Override

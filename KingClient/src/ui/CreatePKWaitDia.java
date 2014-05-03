@@ -17,8 +17,10 @@ import com.zjd.universal.net.GameClient;
 public class CreatePKWaitDia extends WaitDia {
 	 Label btn_start_game,btn_end_game;
 	 Image image_start_game,iamge_end_game;
-	public CreatePKWaitDia(Shell parentShell) {
-		super(parentShell);
+	
+
+	public CreatePKWaitDia(Shell parentShell, int type,String area,String title) {
+		super(parentShell,60*30,type, area, title);
 		image_start_game=new Image(Display.getDefault(),"start_game.png");
 		iamge_end_game=new Image(Display.getDefault(),"end_game.png");
 	}
@@ -51,8 +53,9 @@ public class CreatePKWaitDia extends WaitDia {
 			}
 		});
 		
-//		faqi[0].setText(KingLogin.name);
+		faqiName[0].setText(KingLogin.name);
 		faqi[0].setVisible(true);
 	}
+
 
 	}

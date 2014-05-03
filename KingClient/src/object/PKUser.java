@@ -14,5 +14,9 @@ public PKUser(String name, int camp, int seatID) {
 	this.camp = camp;
 	this.seatID = seatID;
 }
-
+@Override
+public String toString() {
+	// TODO Auto-generated method stub
+	return "name:"+name+",camp:"+camp+",seatID"+seatID;
+}
 }

@@ -1,20 +1,20 @@
 package send;
 
-import object.PKUser;
-
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+/**
+ * 玩家正常主动离开挑战房间
+ *
+ */
+public class NormalLeavePKMessage1006 extends SocketMessageToSend {
 
-public class StartGamePKMessage1004 extends SocketMessageToSend {
 
-	public StartGamePKMessage1004() {
+	public NormalLeavePKMessage1006() {
 	}
-
 	@Override
 	public ChannelBuffer pack() {
 		ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
-		cb.writeShort(1004);
-		cb.writeLong(PKUser.sql_id);
+		cb.writeShort(1006);
 		return cb;
 	}
 

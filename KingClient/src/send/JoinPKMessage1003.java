@@ -10,11 +10,11 @@ import org.jboss.netty.buffer.ChannelBuffers;
 
 public class JoinPKMessage1003 extends SocketMessageToSend {
 
-	int index;//条目索引
+	long sql_id;//sqlID
 	int camp;//阵营 1发起 2应战
 	String name;
-	public JoinPKMessage1003(int index,int camp,String name) {
-		this.index = index;
+	public JoinPKMessage1003(long sql_id,int camp,String name) {
+		this.sql_id = sql_id;
 		this.camp=camp;
 		this.name=name;
 	}
@@ -23,7 +23,7 @@ public class JoinPKMessage1003 extends SocketMessageToSend {
 	public ChannelBuffer pack() {
 		ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
 		cb.writeShort(1003);
-			cb.writeShort(index);
+			cb.writeLong(sql_id);
 			cb.writeShort(camp);
 			
 			

@@ -18,6 +18,7 @@ import ui.KingMain;
 public class CreatePKResultMessageReceive2002 extends SocketMessageReceived {
 	String name=null;
 	int type;
+	String area,title;
 	@Override
 	public void parse(ChannelBuffer buffer) {
 		
@@ -46,7 +47,7 @@ public class CreatePKResultMessageReceive2002 extends SocketMessageReceived {
 				int arealength = buffer.readShort();
 				byte areaBytes[] = new byte[arealength];
 				buffer.readBytes(areaBytes);
-				String area = new String(areaBytes,"utf-8");
+				area = new String(areaBytes,"utf-8");
 				int maplength = buffer.readShort();
 				byte mapBytes[] = new byte[maplength];
 				buffer.readBytes(mapBytes);
@@ -55,7 +56,7 @@ public class CreatePKResultMessageReceive2002 extends SocketMessageReceived {
 				int titlelength = buffer.readShort();
 				byte titleBytes[] = new byte[titlelength];
 				buffer.readBytes(titleBytes);
-				String title = new String(titleBytes, "utf-8");
+				title = new String(titleBytes, "utf-8");
 				
 				int deslength = buffer.readShort();
 				byte desBytes[] = new byte[deslength];
@@ -69,7 +70,6 @@ public class CreatePKResultMessageReceive2002 extends SocketMessageReceived {
 				
 				long sql_id = buffer.readLong();
 				PK pk=new PK(name,title, area, map,des, type, point,sql_id);
-				System.out.println(pk.toString());
 				PKManager.getInstance().add(pk);
 				PKUser.sql_id=sql_id;
 				
@@ -83,7 +83,7 @@ public class CreatePKResultMessageReceive2002 extends SocketMessageReceived {
 				public void run() {
 					KingMain kingMain=(KingMain) JfaceWindowManager.getCurWindow();
 					kingMain.RefreshTable();
-					kingMain.PKCreateSuccess(name,type);
+					kingMain.PKCreateSuccess(name,type,area,title);
 				}
 			});
 		
