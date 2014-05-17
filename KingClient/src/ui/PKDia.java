@@ -208,9 +208,7 @@ public class PKDia extends Dialog {
 	public void httpPostFightAdd() {
 		
 		CloseableHttpClient httpClient = HttpClients.createDefault();
-		HttpPost httpPost = new HttpPost(
-				
-				"http://www.woowgo.com/yxlm/member/fight_add.php");
+		HttpPost httpPost = new HttpPost("http://www.hexcm.com/yxlm/member/fight_add.php");
 
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("action", "dopost"));

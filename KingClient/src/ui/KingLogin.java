@@ -172,7 +172,7 @@ public class KingLogin extends ApplicationWindow {
 					mb.open();
 					return;
 				}
-				name = combo.getText();
+				
 				httpPost();
 
 				// Display.getDefault().asyncExec(new Runnable() {
@@ -280,7 +280,7 @@ public class KingLogin extends ApplicationWindow {
 	public void httpPost() {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(
-				"http://www.woowgo.com/yxlm/member/index_do.php?fmdo=login&dopost=login");
+				"http://www.hexcm.com/yxlm/member/index_do.php?fmdo=login&dopost=login");
 
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("userid", combo.getText()));
@@ -318,6 +318,7 @@ public class KingLogin extends ApplicationWindow {
 					}
 				    out.close();
 					PKUser.uid = Integer.parseInt((String) obj.get("uid"));
+					name=obj.getString("uname");
 //					JfaceWindowManager.getCurWindow().close();
 					Display.getCurrent().dispose();
 					KingMain kingMain = new KingMain();

@@ -40,12 +40,12 @@ public class KingMain extends ApplicationWindow {
 	private Table table;
 
 	private Button btn_create_tz;
-	private Image image[] = new Image[5];
-	private TabItem tabItem[] = new TabItem[5];
-	private String tabItemText[] = { "首页", "个人设置", "挑战记录", "充值管理", "礼品兑换" };
-	private String urlText[] = { "http://woowgo.com/yxlm/setting.html",
-			"http://woowgo.com/yxlm/lszj.html",
-			"http://woowgo.com/yxlm/cz.html", "http://woowgo.com/yxlm/dj.html" };
+	private Image image[] = new Image[6];
+	private TabItem tabItem[] = new TabItem[6];
+	private String tabItemText[] = { "首页","对战信息","个人设置", "挑战记录", "充值管理", "礼品兑换" };
+	private String urlText[] = {"http://www.hexcm.com/yxlm/home.php","http://www.hexcm.com/yxlm/setting.php", "http://www.hexcm.com/yxlm/setting.php",
+			"http://www.hexcm.com/yxlm/lszj.php",
+			"http://www.hexcm.com/yxlm/cz.php", "http://www.hexcm.com/yxlm/dj.php" };
 
 	private Image image_join_tz, image_join_yz, image_create_tz, image_query,
 			image_table_bg;
@@ -59,9 +59,8 @@ public class KingMain extends ApplicationWindow {
 		setWindowManager(JfaceWindowManager.wm);
 		createActions();
 		// addStatusLine();
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 6; i++) {
 			image[i] = new Image(Display.getDefault(), "tab" + i + ".png");
-			;
 		}
 		image_join_tz = new Image(Display.getDefault(), "join_tz.jpg");
 		image_join_yz = new Image(Display.getDefault(), "join_yz.jpg");
@@ -133,16 +132,16 @@ public class KingMain extends ApplicationWindow {
 		tabFolder.setBounds(10, 0, 881, 649);
 		// Create each tab and set its text, tool tip text,
 		// image, and control
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 6; i++) {
 			tabItem[i] = new TabItem(tabFolder, SWT.NONE);
 			tabItem[i].setText(tabItemText[i]);
 			tabItem[i].setToolTipText("提示文本");
 			tabItem[i].setImage(image[i]);
-			if (i == 0) {
+			if (i == 1) {
 				tabItem[i].setControl(getTabControlOne(tabFolder));
 			} else {
 				tabItem[i].setControl(getTabContrlOther(tabFolder,
-						urlText[i - 1]));
+						urlText[i]+"?uid="+PKUser.uid));
 			}
 		}
 
@@ -321,7 +320,7 @@ public class KingMain extends ApplicationWindow {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("\u6211\u662F\u738B\u8005" + "----用户:"
+		newShell.setText("\u6211\u662F\u738B\u8005" + "----游戏角色名:"
 				+ KingLogin.name);
 
 	}
