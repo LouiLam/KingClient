@@ -41,7 +41,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.json.JSONObject;
 
 public class KingLogin extends ApplicationWindow {
-	public static String name;
+	public static String id, roleName;
 	Image image, image_reg, image_login;
 	Button btn_isAutoSave;
 	String autoSave="0";
@@ -295,10 +295,10 @@ public class KingLogin extends ApplicationWindow {
 				System.out.println(entity);
 				JSONObject obj = new JSONObject(entity);
 				int value = Integer.parseInt(obj.get("value") + "");
-				MessageBox mb = new MessageBox(KingLogin.this.getShell(),
-						SWT.ICON_INFORMATION | SWT.OK);
-				mb.setMessage(obj.get("msg") + "");
-				mb.open();
+//				MessageBox mb = new MessageBox(KingLogin.this.getShell(),
+//						SWT.ICON_INFORMATION | SWT.OK);
+//				mb.setMessage(obj.get("msg") + "");
+//				mb.open();
 				if (value == 1) {
 					// 登录成功就写入帐号信息
 				    PrintWriter out =WriteFile. openWriter("account.txt");
@@ -318,7 +318,8 @@ public class KingLogin extends ApplicationWindow {
 					}
 				    out.close();
 					PKUser.uid = Integer.parseInt((String) obj.get("uid"));
-					name=obj.getString("uname");
+//					id=obj.getString("uname");
+					id=combo.getText();
 //					JfaceWindowManager.getCurWindow().close();
 					Display.getCurrent().dispose();
 					KingMain kingMain = new KingMain();

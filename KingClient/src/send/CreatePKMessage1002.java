@@ -21,8 +21,10 @@ public class CreatePKMessage1002 extends SocketMessageToSend {
 		ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
 		cb.writeShort(1002);
 		try {
-			cb.writeShort(URLEncoder.encode(pk.name,"UTF-8").getBytes().length);
-			cb.writeBytes(URLEncoder.encode(pk.name,"UTF-8").getBytes());
+			cb.writeShort(URLEncoder.encode(pk.id,"UTF-8").getBytes().length);
+			cb.writeBytes(URLEncoder.encode(pk.id,"UTF-8").getBytes());
+			cb.writeShort(URLEncoder.encode(pk.roleName,"UTF-8").getBytes().length);
+			cb.writeBytes(URLEncoder.encode(pk.roleName,"UTF-8").getBytes());
 			cb.writeShort(URLEncoder.encode(pk.area,"UTF-8").getBytes().length);
 			cb.writeBytes(URLEncoder.encode(pk.area,"UTF-8").getBytes());
 			cb.writeShort(URLEncoder.encode(pk.map,"UTF-8").getBytes().length);

@@ -27,10 +27,10 @@ public class GameClient {
 
     public static final int LOGIN_PROT = 4322;
 
-    public static String GAME_IP="113.10.242.132";
+//    public static String GAME_IP="113.10.242.132";
 //    public static String GAME_IP="louislam0714.xicp.net";
 
-//    public static String GAME_IP="192.168.1.100";
+    public static String GAME_IP="192.168.1.101";
 //    public static String GAME_IP="192.168.1.9";
     
     public static int GAME_PORT=4322;
@@ -97,7 +97,7 @@ public class GameClient {
 //                    cf.getChannel().setAttachment(new NetCommun());
                     channelList.add(cf.getChannel());
                     gameChannel = cf.getChannel();
-                    sendMessage(cf.getChannel(), new LoginMessage1001(KingLogin.name));
+                    sendMessage(cf.getChannel(), new LoginMessage1001(KingLogin.id));
 //                    sendMessage(cf.getChannel(), new Send1_2GRLoginByUserIDMessage());
                 }
             }

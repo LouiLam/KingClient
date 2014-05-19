@@ -5,18 +5,19 @@ public class PKUser {
 	public static long sql_id=-1;
 	public static int type=-1;
 	public static int uid=-1;
-public String name;
+public String id,roleName;
 public int camp;//阵营 1发起 2应战
 public int seatID;//座位号0~4
-public PKUser(String name, int camp, int seatID) {
+public PKUser(String id, String roleName,int camp, int seatID) {
 	super();
-	this.name = name;
+	this.id = id;
+	this.roleName=roleName;
 	this.camp = camp;
 	this.seatID = seatID;
 }
 @Override
 public String toString() {
 	// TODO Auto-generated method stub
-	return "name:"+name+",camp:"+camp+",seatID"+seatID;
+	return "id:"+id+"roleName:"+roleName+",camp:"+camp+",seatID"+seatID;
 }
 }

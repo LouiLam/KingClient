@@ -36,20 +36,21 @@ import send.CreatePKMessage1002;
 
 import com.zjd.universal.net.GameClient;
 
-public class PKDia extends Dialog {
+public class CrateDiaRoleName extends Dialog {
 	private Text title;
 	private Combo area;
 	private Combo map;
 	private Combo point;
 	private Combo type;
 	private Text des;
+	private Text roleName;
 
 	/**
 	 * Create the dialog.
 	 * 
 	 * @param parentShell
 	 */
-	public PKDia(Shell parentShell) {
+	public CrateDiaRoleName(Shell parentShell) {
 		super(parentShell);
 		setWindowManager(JfaceWindowManager.wm);
 	}
@@ -160,6 +161,15 @@ public class PKDia extends Dialog {
 		des = new Text(container, SWT.BORDER);
 		des.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		des.setTextLimit(100);
+		new Label(container, SWT.NONE);
+		
+		Label label = new Label(container, SWT.NONE);
+		label.setText("游戏角色名");
+		new Label(container, SWT.NONE);
+		
+		roleName = new Text(container, SWT.BORDER);
+		roleName.setTextLimit(50);
+		roleName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		return container;
 	}
 
@@ -175,21 +185,22 @@ public class PKDia extends Dialog {
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (title.getText() == null || title.getText().length() == 0
-						|| des.getText() == null || des.getText().length() == 0) {
-					MessageBox mb = new MessageBox(PKDia.this.getParentShell(),
+				if (title.getText() == null || title.getText().trim().length() == 0
+						|| des.getText() == null || des.getText().trim().length() == 0||roleName.getText()==null||roleName.getText().trim().length()==0) {
+					MessageBox mb = new MessageBox(CrateDiaRoleName.this.getParentShell(),
 							SWT.ICON_INFORMATION | SWT.OK);
 					mb.setMessage("填写字段不能为空");
 					mb.open();
 					return;
 				}
+				KingLogin.roleName=roleName.getText();
 //				httpPostFightAdd();
-				PK pk = new PK(KingLogin.name, title.getText(), area.getText(),
+				PK pk = new PK( KingLogin.id,KingLogin.roleName,title.getText(), area.getText(),
 						map.getText(),des.getText(),type.getSelectionIndex() +1,
 						Integer.parseInt(point.getText()),-1);
 				GameClient.getInstance().sendMessageToGameServer(
 						new CreatePKMessage1002(pk));
-				PKDia.this.close();
+				CrateDiaRoleName.this.close();
 			}
 		});
 		button.setText("确定");
@@ -203,7 +214,7 @@ public class PKDia extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 300);
+		return new Point(537, 396);
 	}
 	public void httpPostFightAdd() {
 		
@@ -227,14 +238,14 @@ public class PKDia extends Dialog {
 			if (httppHttpResponse2.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				String entity = EntityUtils.toString(httppHttpResponse2
 						.getEntity());
-				MessageBox mb = new MessageBox(PKDia.this.getParentShell(),
+				MessageBox mb = new MessageBox(CrateDiaRoleName.this.getParentShell(),
 						SWT.ICON_INFORMATION | SWT.OK);
 				mb.setMessage(entity);
 				mb.open();
 			}
 			else
 			{
-				MessageBox mb = new MessageBox(PKDia.this.getParentShell(),
+				MessageBox mb = new MessageBox(CrateDiaRoleName.this.getParentShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
 				mb.setMessage("error!StatusCode:"+httppHttpResponse2.getStatusLine().getStatusCode());// http״̬�����
 				mb.open();

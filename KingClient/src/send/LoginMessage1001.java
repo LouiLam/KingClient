@@ -7,10 +7,10 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
 public class LoginMessage1001 extends SocketMessageToSend{
-	String name;
- public LoginMessage1001(String name)
+	String id;
+ public LoginMessage1001(String id)
  {
-	 this.name=name;
+	 this.id=id;
  }
 
 	@Override
@@ -19,8 +19,8 @@ public class LoginMessage1001 extends SocketMessageToSend{
 		cb.writeShort(1001);
 		
 		try {
-			cb.writeShort(URLEncoder.encode(name,"UTF-8").getBytes().length);
-			cb.writeBytes(URLEncoder.encode(name,"UTF-8").getBytes());
+			cb.writeShort(URLEncoder.encode(id,"UTF-8").getBytes().length);
+			cb.writeBytes(URLEncoder.encode(id,"UTF-8").getBytes());
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

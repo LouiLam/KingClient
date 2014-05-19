@@ -122,10 +122,10 @@ public abstract class WaitDia extends Dialog {
 		for (int i = 0; i < users.length; i++) {
 			if (users[i] != null) {
 				if (users[i].camp == 1) {
-					faqiName[users[i].seatID].setText(users[i].name);
+					faqiName[users[i].seatID].setText(users[i].roleName);
 					faqi[users[i].seatID].setVisible(true);
 				} else {
-					yingzhanName[users[i].seatID].setText(users[i].name);
+					yingzhanName[users[i].seatID].setText(users[i].roleName);
 					yingzhan[users[i].seatID].setVisible(true);
 				}
 			}

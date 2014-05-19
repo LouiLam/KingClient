@@ -53,7 +53,7 @@ public class CreatePKWaitDia extends WaitDia {
 			}
 		});
 		
-		faqiName[0].setText(KingLogin.name);
+		faqiName[0].setText(KingLogin.roleName);
 		faqi[0].setVisible(true);
 	}
 

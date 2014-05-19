@@ -32,20 +32,22 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import send.JoinPKMessage1003;
-
 import com.zjd.universal.net.GameClient;
 
 public class KingMain extends ApplicationWindow {
 	private Table table;
 
 	private Button btn_create_tz;
-	private Image image[] = new Image[6];
-	private TabItem tabItem[] = new TabItem[6];
-	private String tabItemText[] = { "首页","对战信息","个人设置", "挑战记录", "充值管理", "礼品兑换" };
-	private String urlText[] = {"http://www.hexcm.com/yxlm/home.php","http://www.hexcm.com/yxlm/setting.php", "http://www.hexcm.com/yxlm/setting.php",
+	private Image image[] = new Image[5];
+	private TabItem tabItem[] = new TabItem[5];
+	private String tabItemText[] = { "对战信息", "个人设置", "挑战记录", "充值管理",
+			"礼品兑换" };
+	private String urlText[] = { 
+			"http://www.hexcm.com/yxlm/setting.php",
+			"http://www.hexcm.com/yxlm/setting.php",
 			"http://www.hexcm.com/yxlm/lszj.php",
-			"http://www.hexcm.com/yxlm/cz.php", "http://www.hexcm.com/yxlm/dj.php" };
+			"http://www.hexcm.com/yxlm/cz.php",
+			"http://www.hexcm.com/yxlm/dj.php" };
 
 	private Image image_join_tz, image_join_yz, image_create_tz, image_query,
 			image_table_bg;
@@ -59,7 +61,7 @@ public class KingMain extends ApplicationWindow {
 		setWindowManager(JfaceWindowManager.wm);
 		createActions();
 		// addStatusLine();
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < 5; i++) {
 			image[i] = new Image(Display.getDefault(), "tab" + i + ".png");
 		}
 		image_join_tz = new Image(Display.getDefault(), "join_tz.jpg");
@@ -70,8 +72,8 @@ public class KingMain extends ApplicationWindow {
 		setShellStyle(SWT.CLOSE | SWT.TITLE);
 	}
 
-	public void PKCreateSuccess(String name, int type, String area, String title) {
-		if (name.equals(KingLogin.name)) {
+	public void PKCreateSuccess(String id, int type, String area, String title) {
+		if (id.equals(KingLogin.id)) {
 			PKUser.type = type;
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
@@ -87,9 +89,9 @@ public class KingMain extends ApplicationWindow {
 		}
 	}
 
-	public void PKJoinSuccess(String name, int type, PKUser users[],
-			String area, String title) {
-		if (name.equals(KingLogin.name)) {
+	public void PKJoinSuccess(String roleName, int type, PKUser users[], String area,
+			String title) {
+		if (roleName.equals(KingLogin.roleName)) {
 			PKUser.type = type;
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
@@ -132,16 +134,16 @@ public class KingMain extends ApplicationWindow {
 		tabFolder.setBounds(10, 0, 881, 649);
 		// Create each tab and set its text, tool tip text,
 		// image, and control
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < 5; i++) {
 			tabItem[i] = new TabItem(tabFolder, SWT.NONE);
 			tabItem[i].setText(tabItemText[i]);
 			tabItem[i].setToolTipText("提示文本");
 			tabItem[i].setImage(image[i]);
-			if (i == 1) {
+			if (i == 0) {
 				tabItem[i].setControl(getTabControlOne(tabFolder));
 			} else {
-				tabItem[i].setControl(getTabContrlOther(tabFolder,
-						urlText[i]+"?uid="+PKUser.uid));
+				tabItem[i].setControl(getTabContrlOther(tabFolder, urlText[i]
+						+ "?uid=" + PKUser.uid));
 			}
 		}
 
@@ -190,7 +192,7 @@ public class KingMain extends ApplicationWindow {
 		table = new Table(container, SWT.BORDER | SWT.MULTI);
 		table.setLinesVisible(false);
 		table.setHeaderVisible(true);
-		table.setBounds(10, 64, 900, 500);
+		table.setBounds(10, 64, 1090, 500);
 		table.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 		TableColumn column = new TableColumn(table, SWT.NONE);
 		column.setWidth(100);
@@ -210,6 +212,9 @@ public class KingMain extends ApplicationWindow {
 		column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(100);
 		column.setText("挑战点");
+		column = new TableColumn(table, SWT.CENTER);
+		column.setWidth(200);
+		column.setText("当前人数（挑-应）");
 		column = new TableColumn(table, SWT.CENTER);// 挑战方
 		column.setWidth(108);
 		column.setText("挑战方");
@@ -220,7 +225,8 @@ public class KingMain extends ApplicationWindow {
 		btn_create_tz.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				PKDia pkDia = new PKDia(KingMain.this.getShell());
+				CrateDiaRoleName pkDia = new CrateDiaRoleName(KingMain.this
+						.getShell());
 				pkDia.open();
 			}
 		});
@@ -320,8 +326,7 @@ public class KingMain extends ApplicationWindow {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("\u6211\u662F\u738B\u8005" + "----游戏角色名:"
-				+ KingLogin.name);
+		newShell.setText("\u6211\u662F\u738B\u8005" + "----id:" + KingLogin.id);
 
 	}
 
@@ -330,7 +335,7 @@ public class KingMain extends ApplicationWindow {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(1024, 768);
+		return new Point(1200, 768);
 	}
 
 	public void PopErrorCreateMessage() {
@@ -340,8 +345,8 @@ public class KingMain extends ApplicationWindow {
 		mb.open();
 	}
 
-	public void PopErrorJoinMessage(String name) {
-		if (name.equals(KingLogin.name)) {
+	public void PopErrorJoinMessage(String roleName) {
+		if (roleName.equals(KingLogin.roleName)) {
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("加入房间房间失败,阵营人数已满，或房间无效");//
@@ -381,7 +386,7 @@ public class KingMain extends ApplicationWindow {
 			State.CurState = State.STATE_GAME_START;
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
-			if (name.equals(KingLogin.name)) {
+			if (name.equals(KingLogin.roleName)) {
 				mb.setMessage("现在你有操作权限可以结束游戏了");
 				if (JfaceWindowManager.getCurWindow() instanceof CreatePKWaitDia) {
 					CreatePKWaitDia dia = (CreatePKWaitDia) JfaceWindowManager
@@ -458,13 +463,13 @@ public class KingMain extends ApplicationWindow {
 
 			TableEditor editor = new TableEditor(table);
 			Label textName = new Label(table, SWT.CENTER);
-			textName.setText(PKManager.getInstance().getPKByIndex(i).name);
+			textName.setText(PKManager.getInstance().getPKByIndex(i).id);
 			// text.setEditable(false);
 			// text.setBackground(table.getBackground());
 			textName.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
 			editor.setEditor(textName, items[i], 0);
-			textName.setToolTipText(PKManager.getInstance().getPKByIndex(i).name);
+			textName.setToolTipText(PKManager.getInstance().getPKByIndex(i).id);
 			listControl.add(textName);
 
 			editor = new TableEditor(table);
@@ -519,6 +524,19 @@ public class KingMain extends ApplicationWindow {
 			listControl.add(textPoint);
 
 			editor = new TableEditor(table);
+			Label textCurNum = new Label(table, SWT.CENTER);
+			textCurNum.setText(PKManager.getInstance().getPKByIndex(i).point
+					+ "");
+			textCurNum.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			editor.grabHorizontal = true;
+			editor.setEditor(textCurNum, items[i], 6);
+			textCurNum
+					.setToolTipText(PKManager.getInstance().getPKByIndex(i).point
+							+ "");
+			listControl.add(textCurNum);
+			
+			
+			editor = new TableEditor(table);
 			Button join_tz = new Button(table, SWT.CENTER);
 			join_tz.setImage(image_join_tz);
 			join_tz.setData(i);
@@ -528,10 +546,9 @@ public class KingMain extends ApplicationWindow {
 				public void widgetSelected(SelectionEvent e) {
 
 					int index = (int) ((Button) e.getSource()).getData();
-					GameClient.getInstance().sendMessageToGameServer(
-							new JoinPKMessage1003(PKManager.getInstance()
-									.getPKByIndex(index).sql_id, 1,
-									KingLogin.name));
+					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
+							.getShell(), index, 1);
+					pkDia.open();
 
 				}
 
@@ -543,7 +560,7 @@ public class KingMain extends ApplicationWindow {
 			editor.minimumWidth = join_tz.getSize().x;
 			editor.minimumHeight = join_tz.getSize().y;
 			editor.grabHorizontal = true;
-			editor.setEditor(join_tz, items[i], 6);
+			editor.setEditor(join_tz, items[i], 7);
 			listControl.add(join_tz);
 
 			editor = new TableEditor(table);
@@ -554,10 +571,9 @@ public class KingMain extends ApplicationWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					int index = (int) ((Button) e.getSource()).getData();
-					GameClient.getInstance().sendMessageToGameServer(
-							new JoinPKMessage1003(PKManager.getInstance()
-									.getPKByIndex(index).sql_id, 2,
-									KingLogin.name));
+					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
+							.getShell(), index, 2);
+					pkDia.open();
 
 				}
 
@@ -569,7 +585,7 @@ public class KingMain extends ApplicationWindow {
 			editor.minimumWidth = join_yz.getSize().x;
 			editor.minimumHeight = join_yz.getSize().y;
 			editor.grabHorizontal = true;
-			editor.setEditor(join_yz, items[i], 7);
+			editor.setEditor(join_yz, items[i], 8);
 			listControl.add(join_yz);
 		}
 

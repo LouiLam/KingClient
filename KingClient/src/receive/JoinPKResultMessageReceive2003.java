@@ -10,7 +10,6 @@ import org.eclipse.swt.widgets.Display;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 
-import ui.KingLogin;
 import ui.KingMain;
 import ui.WaitDia;
 
@@ -19,7 +18,7 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 	// int camp;
 	// int seatID;
 	// int pkNum;
-	String name,title,area;
+	String id, roleName, title, area;
 	PKUser users[] = new PKUser[10];
 	int type;
 	int status;
@@ -30,53 +29,47 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 		status = buffer.readInt();
 
 		type = buffer.readInt();
-		int mynamelength = buffer.readShort();
-		byte mynameBytes[] = new byte[mynamelength];
-		buffer.readBytes(mynameBytes);
+
 		try {
-			name = new String(mynameBytes, "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		int titlelength = buffer.readShort();
-		byte titleBytes[] = new byte[titlelength];
-		buffer.readBytes(titleBytes);
-		try {
+			int idlength = buffer.readShort();
+			byte idBytes[] = new byte[idlength];
+			buffer.readBytes(idBytes);
+			id = new String(idBytes, "utf-8");
+
+			int myRoleNamelength = buffer.readShort();
+			byte myRoleNameBytes[] = new byte[myRoleNamelength];
+			buffer.readBytes(myRoleNameBytes);
+			roleName = new String(myRoleNameBytes, "utf-8");
+
+			int titlelength = buffer.readShort();
+			byte titleBytes[] = new byte[titlelength];
+			buffer.readBytes(titleBytes);
 			title = new String(titleBytes, "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		int arealength = buffer.readShort();
-		byte areaBytes[] = new byte[arealength];
-		buffer.readBytes(areaBytes);
-		try {
+			int arealength = buffer.readShort();
+			byte areaBytes[] = new byte[arealength];
+			buffer.readBytes(areaBytes);
 			area = new String(areaBytes, "utf-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
-		
-		
-		int pkNum = buffer.readShort();
 
+		int pkNum = buffer.readShort();
 		for (int i = 0; i < pkNum; i++) {
-			String name = null;
 			int Camp = buffer.readShort();
 			int seatID = buffer.readShort();
-			int namelength = buffer.readShort();
-			byte nameBytes[] = new byte[namelength];
-			buffer.readBytes(nameBytes);
 			try {
-				name = new String(nameBytes, "utf-8");
+
+				int roleNamelength = buffer.readShort();
+				byte roleNameBytes[] = new byte[roleNamelength];
+				buffer.readBytes(roleNameBytes);
+				String roleName = new String(roleNameBytes, "utf-8");
+				users[i] = new PKUser(null, roleName, Camp, seatID);
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			users[i] = new PKUser(name, Camp, seatID);
+
 		}
 		Display.getDefault().asyncExec(new Runnable() {
 
@@ -88,19 +81,21 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 					if (window instanceof KingMain) {
 						kingMain = (KingMain) window;
 					}
-					if(window instanceof WaitDia)
-					{
-						waitDia= (WaitDia) window;
+					if (window instanceof WaitDia) {
+						waitDia = (WaitDia) window;
 					}
 				}
-				if(kingMain==null){return;}
+				if (kingMain == null) {
+					return;
+				}
 				if (status != 0) // 加入房间失败 房间已满
 				{
-					kingMain.PopErrorJoinMessage(name);
+					kingMain.PopErrorJoinMessage(roleName);
 				} else {
-					kingMain.PKJoinSuccess(name, type,users,area,title);
-					if(waitDia!=null)
-					{waitDia.RefreshLables(users);}
+					kingMain.PKJoinSuccess(roleName, type, users, area, title);
+					if (waitDia != null) {
+						waitDia.RefreshLables(users);
+					}
 
 				}
 

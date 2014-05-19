@@ -14,11 +14,17 @@ public class RoomPKMessageReceive2001 extends SocketMessageReceived {
 	public void parse(ChannelBuffer buffer) {
 
 		try {
-			int namelength = buffer.readShort();
-			byte nameBytes[] = new byte[namelength];
-			buffer.readBytes(nameBytes);
-			String name = new String(nameBytes, "utf-8");
+			int idlength = buffer.readShort();
+			byte idBytes[] = new byte[idlength];
+			buffer.readBytes(idBytes);
+			String id = new String(idBytes, "utf-8");
 
+			
+			int roleNamelength = buffer.readShort();
+			byte roleNameBytes[] = new byte[roleNamelength];
+			buffer.readBytes(roleNameBytes);
+			String roleName = new String(roleNameBytes, "utf-8");
+			
 			int arealength = buffer.readShort();
 			byte areaBytes[] = new byte[arealength];
 			buffer.readBytes(areaBytes);
@@ -43,7 +49,7 @@ public class RoomPKMessageReceive2001 extends SocketMessageReceived {
 			int point = buffer.readInt();
 			// 数据库ID
 			long sql_id = buffer.readLong();
-			PK pk = new PK(name, title, area, map,des, type, point,sql_id);
+			PK pk = new PK(id,roleName, title, area, map,des, type, point,sql_id);
 			PKManager.getInstance().add(pk);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

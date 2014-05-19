@@ -67,7 +67,7 @@ public class TestDemo extends ApplicationWindow {
 	}
 
 	public void PKCreateSuccess(String name, int type) {
-		if (name.equals(KingLogin.name)) {
+		if (name.equals(KingLogin.id)) {
 			PKUser.type = type;
 			MessageBox mb = new MessageBox(TestDemo.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
@@ -79,7 +79,7 @@ public class TestDemo extends ApplicationWindow {
 			}
 			
 			btn_create_tz.setEnabled(false);
-			faqi[0].setText(KingLogin.name);
+			faqi[0].setText(KingLogin.id);
 			for (int i = 0; i < PKUser.type; i++) {
 				faqi[i].setVisible(true);
 				yingzhan[i].setVisible(true);
@@ -88,7 +88,7 @@ public class TestDemo extends ApplicationWindow {
 	}
 
 	public void PKJoinSuccess(String name, int type) {
-		if (name.equals(KingLogin.name)) {
+		if (name.equals(KingLogin.id)) {
 			PKUser.type = type;
 			MessageBox mb = new MessageBox(TestDemo.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
@@ -131,7 +131,7 @@ public class TestDemo extends ApplicationWindow {
 		btn_create_tz.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				PKDia pkDia = new PKDia(TestDemo.this.getShell());
+				CrateDiaRoleName pkDia = new CrateDiaRoleName(TestDemo.this.getShell());
 				pkDia.open();
 			}
 		});
@@ -315,7 +315,7 @@ public class TestDemo extends ApplicationWindow {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("\u6211\u662F\u738B\u8005"+"----用户:"+KingLogin.name);
+		newShell.setText("\u6211\u662F\u738B\u8005"+"----用户:"+KingLogin.id);
 		
 	}
 
@@ -331,9 +331,9 @@ public class TestDemo extends ApplicationWindow {
 		for (int i = 0; i < users.length; i++) {
 			if (users[i] != null) {
 				if (users[i].camp == 1) {
-					faqi[users[i].seatID].setText(users[i].name);
+					faqi[users[i].seatID].setText(users[i].id);
 				} else {
-					yingzhan[users[i].seatID].setText(users[i].name);
+					yingzhan[users[i].seatID].setText(users[i].id);
 				}
 			}
 		}
@@ -356,7 +356,7 @@ public class TestDemo extends ApplicationWindow {
 	}
 
 	public void PopErrorJoinMessage(String name) {
-		if (name.equals(KingLogin.name)) {
+		if (name.equals(KingLogin.id)) {
 			MessageBox mb = new MessageBox(TestDemo.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("加入房间房间失败,阵营人数已满，或房间无效");//
@@ -378,7 +378,7 @@ public class TestDemo extends ApplicationWindow {
 			
 			MessageBox mb = new MessageBox(TestDemo.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
-			if(name.equals(KingLogin.name))
+			if(name.equals(KingLogin.id))
 		{mb.setMessage("现在你有操作权限可以结束游戏了");
 		btn_end_game.setEnabled(true);
 		}
@@ -465,7 +465,7 @@ public class TestDemo extends ApplicationWindow {
 
 					int index = (int) ((Button) e.getSource()).getData();
 					GameClient.getInstance().sendMessageToGameServer(
-							new JoinPKMessage1003(index, 1, KingLogin.name));
+							new JoinPKMessage1003(index, 1,KingLogin.id, KingLogin.roleName));
 
 				}
 
@@ -491,7 +491,7 @@ public class TestDemo extends ApplicationWindow {
 				public void widgetSelected(SelectionEvent e) {
 					int index = (int) ((Button) e.getSource()).getData();
 					GameClient.getInstance().sendMessageToGameServer(
-							new JoinPKMessage1003(index, 2, KingLogin.name));
+							new JoinPKMessage1003(index, 2, KingLogin.id, KingLogin.roleName));
 
 				}
 
