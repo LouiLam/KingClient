@@ -4,13 +4,15 @@ package com.zjd.universal.net;
 import receive.CanStartGamePKMessageReceive2005;
 import receive.CreatePKResultMessageReceive2002;
 import receive.EndGamePKResultMessageReceive2007;
+import receive.ForceLeavePKResultMessageReceive2012;
 import receive.HostLeavePKResultMessageRecevie2009;
 import receive.JoinPKResultMessageReceive2003;
-import receive.LeavePKResultMessageRecevie2004;
+import receive.CrashLeavePKResultMessageRecevie2004;
 import receive.NoCanStartGamePKMessageReceive2010;
 import receive.NormalLeavePKResultMessageRecevie2011;
+import receive.RoomPKBeginMessageReceive2013;
 import receive.RoomPKMessageReceive2001;
-import receive.RoomPKMessageReceive2008;
+import receive.RoomPKFinishMessageReceive2008;
 import receive.SocketMessageReceived;
 import receive.StartGamePKResultMessageReceive2006;
 
@@ -27,7 +29,7 @@ public class GameServerMessageFactory {
 		case 2003:
 			return new JoinPKResultMessageReceive2003();
 		case 2004:
-			return new LeavePKResultMessageRecevie2004();
+			return new CrashLeavePKResultMessageRecevie2004();
 		case 2005:
 			return new CanStartGamePKMessageReceive2005();
 		case 2006:
@@ -35,13 +37,18 @@ public class GameServerMessageFactory {
 		case 2007:
 			return new EndGamePKResultMessageReceive2007();
 		case 2008:
-			return new RoomPKMessageReceive2008();
+			return new RoomPKFinishMessageReceive2008();
 		case 2009:
 			return new HostLeavePKResultMessageRecevie2009();
 		case 2010:
 			return new NoCanStartGamePKMessageReceive2010();
 		case 2011:
 			return new NormalLeavePKResultMessageRecevie2011();
+		case 2012:
+			return new ForceLeavePKResultMessageReceive2012();
+		case 2013:
+			return new RoomPKBeginMessageReceive2013();
+			
 		default:
 			break;
 		}

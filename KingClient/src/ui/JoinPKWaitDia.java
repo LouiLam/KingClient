@@ -11,8 +11,8 @@ public class JoinPKWaitDia extends WaitDia {
 //		super(parentShell,300);
 //		// TODO Auto-generated constructor stub
 //	}
-	public JoinPKWaitDia(Shell parentShell,PKUser users[],int type,String area,String title) {
-		super(parentShell, users,300,type,area,title);
+	public JoinPKWaitDia(Shell parentShell,PKUser users[],int type,String area,String title,int point) {
+		super(parentShell, users,60*5,type,area,title,point);
 		// TODO Auto-generated constructor stub
 	}
 	@Override

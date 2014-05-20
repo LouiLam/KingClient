@@ -3,6 +3,7 @@ package ui;
 import java.util.ArrayList;
 
 import object.JfaceWindowManager;
+import object.PK;
 import object.PKManager;
 import object.PKUser;
 import object.State;
@@ -72,7 +73,7 @@ public class KingMain extends ApplicationWindow {
 		setShellStyle(SWT.CLOSE | SWT.TITLE);
 	}
 
-	public void PKCreateSuccess(String id, int type, String area, String title) {
+	public void PKCreateSuccess(String id, int type, String area, String title,int point) {
 		if (id.equals(KingLogin.id)) {
 			PKUser.type = type;
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
@@ -84,13 +85,13 @@ public class KingMain extends ApplicationWindow {
 			btn_create_tz.setEnabled(false);
 
 			CreatePKWaitDia waitDia = new CreatePKWaitDia(getShell(), type,
-					area, title);
+					area, title,point);
 			waitDia.open();
 		}
 	}
 
 	public void PKJoinSuccess(String roleName, int type, PKUser users[], String area,
-			String title) {
+			String title,int point) {
 		if (roleName.equals(KingLogin.roleName)) {
 			PKUser.type = type;
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
@@ -100,7 +101,7 @@ public class KingMain extends ApplicationWindow {
 			tableDisable();
 			btn_create_tz.setEnabled(false);
 			JoinPKWaitDia waitDia = new JoinPKWaitDia(getShell(), users, type,
-					area, title);
+					area, title,point);
 			waitDia.open();
 		}
 	}
@@ -415,7 +416,7 @@ public class KingMain extends ApplicationWindow {
 			mb.open();
 			if (JfaceWindowManager.getCurWindow() instanceof WaitDia) {
 				WaitDia dia = (WaitDia) JfaceWindowManager.getCurWindow();
-				dia.close();
+				dia.myClose();
 			}
 			if (JfaceWindowManager.getCurWindow() instanceof WaitDia) {
 				WaitDia waitDia = (WaitDia) JfaceWindowManager.getCurWindow();
@@ -434,12 +435,13 @@ public class KingMain extends ApplicationWindow {
 	}
 
 	// 房主退出
-	public void HostLeave() {
-		tableEnable();
+	public void HostLeave(String id) {
+		if(!id.equals(KingLogin.id))//自己是房主 不需要弹出此对话框
+		{tableEnable();
 		MessageBox mb = new MessageBox(KingMain.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
 		mb.setMessage("房主异常退出，挑战解散");//
-		mb.open();
+		mb.open();}
 
 	}
 
@@ -460,79 +462,79 @@ public class KingMain extends ApplicationWindow {
 		}
 		TableItem[] items = table.getItems();
 		for (int i = 0; i < items.length; i++) {
-
+				PK pk=PKManager.getInstance().getPKByIndex(i);
 			TableEditor editor = new TableEditor(table);
 			Label textName = new Label(table, SWT.CENTER);
-			textName.setText(PKManager.getInstance().getPKByIndex(i).id);
+			textName.setText(pk.id);
 			// text.setEditable(false);
 			// text.setBackground(table.getBackground());
 			textName.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
 			editor.setEditor(textName, items[i], 0);
-			textName.setToolTipText(PKManager.getInstance().getPKByIndex(i).id);
+			textName.setToolTipText(pk.id);
 			listControl.add(textName);
 
 			editor = new TableEditor(table);
 			Label textTitle = new Label(table, SWT.CENTER);
-			textTitle.setText(PKManager.getInstance().getPKByIndex(i).title);
+			textTitle.setText(pk.title);
 			textTitle.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
 			editor.setEditor(textTitle, items[i], 1);
 			textTitle
-					.setToolTipText(PKManager.getInstance().getPKByIndex(i).title);
+					.setToolTipText(pk.title);
 			listControl.add(textTitle);
 
 			editor = new TableEditor(table);
 			Label textArea = new Label(table, SWT.CENTER);
-			textArea.setText(PKManager.getInstance().getPKByIndex(i).area);
+			textArea.setText(pk.area);
 			textArea.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
 			editor.setEditor(textArea, items[i], 2);
-			textArea.setToolTipText(PKManager.getInstance().getPKByIndex(i).area);
+			textArea.setToolTipText(pk.area);
 			listControl.add(textArea);
 
 			editor = new TableEditor(table);
 			Label textMap = new Label(table, SWT.CENTER);
-			textMap.setText(PKManager.getInstance().getPKByIndex(i).map);
+			textMap.setText(pk.map);
 			textMap.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
 			editor.setEditor(textMap, items[i], 3);
-			textMap.setToolTipText(PKManager.getInstance().getPKByIndex(i).map);
+			textMap.setToolTipText(pk.map);
 			listControl.add(textMap);
 
 			editor = new TableEditor(table);
 			Label textType = new Label(table, SWT.CENTER);
 			textType.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			textType.setText(PKManager.getInstance().getPKByIndex(i).type + "v"
-					+ PKManager.getInstance().getPKByIndex(i).type);
+			textType.setText(pk.type + "v"
+					+ pk.type);
 			editor.grabHorizontal = true;
 			editor.setEditor(textType, items[i], 4);
-			textType.setToolTipText(PKManager.getInstance().getPKByIndex(i).type
-					+ "v" + PKManager.getInstance().getPKByIndex(i).type);
+			textType.setToolTipText(pk.type
+					+ "v" + pk.type);
 			listControl.add(textType);
 
 			editor = new TableEditor(table);
 			Label textPoint = new Label(table, SWT.CENTER);
-			textPoint.setText(PKManager.getInstance().getPKByIndex(i).point
+			textPoint.setText(pk.point
 					+ "");
 			textPoint.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
 			editor.setEditor(textPoint, items[i], 5);
 			textPoint
-					.setToolTipText(PKManager.getInstance().getPKByIndex(i).point
+					.setToolTipText(pk.point
 							+ "");
 			listControl.add(textPoint);
 
 			editor = new TableEditor(table);
 			Label textCurNum = new Label(table, SWT.CENTER);
-			textCurNum.setText(PKManager.getInstance().getPKByIndex(i).point
-					+ "");
+			textCurNum.setText(pk.faqiSeatCount+"-"+
+					+ pk.yingzhanSeatCount);
 			textCurNum.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
 			editor.setEditor(textCurNum, items[i], 6);
 			textCurNum
-					.setToolTipText(PKManager.getInstance().getPKByIndex(i).point
-							+ "");
+					.setToolTipText(pk.faqiSeatCount+"-"+
+							+ pk.yingzhanSeatCount);
 			listControl.add(textCurNum);
 			
 			

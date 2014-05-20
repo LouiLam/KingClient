@@ -17,6 +17,8 @@ public class PK {
 	public String curNum;
 	public PKUser[]faqi=new PKUser[5];
 	public PKUser[]yingzhan=new PKUser[5];
+	public int faqiSeatCount = 0;
+	public int yingzhanSeatCount = 0;
 	public PK( String id,String roleName,String title, String area, String map,String des, int type,
 			int point,long sql_id) {
 		super();

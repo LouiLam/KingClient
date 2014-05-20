@@ -22,7 +22,6 @@ public class LoginMessage1001 extends SocketMessageToSend{
 			cb.writeShort(URLEncoder.encode(id,"UTF-8").getBytes().length);
 			cb.writeBytes(URLEncoder.encode(id,"UTF-8").getBytes());
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

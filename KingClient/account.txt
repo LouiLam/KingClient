@@ -1,5 +1,5 @@
 test	test	0
 lgc	123456	1
 lgc2	lgc2	1
-lg2	lg2	1
+lg2	123456	1
 ceshi1	123456	1

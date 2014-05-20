@@ -1,6 +1,7 @@
 package ui;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import object.JfaceWindowManager;
 import object.PKUser;
@@ -21,6 +22,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.json.JSONObject;
 
+import send.ForceLeavePKMessage1007;
 import send.NormalLeavePKMessage1006;
 
 import com.zjd.universal.net.GameClient;
@@ -35,7 +37,7 @@ public abstract class WaitDia extends Dialog {
 	 PKUser users[]=null;
 	 int curTime;
 	 Label time;
-	 int type;
+	 int type,point;
 	 String area;
 	 String title;
 	/**
@@ -44,13 +46,14 @@ public abstract class WaitDia extends Dialog {
 	 * @param parentShell
 	 * @wbp.parser.constructor
 	 */
-	public WaitDia(Shell parentShell,int curTime,int type,String area,String title) {
+	public WaitDia(Shell parentShell,int curTime,int type,String area,String title,int point) {
 		super(parentShell);
 		setWindowManager(JfaceWindowManager.wm);
 		this.curTime=curTime;
 		this.type = type;
 		this.area = area;
 		this.title = title;
+		this.point=point;
 		image_table_bg=new Image(Display.getDefault(),"green.jpg");
 		image_wati_icon=new Image(Display.getDefault(),"wait_icon.png");
 		image_wait_tz=new Image(Display.getDefault(),"wait_tz.png");
@@ -59,7 +62,16 @@ public abstract class WaitDia extends Dialog {
 		
 		
 	}
-	public WaitDia(Shell parentShell,PKUser users[],int curTime,int type,String area,String title) {
+	public void myClose()
+	{
+		if(State.CurState==State.STATE_GAME_EXCEPTION_EXIT)//房主退出的时候，加入者直接关掉定时器
+		{
+		TaskScheduled.clear();
+		State.CurState=State.STATE_GAME_NULL;
+		}
+		this.close();
+	}
+	public WaitDia(Shell parentShell,PKUser users[],int curTime,int type,String area,String title,int point) {
 		super(parentShell);
 		setWindowManager(JfaceWindowManager.wm);
 		this.users=users;
@@ -67,6 +79,7 @@ public abstract class WaitDia extends Dialog {
 		this.type = type;
 		this.area = area;
 		this.title = title;
+		this.point=point;
 		image_table_bg=new Image(Display.getDefault(),"green.jpg");
 		image_wati_icon=new Image(Display.getDefault(),"wait_icon.png");
 		image_wait_tz=new Image(Display.getDefault(),"wait_tz.png");
@@ -77,22 +90,17 @@ public abstract class WaitDia extends Dialog {
 	}
 	@Override
 	protected void handleShellCloseEvent() {
-		if(curTime>1&&State.CurState==State.STATE_GAME_START)
+		if(curTime>1)
 		{
-			MessageBox mb = new MessageBox(getParentShell(),
-					SWT.ICON_INFORMATION | SWT.OK );
-			mb.setMessage("倒计时结束后才能退出挑战");//
-			mb.open();
-		}
-		else
-		{
+			
 			MessageBox mb = new MessageBox(getParentShell(),
 					SWT.ICON_INFORMATION | SWT.OK | SWT.CANCEL);
-			mb.setMessage("确定要关闭吗?");//
-			int rc = mb.open();
+			mb.setMessage("现在还未到游戏可退出时间，如果强行退出，您会被扣除"+point+"积分");//
+			int rc =mb.open();
 			if (rc == SWT.OK) {
 				GameClient.getInstance().sendMessageToGameServer(
-						new NormalLeavePKMessage1006());
+						new ForceLeavePKMessage1007());
+				System.out.println("handleShellCloseEvent发送1007"+KingLogin.id);
 				for (Window window : JfaceWindowManager.wm.getWindows()) {
 					if(window instanceof KingMain)
 						{
@@ -101,11 +109,35 @@ public abstract class WaitDia extends Dialog {
 						main.tableEnable();
 						}
 				}
-				
+				TaskScheduled.clear();
 				
 				super.handleShellCloseEvent();
 			} else if (rc == SWT.CANCEL) {
 				return;
+			}
+		}
+		else
+		{
+			MessageBox mb = new MessageBox(getParentShell(),
+					SWT.ICON_INFORMATION | SWT.OK | SWT.CANCEL);
+			mb.setMessage("确定要关闭吗?");//
+			int rc = mb.open();
+			if (rc == SWT.OK) {
+				System.out.println("handleShellCloseEvent发送1006"+KingLogin.id);
+				GameClient.getInstance().sendMessageToGameServer(
+						new NormalLeavePKMessage1006());
+				for (Window window : JfaceWindowManager.wm.getWindows()) {
+					if(window instanceof KingMain)
+						{
+						KingMain main=(KingMain) window;
+						main.tableEnable();
+						}
+				}
+				
+				TaskScheduled.clear();
+				super.handleShellCloseEvent();
+			} else {
+				
 			}
 		}
 		
@@ -244,6 +276,28 @@ public abstract class WaitDia extends Dialog {
 		typeLabel.setBounds(83, 68, 61, 17);
 		if(users!=null)
 		{RefreshLables(users);}
+		 TaskScheduled.scheduleAtFixedRate(new Runnable() {
+				
+				@Override
+				public void run() {
+					Display.getDefault().asyncExec(new Runnable() {
+						
+						@Override
+						public void run() {
+							showTime();
+//							WaitDia waitDia = null;
+//							for (Window window : JfaceWindowManager.wm.getWindows()) {
+//								if (window instanceof WaitDia) {
+//									waitDia = (WaitDia) window;
+//								}
+//							}
+//							if(waitDia==null){return;}
+//							waitDia.showTime();
+						}
+					});
+					
+				}
+			}, 0, 1, TimeUnit.SECONDS);
 		return container;
 	}
 	public void showTime()

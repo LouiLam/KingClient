@@ -1,6 +1,7 @@
 package ui;
 
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,11 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.StatusLineManager;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -44,28 +49,27 @@ public class KingLogin extends ApplicationWindow {
 	public static String id, roleName;
 	Image image, image_reg, image_login;
 	Button btn_isAutoSave;
-	String autoSave="0";
+	String autoSave = "0";
+	boolean isBreak=true;
+
 	/**
 	 * Create the application window,
 	 */
 	public KingLogin() {
 		super(null);
-//		InetAddress addresses;
-//		try {
-//			addresses = InetAddress.getByName("louislam0714.xicp.net");
-//			GameClient.GAME_IP=addresses.getHostAddress();
-//		System.out.println(GameClient.GAME_IP);
-//		} catch (UnknownHostException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		// InetAddress addresses;
+		// try {
+		// addresses = InetAddress.getByName("louislam0714.xicp.net");
+		// GameClient.GAME_IP=addresses.getHostAddress();
+		// System.out.println(GameClient.GAME_IP);
+		// } catch (UnknownHostException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 		setWindowManager(JfaceWindowManager.wm);
-	
-		
-		
-		
+
 		ReadFile.init();
-		
+
 		image = new Image(Display.getDefault(), "1.jpg");
 		image_reg = new Image(Display.getDefault(), "reg.png");
 		image_login = new Image(Display.getDefault(), "login.png");
@@ -75,6 +79,7 @@ public class KingLogin extends ApplicationWindow {
 		// addMenuBar();
 		// addStatusLine();
 	}
+
 	protected boolean showTopSeperator() {
 		return false;
 	}
@@ -105,18 +110,16 @@ public class KingLogin extends ApplicationWindow {
 		combo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				int index=((Combo)e.getSource()).getSelectionIndex();
-				if(!ReadFile.accounts.get(index).isAutoSave.equals("0"))
-				{
+				int index = ((Combo) e.getSource()).getSelectionIndex();
+				if (!ReadFile.accounts.get(index).isAutoSave.equals("0")) {
 					pwd_text.setText(ReadFile.accounts.get(index).password);
 					btn_isAutoSave.setSelection(true);
-				}
-				else
-				{
+				} else {
 					pwd_text.setText("");
 					btn_isAutoSave.setSelection(false);
 				}
 			}
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				widgetDefaultSelected(e);
@@ -138,12 +141,12 @@ public class KingLogin extends ApplicationWindow {
 		pwd_text.setTextLimit(36);
 		for (Account obj : ReadFile.accounts) {
 			combo.add(obj.id);
-		
+
 		}
-		combo.select(combo.getItemCount()-1);
-		if(!ReadFile.accounts.get(combo.getItemCount()-1).isAutoSave.equals("0"))
-		{
-			pwd_text.setText(ReadFile.accounts.get(combo.getItemCount()-1).password);
+		combo.select(combo.getItemCount() - 1);
+		if (!ReadFile.accounts.get(combo.getItemCount() - 1).isAutoSave
+				.equals("0")) {
+			pwd_text.setText(ReadFile.accounts.get(combo.getItemCount() - 1).password);
 		}
 		Label reg = new Label(container, SWT.FLAT);
 		reg.setImage(image_reg);
@@ -158,7 +161,7 @@ public class KingLogin extends ApplicationWindow {
 		reg.setBounds(10, 218, 138, 37);
 		Label login = new Label(container, SWT.NONE);
 		login.setImage(image_login);
-		
+
 		login.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
@@ -172,42 +175,72 @@ public class KingLogin extends ApplicationWindow {
 					mb.open();
 					return;
 				}
-				
 				httpPost();
-
-				// Display.getDefault().asyncExec(new Runnable() {
-				//
-				// @Override
-				// public void run() {
-				//
-				//
-				// }
-				// });
-
+//				ProgressMonitorDialog dialog = new ProgressMonitorDialog(
+//						getShell());
+//				try {
+//					dialog.run(true, true, new IRunnableWithProgress() {
+//
+//						@Override
+//						public void run(IProgressMonitor monitor)
+//								throws InvocationTargetException,
+//								InterruptedException {
+//						
+//							monitor.beginTask("wait ...", 10);
+//							int i=0;
+//							while (isBreak) {
+//								i++;
+//								Thread.sleep(100);
+//								monitor.worked(1);
+//								if (monitor.isCanceled()) {
+//									throw new InterruptedException();
+//								}
+//								if(i>10)
+//								{
+//								i=0;
+//								monitor.beginTask("wait ...", 10);
+//								}
+//							}
+//							monitor.done();
+//						
+//							
+//						}
+//					});
+//					MessageDialog.openInformation(getShell(), "登录提示",
+//							"登录完成");
+//				} catch (InvocationTargetException s) {
+//					MessageDialog.openError(getShell(), "InvocationTargetException", 
+//							s.getMessage());
+//				} catch (InterruptedException s) {
+//					MessageDialog.openInformation(getShell(), "InterruptedException",
+//							"User cancels it.");
+//				}
+			
 			}
 		});
 		login.setBounds(206, 218, 138, 37);
 
-		 btn_isAutoSave = new Button(container, SWT.CHECK);
-		btn_isAutoSave.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+		btn_isAutoSave = new Button(container, SWT.CHECK);
+		btn_isAutoSave
+				.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 		btn_isAutoSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (btn_isAutoSave.getSelection()) {
 					autoSave = "1";
 				} else {
-					autoSave="0";
+					autoSave = "0";
 				}
 			}
 		});
-		btn_isAutoSave
-				.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		btn_isAutoSave.setForeground(SWTResourceManager
+				.getColor(SWT.COLOR_WHITE));
 		btn_isAutoSave.setBounds(103, 190, 72, 22);
 		btn_isAutoSave.setText("记住密码");
-		if(!ReadFile.accounts.get(combo.getItemCount()-1).isAutoSave.equals("0"))
-		{
+		if (!ReadFile.accounts.get(combo.getItemCount() - 1).isAutoSave
+				.equals("0")) {
 			btn_isAutoSave.setSelection(true);
-			autoSave="1";
+			autoSave = "1";
 		}
 		Label lblNewLabel = new Label(container, SWT.WRAP);
 		lblNewLabel.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
@@ -281,7 +314,6 @@ public class KingLogin extends ApplicationWindow {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(
 				"http://www.hexcm.com/yxlm/member/index_do.php?fmdo=login&dopost=login");
-
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("userid", combo.getText()));
 		nvps.add(new BasicNameValuePair("pwd", pwd_text.getText()));
@@ -295,37 +327,33 @@ public class KingLogin extends ApplicationWindow {
 				System.out.println(entity);
 				JSONObject obj = new JSONObject(entity);
 				int value = Integer.parseInt(obj.get("value") + "");
-//				MessageBox mb = new MessageBox(KingLogin.this.getShell(),
-//						SWT.ICON_INFORMATION | SWT.OK);
-//				mb.setMessage(obj.get("msg") + "");
-//				mb.open();
 				if (value == 1) {
 					// 登录成功就写入帐号信息
-				    PrintWriter out =WriteFile. openWriter("account.txt");
-				    boolean temp=false;
-				    for (Account account : ReadFile.accounts) {
-				    	if(account.id.equals(combo.getText()))
-				    	{
-				    		account.password= pwd_text.getText();
-				    		account.isAutoSave= autoSave;
-				    		temp=true;
-				    	}
+					PrintWriter out = WriteFile.openWriter("account.txt");
+					boolean temp = false;
+					for (Account account : ReadFile.accounts) {
+						if (account.id.equals(combo.getText())) {
+							account.password = pwd_text.getText();
+							account.isAutoSave = autoSave;
+							temp = true;
+						}
 					}
-				    if(!temp)
-				    { ReadFile.accounts.add(new Account( combo.getText(), pwd_text.getText(), autoSave));}
-				    for (Account account : ReadFile.accounts) {
-				    	WriteFile.writeMovie(account, out);
+					if (!temp) {
+						ReadFile.accounts.add(new Account(combo.getText(),
+								pwd_text.getText(), autoSave));
 					}
-				    out.close();
+					for (Account account : ReadFile.accounts) {
+						WriteFile.writeMovie(account, out);
+					}
+					out.close();
 					PKUser.uid = Integer.parseInt((String) obj.get("uid"));
-//					id=obj.getString("uname");
-					id=combo.getText();
-//					JfaceWindowManager.getCurWindow().close();
+					// id=obj.getString("uname");
+					id = combo.getText();
+					// JfaceWindowManager.getCurWindow().close();
 					Display.getCurrent().dispose();
 					KingMain kingMain = new KingMain();
 					kingMain.setBlockOnOpen(true);
 					kingMain.open();
-					
 				}
 
 			} else {
@@ -335,6 +363,7 @@ public class KingLogin extends ApplicationWindow {
 						+ httppHttpResponse2.getStatusLine().getStatusCode());// http״̬�����
 				mb.open();
 			}
+			
 			httppHttpResponse2.close();
 			httpClient.close();
 		} catch (Exception e) {

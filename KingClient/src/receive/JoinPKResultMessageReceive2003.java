@@ -3,6 +3,8 @@ package receive;
 import java.io.UnsupportedEncodingException;
 
 import object.JfaceWindowManager;
+import object.PK;
+import object.PKManager;
 import object.PKUser;
 
 import org.eclipse.jface.window.Window;
@@ -21,15 +23,22 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 	String id, roleName, title, area;
 	PKUser users[] = new PKUser[10];
 	int type;
-	int status;
-
+	int status, point;
+	int faqiSeatCount, yingzhanSeatCount;
+	long sql_id;
 	@Override
 	public void parse(ChannelBuffer buffer) {
 
 		status = buffer.readInt();
 
 		type = buffer.readInt();
-
+		point = buffer.readInt();
+		faqiSeatCount = buffer.readInt();
+		yingzhanSeatCount = buffer.readInt();
+		sql_id= buffer.readLong();
+		PK pk=PKManager.getInstance().getPKBySQLID(sql_id);
+		pk.faqiSeatCount=faqiSeatCount;
+		pk.yingzhanSeatCount=yingzhanSeatCount;
 		try {
 			int idlength = buffer.readShort();
 			byte idBytes[] = new byte[idlength];
@@ -92,7 +101,9 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 				{
 					kingMain.PopErrorJoinMessage(roleName);
 				} else {
-					kingMain.PKJoinSuccess(roleName, type, users, area, title);
+					kingMain.RefreshTable();
+					kingMain.PKJoinSuccess(roleName, type, users, area, title,
+							point);
 					if (waitDia != null) {
 						waitDia.RefreshLables(users);
 					}

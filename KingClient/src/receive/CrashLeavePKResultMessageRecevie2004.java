@@ -1,25 +1,29 @@
 package receive;
 
 import object.JfaceWindowManager;
+import object.PK;
+import object.PKManager;
 
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 
+import ui.KingMain;
 import ui.WaitDia;
 
 /**
- * 离开房间
+ * 客户端崩溃，或者强行关闭程序离开房间
  * 
  * @author Administrator
  * 
  */
-public class LeavePKResultMessageRecevie2004 extends SocketMessageReceived {
+public class CrashLeavePKResultMessageRecevie2004 extends SocketMessageReceived {
 
 	int camp;
 	int seatID;
 	String name;
-
+	long sql_id;
 	// public LeavePKResultMessageRecevie2004(String name, int camp, int seatID)
 	// {
 	// this.seatID = seatID;
@@ -48,6 +52,16 @@ public class LeavePKResultMessageRecevie2004 extends SocketMessageReceived {
 	public void parse(ChannelBuffer buffer) {
 		camp = buffer.readShort();
 		seatID = buffer.readShort();
+		 sql_id=buffer.readLong();
+		PK pk=PKManager.getInstance().getPKBySQLID(sql_id);
+		if(camp==1)
+		{
+			pk.faqiSeatCount--;
+		}
+		else
+		{
+			pk.yingzhanSeatCount--;
+		}
 	}
 
 	@Override
@@ -56,9 +70,21 @@ public class LeavePKResultMessageRecevie2004 extends SocketMessageReceived {
 
 			@Override
 			public void run() {
-				if(JfaceWindowManager.getCurWindow() instanceof WaitDia)
-				{WaitDia waitDia=(WaitDia) JfaceWindowManager.getCurWindow();
-				waitDia.leaveLables(camp,seatID);}
+				
+
+				for (Window window : JfaceWindowManager.wm.getWindows()) {
+					if(window instanceof KingMain)
+					{
+						KingMain kingMain=(KingMain) window;
+						kingMain.RefreshTable();
+					}
+					if(window instanceof WaitDia)
+					{
+						WaitDia waitDia=(WaitDia)window;
+						waitDia.leaveLables(camp,seatID);
+					}
+				}
+			
 			}
 		});
 

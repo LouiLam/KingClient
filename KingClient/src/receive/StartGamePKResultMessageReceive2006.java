@@ -35,27 +35,7 @@ public class StartGamePKResultMessageReceive2006 extends SocketMessageReceived {
 			e.printStackTrace();
 		}
 	
-		 TaskScheduled.scheduleAtFixedRate(new Runnable() {
-			
-			@Override
-			public void run() {
-				Display.getDefault().asyncExec(new Runnable() {
-					
-					@Override
-					public void run() {
-						WaitDia waitDia = null;
-						for (Window window : JfaceWindowManager.wm.getWindows()) {
-							if (window instanceof WaitDia) {
-								waitDia = (WaitDia) window;
-							}
-						}
-						if(waitDia==null){return;}
-						waitDia.showTime();
-					}
-				});
-				
-			}
-		}, 0, 1, TimeUnit.SECONDS);
+		
 			Display.getDefault().asyncExec(new Runnable() {
 				
 				@Override

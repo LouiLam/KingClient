@@ -47,10 +47,16 @@ public class RoomPKMessageReceive2001 extends SocketMessageReceived {
 			int type = buffer.readInt();
 			// 点数
 			int point = buffer.readInt();
+			
+			int faqiSeatCount= buffer.readInt();
+			int yingzhanSeatCount= buffer.readInt();
 			// 数据库ID
 			long sql_id = buffer.readLong();
 			PK pk = new PK(id,roleName, title, area, map,des, type, point,sql_id);
+			pk.faqiSeatCount=faqiSeatCount;
+			pk.yingzhanSeatCount=yingzhanSeatCount;
 			PKManager.getInstance().add(pk);
+			System.out.println("RoomPKMessageReceive2001---"+PKManager.getInstance().getPKNum());
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

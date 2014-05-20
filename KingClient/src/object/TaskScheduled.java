@@ -4,6 +4,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import ui.KingLogin;
+
 public class TaskScheduled {
 
 	private static ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(1);
@@ -31,6 +33,7 @@ public class TaskScheduled {
 	}
 	public static void clear()
 	{
+		System.out.println("时间定时器clear"+KingLogin.id);
 		scheduler.shutdown();
 		scheduler= new ScheduledThreadPoolExecutor(1);
 	}

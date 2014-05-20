@@ -14,51 +14,49 @@ import ui.WaitDia;
 
 /**
  * 离开房间
- * 
  * @author Administrator
- * 
+ *
  */
-public class NormalLeavePKResultMessageRecevie2011 extends
-		SocketMessageReceived {
+public class ForceLeavePKResultMessageReceive2012   extends SocketMessageReceived  {
 
 	int camp;
 	int seatID;
-	String name;
-	long sql_id;
+	String roleName;
+long sql_id;
+	public ForceLeavePKResultMessageReceive2012() {
+	
+	}
 
-	// public LeavePKResultMessageRecevie2004(String name, int camp, int seatID)
-	// {
-	// this.seatID = seatID;
-	// this.camp = camp;
-	// this.name = name;
-	// }
-
-	// @Override
-	// public ChannelBuffer pack() {
-	// ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
-	// cb.writeShort(2004);
-	// cb.writeShort(camp);
-	// cb.writeShort(seatID);
-	// cb.writeShort(name.getBytes().length);
-	// try {
-	// cb.writeBytes(name.getBytes("utf-8"));
-	// } catch (UnsupportedEncodingException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	//
-	// return cb;
-	// }
+//	@Override
+//	public ChannelBuffer pack() {
+//		ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
+//		cb.writeShort(2012);
+//		cb.writeShort(camp);
+//		cb.writeShort(seatID);
+//		cb.writeShort(roleName.getBytes().length);
+//		try {
+//			cb.writeBytes(roleName.getBytes("utf-8"));
+//		} catch (UnsupportedEncodingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//
+//		return cb;
+//	}
 
 	@Override
 	public void parse(ChannelBuffer buffer) {
-		camp = buffer.readShort();
-		seatID = buffer.readShort();
-		sql_id = buffer.readLong();
-		PK pk = PKManager.getInstance().getPKBySQLID(sql_id);
-		if (camp == 1) {
+		 camp=buffer.readShort();
+		 seatID=buffer.readShort();
+		 sql_id=buffer.readLong();
+		PK pk=PKManager.getInstance().getPKBySQLID(sql_id);
+		if(camp==1)
+		{
 			pk.faqiSeatCount--;
-		} else {
+		}
+		else
+		{
 			pk.yingzhanSeatCount--;
 		}
 	}
@@ -69,8 +67,6 @@ public class NormalLeavePKResultMessageRecevie2011 extends
 
 			@Override
 			public void run() {
-				
-
 				for (Window window : JfaceWindowManager.wm.getWindows()) {
 					if(window instanceof KingMain)
 					{
@@ -83,10 +79,8 @@ public class NormalLeavePKResultMessageRecevie2011 extends
 						waitDia.leaveLables(camp,seatID);
 					}
 				}
-			
 			}
 		});
-
 	}
 
 }

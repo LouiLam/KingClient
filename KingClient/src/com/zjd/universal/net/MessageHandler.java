@@ -35,6 +35,7 @@ public class MessageHandler extends SimpleChannelHandler {
 //				2002=client.msg.received.BetMessage
 //				2006=client.msg.received.YaoPaiMessage
 		SocketMessageReceived msg = GameServerMessageFactory.getMessage(msgType);
+		System.out.println("收到消息"+msgType);
 		msg.handle(channelBuffer,channel);
 	}
 	

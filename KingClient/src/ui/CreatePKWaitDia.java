@@ -19,8 +19,8 @@ public class CreatePKWaitDia extends WaitDia {
 	 Image image_start_game,iamge_end_game;
 	
 
-	public CreatePKWaitDia(Shell parentShell, int type,String area,String title) {
-		super(parentShell,60*30,type, area, title);
+	public CreatePKWaitDia(Shell parentShell, int type,String area,String title,int point) {
+		super(parentShell,60*20,type, area, title,point);
 		image_start_game=new Image(Display.getDefault(),"start_game.png");
 		iamge_end_game=new Image(Display.getDefault(),"end_game.png");
 	}
@@ -55,6 +55,7 @@ public class CreatePKWaitDia extends WaitDia {
 		
 		faqiName[0].setText(KingLogin.roleName);
 		faqi[0].setVisible(true);
+
 	}
 
 

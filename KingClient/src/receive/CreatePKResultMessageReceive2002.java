@@ -15,12 +15,12 @@ import ui.KingMain;
 
 public class CreatePKResultMessageReceive2002 extends SocketMessageReceived {
 	String id = null,roleName=null;
-	int type;
+	int type,point;
 	String area, title;
 
 	@Override
 	public void parse(ChannelBuffer buffer) {
-
+		
 		try {
 			int status = buffer.readShort();
 			if (status != 0) {
@@ -67,12 +67,16 @@ public class CreatePKResultMessageReceive2002 extends SocketMessageReceived {
 			// 几V几
 			type = buffer.readInt();
 			// 点数
-			int point = buffer.readInt();
-
+			 point = buffer.readInt();
+			 
+			int faqiSeatCount=buffer.readInt();
+			int yingzhanSeatCount=buffer.readInt();
 			long sql_id = buffer.readLong();
-			PK pk = new PK(id, roleName, title, area, map, des, type, point,
-					sql_id);
-			PKManager.getInstance().add(pk);
+//			PK pk = new PK(id, roleName, title, area, map, des, type, point,
+//					sql_id);
+//			pk.faqiSeatCount=faqiSeatCount;
+//			pk.yingzhanSeatCount=yingzhanSeatCount;
+//			PKManager.getInstance().add(pk);
 			PKUser.sql_id = sql_id;
 
 		} catch (UnsupportedEncodingException e) {
@@ -86,7 +90,7 @@ public class CreatePKResultMessageReceive2002 extends SocketMessageReceived {
 				KingMain kingMain = (KingMain) JfaceWindowManager
 						.getCurWindow();
 				kingMain.RefreshTable();
-				kingMain.PKCreateSuccess(id, type, area, title);
+				kingMain.PKCreateSuccess(id, type, area, title,point);
 			}
 		});
 
