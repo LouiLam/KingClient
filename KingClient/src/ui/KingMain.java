@@ -193,28 +193,28 @@ public class KingMain extends ApplicationWindow {
 		table = new Table(container, SWT.BORDER | SWT.MULTI);
 		table.setLinesVisible(false);
 		table.setHeaderVisible(true);
-		table.setBounds(10, 64, 1090, 500);
+		table.setBounds(0, 64, 1190, 600);
 		table.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-		TableColumn column = new TableColumn(table, SWT.NONE);
-		column.setWidth(100);
+		TableColumn column = new TableColumn(table, SWT.CENTER);
+		column.setWidth(115);
 		column.setText("房主");
 		column = new TableColumn(table, SWT.CENTER);
-		column.setWidth(100);
+		column.setWidth(110);
 		column.setText("标题");
 		column = new TableColumn(table, SWT.CENTER);
-		column.setWidth(150);
+		column.setWidth(160);
 		column.setText("游戏区");
 		column = new TableColumn(table, SWT.CENTER);
-		column.setWidth(120);
+		column.setWidth(130);
 		column.setText("挑战图");
 		column = new TableColumn(table, SWT.CENTER);
-		column.setWidth(100);
+		column.setWidth(110);
 		column.setText("对战人数");
 		column = new TableColumn(table, SWT.CENTER);
-		column.setWidth(100);
+		column.setWidth(120);
 		column.setText("挑战点");
 		column = new TableColumn(table, SWT.CENTER);
-		column.setWidth(200);
+		column.setWidth(220);
 		column.setText("当前人数（挑-应）");
 		column = new TableColumn(table, SWT.CENTER);// 挑战方
 		column.setWidth(108);
@@ -234,7 +234,7 @@ public class KingMain extends ApplicationWindow {
 		btn_create_tz.setBounds(10, 10, 193, 38);
 		btn_create_tz.setImage(image_create_tz);
 
-		Button query = new Button(container, SWT.NONE);
+		Button query = new Button(container, SWT.CENTER);
 		query.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
