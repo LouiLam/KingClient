@@ -33,6 +33,8 @@ public class CreatePKMessage1002 extends SocketMessageToSend {
 			cb.writeBytes(URLEncoder.encode(pk.title,"UTF-8").getBytes());
 			cb.writeShort(URLEncoder.encode(pk.des,"UTF-8").getBytes().length);
 			cb.writeBytes(URLEncoder.encode(pk.des,"UTF-8").getBytes());
+			cb.writeShort(URLEncoder.encode(pk.password,"UTF-8").getBytes().length);
+			cb.writeBytes(URLEncoder.encode(pk.password,"UTF-8").getBytes());
 			cb.writeInt(pk.type);
 			cb.writeInt(pk.point);
 			cb.writeInt(PKUser.uid);

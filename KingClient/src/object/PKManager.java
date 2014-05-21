@@ -1,5 +1,7 @@
 package object;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -57,8 +59,14 @@ public class PKManager {
 		return pkMap.get(sql_id);
 	}
 	public static void main(String[] args) {
-	
-		PK pk=new PK(null, null, null, null, null, null, 0, 0, 0);
+		
+		try {
+			System.out.println(URLEncoder.encode("","UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		PK pk=new PK(null, null, null, null, null, null, 0, 0, 0,null);
 		PKManager.getInstance().add(pk);
 		PK pk1=PKManager.getInstance().getPKBySQLID(0);
 		pk1.faqiSeatCount=10;

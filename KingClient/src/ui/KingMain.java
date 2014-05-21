@@ -346,11 +346,15 @@ public class KingMain extends ApplicationWindow {
 		mb.open();
 	}
 
-	public void PopErrorJoinMessage(String roleName) {
+	public void PopErrorJoinMessage(String roleName,int status) {
 		if (roleName.equals(KingLogin.roleName)) {
+			
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
-			mb.setMessage("加入房间房间失败,阵营人数已满，或房间无效");//
+			if(status==-1)
+			{mb.setMessage("加入房间房间失败,阵营人数已满，或房间无效");}
+			else
+			{mb.setMessage("加入房间房间失败,密码错误");}
 			mb.open();
 		}
 
@@ -382,20 +386,26 @@ public class KingMain extends ApplicationWindow {
 
 	}
 
-	public void StartGameResult(int status, String name) {
+	public void StartGameResult(int status, String id) {
 		if (status == 0) {
 			State.CurState = State.STATE_GAME_START;
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
-			if (name.equals(KingLogin.roleName)) {
+			if (id.equals(KingLogin.id)) {
 				mb.setMessage("现在你有操作权限可以结束游戏了");
 				if (JfaceWindowManager.getCurWindow() instanceof CreatePKWaitDia) {
 					CreatePKWaitDia dia = (CreatePKWaitDia) JfaceWindowManager
 							.getCurWindow();
 					dia.btn_end_game.setEnabled(true);
+					dia.hideTime();
 				}
 			} else {
 				mb.setMessage("房主已经点击开始游戏了，游戏开始");
+				if (JfaceWindowManager.getCurWindow() instanceof WaitDia) {
+					WaitDia dia = (WaitDia) JfaceWindowManager
+							.getCurWindow();
+					dia.hideTime();
+				}
 			}
 			mb.open();
 
@@ -527,8 +537,12 @@ public class KingMain extends ApplicationWindow {
 
 			editor = new TableEditor(table);
 			Label textCurNum = new Label(table, SWT.CENTER);
-			textCurNum.setText(pk.faqiSeatCount+"-"+
-					+ pk.yingzhanSeatCount);
+			if(pk.password.equals(""))
+			{textCurNum.setText(pk.faqiSeatCount+"-"+
+					+ pk.yingzhanSeatCount);}
+			else
+			{textCurNum.setText(pk.faqiSeatCount+"-"+
+					+ pk.yingzhanSeatCount+"(密)");}
 			textCurNum.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
 			editor.setEditor(textCurNum, items[i], 6);
@@ -548,8 +562,9 @@ public class KingMain extends ApplicationWindow {
 				public void widgetSelected(SelectionEvent e) {
 
 					int index = (int) ((Button) e.getSource()).getData();
+					PK pk=PKManager.getInstance().getPKByIndex(index);
 					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
-							.getShell(), index, 1);
+							.getShell(), index, 1,pk.password);
 					pkDia.open();
 
 				}
@@ -573,8 +588,9 @@ public class KingMain extends ApplicationWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					int index = (int) ((Button) e.getSource()).getData();
+					PK pk=PKManager.getInstance().getPKByIndex(index);
 					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
-							.getShell(), index, 2);
+							.getShell(), index, 2,pk.password);
 					pkDia.open();
 
 				}

@@ -21,7 +21,7 @@ public class StartGamePKResultMessageReceive2006 extends SocketMessageReceived {
 	 * 	0表示成功 否则失败
 	 */
 	int status;
-	String name;
+	String id;
 	@Override
 	public void parse(ChannelBuffer buffer) {
 		
@@ -30,7 +30,7 @@ public class StartGamePKResultMessageReceive2006 extends SocketMessageReceived {
 		byte nameBytes[] = new byte[namelength];
 		buffer.readBytes(nameBytes);
 		 try {
-			name = new String(nameBytes,"utf-8");
+			id = new String(nameBytes,"utf-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -47,7 +47,7 @@ public class StartGamePKResultMessageReceive2006 extends SocketMessageReceived {
 						}
 					}
 					if(kingMain==null){return;}
-					kingMain.StartGameResult(status,name);
+					kingMain.StartGameResult(status,id);
 				}
 			});
 		

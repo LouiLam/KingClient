@@ -40,6 +40,7 @@ public abstract class WaitDia extends Dialog {
 	 int type,point;
 	 String area;
 	 String title;
+	 Label label_2 ;
 	/**
 	 * Create the dialog.
 	 * 
@@ -200,11 +201,11 @@ public abstract class WaitDia extends Dialog {
 		label.setText("对局人数:");
 		label.setBounds(25, 72, 52, 13);
 		label.pack();
-		Label label_2 = new Label(container, SWT.NONE);
+		label_2 = new Label(container, SWT.NONE);
 		label_2.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 		label_2.setText("距离可退出游戏时间还剩：");
 		label_2.setBounds(558, 46, 156, 13);
-		
+		label_2.setVisible(false);
 		Composite composite = new Composite(container, SWT.NONE);
 		composite.setBounds(10, 91, 998, 567);
 		composite.setBackgroundMode(SWT.INHERIT_DEFAULT);
@@ -300,8 +301,15 @@ public abstract class WaitDia extends Dialog {
 			}, 0, 1, TimeUnit.SECONDS);
 		return container;
 	}
+	public void hideTime()
+	{
+		TaskScheduled.clear();
+		time.setText("");
+		label_2.setVisible(false);
+	}
 	public void showTime()
 	{
+		label_2.setVisible(true);
 		String min=curTime/60+"分:";
 		String sec=curTime%60+"秒";
 		time.setText(min+sec);

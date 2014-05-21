@@ -11,6 +11,7 @@ public class PK {
 	public String area;//挑战区
 	public String map;//挑战地图
 	public String des;//挑战描述
+	public String password;//房间密码
 	public int type;//游戏对战人数类型
 	public int point;//挑战点数
 	public long sql_id;//数据库ID
@@ -20,7 +21,7 @@ public class PK {
 	public int faqiSeatCount = 0;
 	public int yingzhanSeatCount = 0;
 	public PK( String id,String roleName,String title, String area, String map,String des, int type,
-			int point,long sql_id) {
+			int point,long sql_id,String password) {
 		super();
 		this.id=id;
 		this.roleName=roleName;
@@ -31,6 +32,7 @@ public class PK {
 		this.type = type;
 		this.point = point;
 		this.sql_id=sql_id;
+		this.password=password;
 	}
 
 	@Override

@@ -44,6 +44,8 @@ public class CrateDiaRoleName extends Dialog {
 	private Combo type;
 	private Text des;
 	private Text roleName;
+	private Text password;
+	private Button btnCheckButton;
 
 	/**
 	 * Create the dialog.
@@ -170,6 +172,27 @@ public class CrateDiaRoleName extends Dialog {
 		roleName = new Text(container, SWT.BORDER);
 		roleName.setTextLimit(50);
 		roleName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(container, SWT.NONE);
+		
+		  btnCheckButton = new Button(container, SWT.CHECK);
+		btnCheckButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(btnCheckButton.getSelection())
+				{
+					password.setEnabled(true);
+				}
+				else
+				{
+					password.setEnabled(false);
+				}
+			}
+		});
+		btnCheckButton.setText("设置密码");
+		new Label(container, SWT.NONE);
+		password = new Text(container, SWT.BORDER | SWT.PASSWORD);
+		password.setEnabled(false);
+		password.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		return container;
 	}
 
@@ -195,9 +218,28 @@ public class CrateDiaRoleName extends Dialog {
 				}
 				KingLogin.roleName=roleName.getText();
 //				httpPostFightAdd();
+				String str=null;
+				if(btnCheckButton.getSelection())
+				{
+					if(password.getText()==null||password.getText().trim().length()==0)
+					{ MessageBox mb = new MessageBox(CrateDiaRoleName.this.getParentShell(),
+							SWT.ICON_INFORMATION | SWT.OK);
+					mb.setMessage("设置密码不能为空");
+					mb.open();
+					return;
+					}
+					else
+					{
+						str=password.getText();
+					}
+				}
+				else
+				{
+					str="";
+				}
 				PK pk = new PK( KingLogin.id,KingLogin.roleName,title.getText(), area.getText(),
 						map.getText(),des.getText(),type.getSelectionIndex() +1,
-						Integer.parseInt(point.getText()),-1);
+						Integer.parseInt(point.getText()),-1,str);
 				GameClient.getInstance().sendMessageToGameServer(
 						new CreatePKMessage1002(pk));
 				CrateDiaRoleName.this.close();

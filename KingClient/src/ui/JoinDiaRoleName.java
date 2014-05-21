@@ -26,16 +26,19 @@ import com.zjd.universal.net.GameClient;
 public class JoinDiaRoleName extends Dialog {
 	private Text roleName;
 	private int index,camp;
+	private String password;
+	private Text passwordText;
 	/**
 	 * Create the dialog.
 	 * 
 	 * @param parentShell
 	 */
-	public JoinDiaRoleName(Shell parentShell,int index,int camp) {
+	public JoinDiaRoleName(Shell parentShell,int index,int camp,String password) {
 		super(parentShell);
 		setWindowManager(JfaceWindowManager.wm);
 		this.index=index;
 		this.camp=camp;
+		this.password=password;
 	}
 
 	/**
@@ -58,6 +61,20 @@ public class JoinDiaRoleName extends Dialog {
 		roleName = new Text(container, SWT.BORDER);
 		roleName.setTextLimit(50);
 		roleName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(container, SWT.NONE);
+		Label lblNewLabel = new Label(container, SWT.NONE);
+		lblNewLabel.setText("此房间需要密码");
+		new Label(container, SWT.NONE);
+		passwordText = new Text(container, SWT.BORDER | SWT.PASSWORD);
+		passwordText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		if(password.equals(""))
+		{
+			lblNewLabel.setVisible(false);
+			passwordText.setVisible(false);
+		}
+		
+		
+		
 		return container;
 	}
 
@@ -81,10 +98,19 @@ public class JoinDiaRoleName extends Dialog {
 					return;
 				}
 				KingLogin.roleName=roleName.getText();
+				String str=null;
+				if(!passwordText.getVisible())
+				{
+					str="";
+				}
+				else
+				{
+					str=passwordText.getText();
+				}
 				GameClient.getInstance().sendMessageToGameServer(
 						new JoinPKMessage1003(PKManager.getInstance()
 								.getPKByIndex(index).sql_id,camp,KingLogin.id,
-								KingLogin.roleName));
+								KingLogin.roleName,str));
 
 			
 				JoinDiaRoleName.this.close();

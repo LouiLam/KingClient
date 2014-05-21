@@ -97,10 +97,15 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 				if (kingMain == null) {
 					return;
 				}
-				if (status != 0) // 加入房间失败 房间已满
+				if (status == -1) // 加入房间失败 房间已满
 				{
-					kingMain.PopErrorJoinMessage(roleName);
-				} else {
+					kingMain.PopErrorJoinMessage(roleName,status);
+				} 
+				else if(status == -2) //密码错误 加入失败
+				{
+					kingMain.PopErrorJoinMessage(roleName,status);
+				}
+				else {
 					kingMain.RefreshTable();
 					kingMain.PKJoinSuccess(roleName, type, users, area, title,
 							point);

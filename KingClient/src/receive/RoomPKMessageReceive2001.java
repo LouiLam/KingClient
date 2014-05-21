@@ -43,6 +43,11 @@ public class RoomPKMessageReceive2001 extends SocketMessageReceived {
 			byte desBytes[] = new byte[deslength];
 			buffer.readBytes(desBytes);
 			String des = new String(titleBytes, "utf-8");
+			
+			int pwdlength = buffer.readShort();
+			byte pwdBytes[] = new byte[pwdlength];
+			buffer.readBytes(pwdBytes);
+			String password = new String(pwdBytes, "utf-8");
 			// 几V几
 			int type = buffer.readInt();
 			// 点数
@@ -52,7 +57,7 @@ public class RoomPKMessageReceive2001 extends SocketMessageReceived {
 			int yingzhanSeatCount= buffer.readInt();
 			// 数据库ID
 			long sql_id = buffer.readLong();
-			PK pk = new PK(id,roleName, title, area, map,des, type, point,sql_id);
+			PK pk = new PK(id,roleName, title, area, map,des, type, point,sql_id,password);
 			pk.faqiSeatCount=faqiSeatCount;
 			pk.yingzhanSeatCount=yingzhanSeatCount;
 			PKManager.getInstance().add(pk);

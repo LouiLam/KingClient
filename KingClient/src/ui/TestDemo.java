@@ -464,8 +464,8 @@ public class TestDemo extends ApplicationWindow {
 				public void widgetSelected(SelectionEvent e) {
 
 					int index = (int) ((Button) e.getSource()).getData();
-					GameClient.getInstance().sendMessageToGameServer(
-							new JoinPKMessage1003(index, 1,KingLogin.id, KingLogin.roleName));
+//					GameClient.getInstance().sendMessageToGameServer(
+//							new JoinPKMessage1003(index, 1,KingLogin.id, KingLogin.roleName));
 
 				}
 
@@ -490,8 +490,8 @@ public class TestDemo extends ApplicationWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					int index = (int) ((Button) e.getSource()).getData();
-					GameClient.getInstance().sendMessageToGameServer(
-							new JoinPKMessage1003(index, 2, KingLogin.id, KingLogin.roleName));
+//					GameClient.getInstance().sendMessageToGameServer(
+//							new JoinPKMessage1003(index, 2, KingLogin.id, KingLogin.roleName));
 
 				}
 

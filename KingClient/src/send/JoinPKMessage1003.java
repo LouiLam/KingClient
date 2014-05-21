@@ -12,12 +12,13 @@ public class JoinPKMessage1003 extends SocketMessageToSend {
 
 	long sql_id;//sqlID
 	int camp;//阵营 1发起 2应战
-	String roleName,id;
-	public JoinPKMessage1003(long sql_id,int camp,String id,String roleName) {
+	String roleName,id,password;
+	public JoinPKMessage1003(long sql_id,int camp,String id,String roleName,String password) {
 		this.sql_id = sql_id;
 		this.camp=camp;
 		this.id=id;
 		this.roleName=roleName;
+		this.password=password;
 	}
 
 	@Override
@@ -34,7 +35,8 @@ public class JoinPKMessage1003 extends SocketMessageToSend {
 				cb.writeBytes(URLEncoder.encode(id,"UTF-8").getBytes());
 				cb.writeShort(URLEncoder.encode(roleName,"UTF-8").getBytes().length);
 				cb.writeBytes(URLEncoder.encode(roleName,"UTF-8").getBytes());
-			
+				cb.writeShort(URLEncoder.encode(password,"UTF-8").getBytes().length);
+				cb.writeBytes(URLEncoder.encode(password,"UTF-8").getBytes());
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
