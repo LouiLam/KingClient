@@ -15,10 +15,15 @@ import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.TableEditor;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -31,27 +36,26 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.wb.swt.SWTResourceManager;
-
-import com.zjd.universal.net.GameClient;
 
 public class KingMain extends ApplicationWindow {
 	private Table table;
 
 	private Button btn_create_tz;
 	private Image image[] = new Image[5];
-	private TabItem tabItem[] = new TabItem[5];
-	private String tabItemText[] = { "对战信息", "个人设置", "挑战记录", "充值管理",
-			"礼品兑换" };
-	private String urlText[] = { 
-			"http://www.hexcm.com/yxlm/setting.php",
+	// private TabItem tabItem[] = new TabItem[5];
+	Composite[] tabItem = new Composite[5];
+	// private String tabItemText[] = { "对战信息", "个人设置", "挑战记录", "充值管理",
+	// "礼品兑换" };
+	private String urlText[] = { "http://www.hexcm.com/yxlm/setting.php",
 			"http://www.hexcm.com/yxlm/setting.php",
 			"http://www.hexcm.com/yxlm/lszj.php",
 			"http://www.hexcm.com/yxlm/cz.php",
 			"http://www.hexcm.com/yxlm/dj.php" };
 
 	private Image image_join_tz, image_join_yz, image_create_tz, image_query,
-			image_table_bg;
+			image_table_bg, tab_bg;
 
 	/**
 	 * Create the application window.
@@ -60,7 +64,7 @@ public class KingMain extends ApplicationWindow {
 
 		super(null);
 		setWindowManager(JfaceWindowManager.wm);
-		createActions();
+		// createActions();
 		// addStatusLine();
 		for (int i = 0; i < 5; i++) {
 			image[i] = new Image(Display.getDefault(), "tab" + i + ".png");
@@ -70,10 +74,12 @@ public class KingMain extends ApplicationWindow {
 		image_create_tz = new Image(Display.getDefault(), "create_tz.png");
 		image_query = new Image(Display.getDefault(), "query.png");
 		image_table_bg = new Image(Display.getDefault(), "green.jpg");
+		tab_bg = new Image(Display.getDefault(), "tab_bg.png");
 		setShellStyle(SWT.CLOSE | SWT.TITLE);
 	}
 
-	public void PKCreateSuccess(String id, int type, String area, String title,int point) {
+	public void PKCreateSuccess(String id, int type, String area, String title,
+			int point) {
 		if (id.equals(KingLogin.id)) {
 			PKUser.type = type;
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
@@ -85,13 +91,13 @@ public class KingMain extends ApplicationWindow {
 			btn_create_tz.setEnabled(false);
 
 			CreatePKWaitDia waitDia = new CreatePKWaitDia(getShell(), type,
-					area, title,point);
+					area, title, point);
 			waitDia.open();
 		}
 	}
 
-	public void PKJoinSuccess(String roleName, int type, PKUser users[], String area,
-			String title,int point) {
+	public void PKJoinSuccess(String roleName, int type, PKUser users[],
+			String area, String title, int point) {
 		if (roleName.equals(KingLogin.roleName)) {
 			PKUser.type = type;
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
@@ -101,7 +107,7 @@ public class KingMain extends ApplicationWindow {
 			tableDisable();
 			btn_create_tz.setEnabled(false);
 			JoinPKWaitDia waitDia = new JoinPKWaitDia(getShell(), users, type,
-					area, title,point);
+					area, title, point);
 			waitDia.open();
 		}
 	}
@@ -122,55 +128,142 @@ public class KingMain extends ApplicationWindow {
 		}
 	}
 
+	protected boolean showTopSeperator() {
+		return false;
+	}
+
 	/**
 	 * Create contents of the application window.
 	 * 
 	 * @param parent
 	 */
 	@Override
-	protected Control createContents(Composite parent) {
+	protected Control createContents(final Composite parent) {
+		parent.setLayout(null);
+		// System.out.println(getInitialSize().x+","+getInitialSize().y+","+
+		// tab_bg.getBounds().height);
 
-		final TabFolder tabFolder = new TabFolder(parent, SWT.None);
-		tabFolder.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-		tabFolder.setBounds(10, 0, 881, 649);
-		// Create each tab and set its text, tool tip text,
-		// image, and control
+		// RowLayout r=new RowLayout(SWT.VERTICAL);
+		// r.spacing=0;
+		// r.fill=true;
+		// r.marginWidth=0;
+		// r.marginLeft=0;
+		// r.marginHeight=0;
+		// r.marginTop=0;
+		// parent.setLayout(r);
+		// parent.setLayout(new abso)
+		parent.setBackgroundMode(SWT.INHERIT_DEFAULT);
+
+		Composite composite = new Composite(parent, SWT.NONE);
+		// 设置容器框大小
+		composite
+				.setBounds(0, 0, getInitialSize().x, tab_bg.getBounds().height);
+		// 设置布局
+		// composite.setLayoutData(new RowData(getInitialSize().x,
+		// tab_bg.getBounds().height));
+		// RowLayout r1=new RowLayout(SWT.HORIZONTAL);
+		// r1.spacing=110;
+		// composite.setLayout(r1);
+
+		composite.setBackgroundImage(tab_bg);
+
+		// 设置容器里的控件
 		for (int i = 0; i < 5; i++) {
-			tabItem[i] = new TabItem(tabFolder, SWT.NONE);
-			tabItem[i].setText(tabItemText[i]);
-			tabItem[i].setToolTipText("提示文本");
-			tabItem[i].setImage(image[i]);
-			if (i == 0) {
-				tabItem[i].setControl(getTabControlOne(tabFolder));
-			} else {
-				tabItem[i].setControl(getTabContrlOther(tabFolder, urlText[i]
-						+ "?uid=" + PKUser.uid));
-			}
+			Label label = new Label(composite, SWT.NONE);
+			label.setImage(image[i]);
+			label.setBounds(10 + i * (image[i].getBounds().width + 50), 0,
+					image[i].getBounds().width, image[i].getBounds().height);
+			label.setData(i);
+			label.addMouseListener(new MouseListener() {
+
+				@Override
+				public void mouseUp(MouseEvent arg0) {
+
+				}
+
+				@Override
+				public void mouseDown(MouseEvent arg0) {
+					Widget d = (Widget) arg0.getSource();
+					int index = (int) d.getData();
+					for (int i = 0; i < 5; i++) {
+						tabItem[i].setVisible(false);
+					}
+					tabItem[index].setVisible(true);
+					// for (int i = 0; i < 5; i++) { tabItem[index].dispose();}
+					// if(index==0)
+					// {tabItem[index] = getTabControlOne(parent);}
+					// else
+					// {tabItem[index] =
+					// getTabContrlOther(parent,urlText[index]);}
+					// tabItem[index].setBackground(SWTResourceManager.getColor(SWT.COLOR_CYAN));
+					// tabItem[index].setBounds(0, tab_bg.getBounds().height,
+					// getInitialSize().x, 500);
+					// parent.layout();
+					System.out.println("index" + index);
+				}
+
+				@Override
+				public void mouseDoubleClick(MouseEvent arg0) {
+
+				}
+			});
 		}
 
-		// Select the third tab (index is zero-based)
-		tabFolder.setSelection(0);
-
-		// Add an event listener to write the selected tab to stdout
-		tabFolder.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(
-					org.eclipse.swt.events.SelectionEvent event) {
-				System.out.println(tabFolder.getSelection()[0].getText()
-						+ " selected");
+		for (int i = 0; i < 5; i++) {
+			if (i == 0) {
+				tabItem[i] = getTabControlOne(parent);
+			} else {
+				tabItem[i] = getTabContrlOther(parent, urlText[i]);
 			}
-		});
 
-		GameClient.getInstance().onCreate();
-		GameClient.getInstance().connectGameServer(GameClient.GAME_IP,
-				GameClient.GAME_PORT);
-		return tabFolder;
+			tabItem[i].setBackground(SWTResourceManager
+					.getColor(SWT.COLOR_CYAN));
+			tabItem[i].setBounds(0, tab_bg.getBounds().height,
+					getInitialSize().x, getInitialSize().y-tab_bg.getBounds().height);
+			// tabItem[i].setLayoutData(new RowData(getInitialSize().x,
+			// parent.getClientArea().height-tab_bg.getBounds().height));
+			tabItem[i].setVisible(false);
+		}
+		tabItem[0].setVisible(true);
+
+		// Composite composite = new Composite(container, SWT.NONE);
+		// composite.setBounds(0, 0, 64, parent.get());
+		// final TabFolder tabFolder = new TabFolder(parent, SWT.None);
+		// tabFolder.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+		// tabFolder.setBounds(10, 0, 881, 649);
+		// tabFolder.setVisible(false);
+		// for (int i = 0; i < 5; i++) {
+		// tabItem[i] = new TabItem(tabFolder, SWT.NONE);
+		// tabItem[i].setImage(image[i]);
+		//
+		// if (i == 0) {
+		// tabItem[i].setControl(getTabControlOne(tabFolder));
+		// } else {
+		// tabItem[i].setControl(getTabContrlOther(tabFolder, urlText[i]
+		// + "?uid=" + PKUser.uid));
+		// }
+		// }
+		//
+		// tabFolder.setSelection(0);
+		// tabFolder.addSelectionListener(new SelectionAdapter() {
+		// public void widgetSelected(
+		// org.eclipse.swt.events.SelectionEvent event) {
+		// System.out.println(tabFolder.getSelection()[0].getText()
+		// + " selected");
+		// }
+		// });
+
+		// GameClient.getInstance().onCreate();
+		// GameClient.getInstance().connectGameServer(GameClient.GAME_IP,
+		// GameClient.GAME_PORT);
+		return parent;
 	}
 
-	private Control getTabContrlOther(TabFolder tabFolder, String url) {
-		Composite container = new Composite(tabFolder, SWT.NONE);
+	private Composite getTabContrlOther(Composite parent, String url) {
+		Composite container = new Composite(parent, SWT.NONE);
 		Browser browser = new Browser(container, SWT.BORDER);
 		browser.setUrl(url);
-		browser.setBounds(0, 0, 1024, 768);
+		browser.setBounds(0, 0, 1020, 768);
 		// GridData layoutData = new GridData(GridData.FILL_BOTH);
 		// layoutData.horizontalSpan = 2;
 		// layoutData.verticalSpan = 2;
@@ -187,13 +280,13 @@ public class KingMain extends ApplicationWindow {
 	 *            the parent tab folder
 	 * @return Control
 	 */
-	private Control getTabControlOne(TabFolder tabFolder) {
-		Composite container = new Composite(tabFolder, SWT.NONE);
+	private Composite getTabControlOne(Composite parent) {
+		Composite container = new Composite(parent, SWT.NONE);
 		container.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 		table = new Table(container, SWT.BORDER | SWT.MULTI);
 		table.setLinesVisible(false);
 		table.setHeaderVisible(true);
-		table.setBounds(0, 64, 1190, 600);
+		table.setBounds(2, 64, 1024-289, 587);
 		table.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 		TableColumn column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(115);
@@ -244,6 +337,10 @@ public class KingMain extends ApplicationWindow {
 		});
 		query.setImage(image_query);
 		query.setBounds(209, 10, 193, 38);
+		Browser browser = new Browser(container, SWT.BORDER);
+		browser.setBounds(1024-285, 64, 278, 587);
+		browser.setUrl("http://www.hexcm.com/index_right.php?uid=" + PKUser.uid);
+		browser.setJavascriptEnabled(true);
 
 		return container;
 	}
@@ -336,7 +433,7 @@ public class KingMain extends ApplicationWindow {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(1200, 768);
+		return new Point(1024, 768);
 	}
 
 	public void PopErrorCreateMessage() {
@@ -346,15 +443,16 @@ public class KingMain extends ApplicationWindow {
 		mb.open();
 	}
 
-	public void PopErrorJoinMessage(String roleName,int status) {
+	public void PopErrorJoinMessage(String roleName, int status) {
 		if (roleName.equals(KingLogin.roleName)) {
-			
+
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
-			if(status==-1)
-			{mb.setMessage("加入房间房间失败,阵营人数已满，或房间无效");}
-			else
-			{mb.setMessage("加入房间房间失败,密码错误");}
+			if (status == -1) {
+				mb.setMessage("加入房间房间失败,阵营人数已满，或房间无效");
+			} else {
+				mb.setMessage("加入房间房间失败,密码错误");
+			}
 			mb.open();
 		}
 
@@ -402,8 +500,7 @@ public class KingMain extends ApplicationWindow {
 			} else {
 				mb.setMessage("房主已经点击开始游戏了，游戏开始");
 				if (JfaceWindowManager.getCurWindow() instanceof WaitDia) {
-					WaitDia dia = (WaitDia) JfaceWindowManager
-							.getCurWindow();
+					WaitDia dia = (WaitDia) JfaceWindowManager.getCurWindow();
 					dia.hideTime();
 				}
 			}
@@ -446,12 +543,14 @@ public class KingMain extends ApplicationWindow {
 
 	// 房主退出
 	public void HostLeave(String id) {
-		if(!id.equals(KingLogin.id))//自己是房主 不需要弹出此对话框
-		{tableEnable();
-		MessageBox mb = new MessageBox(KingMain.this.getShell(),
-				SWT.ICON_INFORMATION | SWT.OK);
-		mb.setMessage("房主异常退出，挑战解散");//
-		mb.open();}
+		if (!id.equals(KingLogin.id))// 自己是房主 不需要弹出此对话框
+		{
+			tableEnable();
+			MessageBox mb = new MessageBox(KingMain.this.getShell(),
+					SWT.ICON_INFORMATION | SWT.OK);
+			mb.setMessage("房主异常退出，挑战解散");//
+			mb.open();
+		}
 
 	}
 
@@ -472,7 +571,7 @@ public class KingMain extends ApplicationWindow {
 		}
 		TableItem[] items = table.getItems();
 		for (int i = 0; i < items.length; i++) {
-				PK pk=PKManager.getInstance().getPKByIndex(i);
+			PK pk = PKManager.getInstance().getPKByIndex(i);
 			TableEditor editor = new TableEditor(table);
 			Label textName = new Label(table, SWT.CENTER);
 			textName.setText(pk.id);
@@ -490,8 +589,7 @@ public class KingMain extends ApplicationWindow {
 			textTitle.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
 			editor.setEditor(textTitle, items[i], 1);
-			textTitle
-					.setToolTipText(pk.title);
+			textTitle.setToolTipText(pk.title);
 			listControl.add(textTitle);
 
 			editor = new TableEditor(table);
@@ -515,43 +613,38 @@ public class KingMain extends ApplicationWindow {
 			editor = new TableEditor(table);
 			Label textType = new Label(table, SWT.CENTER);
 			textType.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			textType.setText(pk.type + "v"
-					+ pk.type);
+			textType.setText(pk.type + "v" + pk.type);
 			editor.grabHorizontal = true;
 			editor.setEditor(textType, items[i], 4);
-			textType.setToolTipText(pk.type
-					+ "v" + pk.type);
+			textType.setToolTipText(pk.type + "v" + pk.type);
 			listControl.add(textType);
 
 			editor = new TableEditor(table);
 			Label textPoint = new Label(table, SWT.CENTER);
-			textPoint.setText(pk.point
-					+ "");
+			textPoint.setText(pk.point + "");
 			textPoint.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
 			editor.setEditor(textPoint, items[i], 5);
-			textPoint
-					.setToolTipText(pk.point
-							+ "");
+			textPoint.setToolTipText(pk.point + "");
 			listControl.add(textPoint);
 
 			editor = new TableEditor(table);
 			Label textCurNum = new Label(table, SWT.CENTER);
-			if(pk.password.equals(""))
-			{textCurNum.setText(pk.faqiSeatCount+"-"+
-					+ pk.yingzhanSeatCount);}
-			else
-			{textCurNum.setText(pk.faqiSeatCount+"-"+
-					+ pk.yingzhanSeatCount+"(密)");}
-			textCurNum.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			if (pk.password.equals("")) {
+				textCurNum.setText(pk.faqiSeatCount + "-"
+						+ +pk.yingzhanSeatCount);
+			} else {
+				textCurNum.setText(pk.faqiSeatCount + "-"
+						+ +pk.yingzhanSeatCount + "(密)");
+			}
+			textCurNum
+					.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
 			editor.setEditor(textCurNum, items[i], 6);
-			textCurNum
-					.setToolTipText(pk.faqiSeatCount+"-"+
-							+ pk.yingzhanSeatCount);
+			textCurNum.setToolTipText(pk.faqiSeatCount + "-"
+					+ +pk.yingzhanSeatCount);
 			listControl.add(textCurNum);
-			
-			
+
 			editor = new TableEditor(table);
 			Button join_tz = new Button(table, SWT.CENTER);
 			join_tz.setImage(image_join_tz);
@@ -562,9 +655,9 @@ public class KingMain extends ApplicationWindow {
 				public void widgetSelected(SelectionEvent e) {
 
 					int index = (int) ((Button) e.getSource()).getData();
-					PK pk=PKManager.getInstance().getPKByIndex(index);
+					PK pk = PKManager.getInstance().getPKByIndex(index);
 					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
-							.getShell(), index, 1,pk.password);
+							.getShell(), index, 1, pk.password);
 					pkDia.open();
 
 				}
@@ -588,9 +681,9 @@ public class KingMain extends ApplicationWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					int index = (int) ((Button) e.getSource()).getData();
-					PK pk=PKManager.getInstance().getPKByIndex(index);
+					PK pk = PKManager.getInstance().getPKByIndex(index);
 					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
-							.getShell(), index, 2,pk.password);
+							.getShell(), index, 2, pk.password);
 					pkDia.open();
 
 				}

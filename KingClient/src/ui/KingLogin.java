@@ -98,7 +98,7 @@ public class KingLogin extends ApplicationWindow {
 
 		// parent.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_GREEN));
 		Composite container = new Composite(parent, SWT.NONE);
-		getShell().setImage(image);
+//		getShell().setImage(image);
 		parent.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		parent.setBackgroundImage(image);
 		Label id = new Label(container, SWT.NONE);
