@@ -127,6 +127,6 @@ public class JoinDiaRoleName extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(537, 145);
+		return new Point(537, 165);
 	}
 }
