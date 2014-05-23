@@ -115,93 +115,52 @@ public class TestDemo extends ApplicationWindow {
 	@Override
 	protected Control createContents(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
-		container.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-		table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION);
+		container.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+		table = new Table(container, SWT.BORDER | SWT.MULTI);
 		table.setLinesVisible(false);
 		table.setHeaderVisible(true);
-		table.setBounds(10, 64, 900, 500);
-		table.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-		TableColumn column = new TableColumn(table, SWT.NONE);
-		column.setWidth(460);
-		TableColumn column1 = new TableColumn(table, SWT.NONE);
-		column1.setWidth(106);
-		TableColumn column2 = new TableColumn(table, SWT.NONE);
-		column2.setWidth(106);
-		btn_create_tz = new Button(container, SWT.NONE);
+		table.setBounds(0, 64, 1190, 600);
+		table.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+		TableColumn column = new TableColumn(table, SWT.CENTER);
+		column.setWidth(115);
+		column.setText("房主");
+		column = new TableColumn(table, SWT.CENTER);
+		column.setWidth(110);
+		column.setText("标题");
+		column = new TableColumn(table, SWT.CENTER);
+		column.setWidth(160);
+		column.setText("游戏区");
+		column = new TableColumn(table, SWT.CENTER);
+		column.setWidth(130);
+		column.setText("挑战图");
+		column = new TableColumn(table, SWT.CENTER);
+		column.setWidth(110);
+		column.setText("对战人数");
+		column = new TableColumn(table, SWT.CENTER);
+		column.setWidth(120);
+		column.setText("挑战点");
+		column = new TableColumn(table, SWT.CENTER);
+		column.setWidth(220);
+		column.setText("当前人数（挑-应）");
+		column = new TableColumn(table, SWT.CENTER);// 挑战方
+		column.setWidth(108);
+		column.setText("挑战方");
+		column = new TableColumn(table, SWT.CENTER);// 应战方
+		column.setWidth(108);
+		column.setText("应战方");
+		btn_create_tz = new Button(container, SWT.CENTER);
 		btn_create_tz.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				CrateDiaRoleName pkDia = new CrateDiaRoleName(TestDemo.this.getShell());
+				CrateDiaRoleName pkDia = new CrateDiaRoleName(TestDemo.this
+						.getShell());
 				pkDia.open();
 			}
 		});
 		btn_create_tz.setBounds(10, 10, 193, 38);
 		btn_create_tz.setImage(image_create_tz);
-		
 
-		Group group = new Group(container, SWT.NONE);
-		group.setText("发起方");
-		group.setBounds(10, 273, 243, 262);
-
-		faqi[0] = new Label(group, SWT.NONE);
-		faqi[0].setBounds(10, 32, 54, 12);
-
-		faqi[1] = new Label(group, SWT.NONE);
-		faqi[1].setBounds(10, 78, 54, 12);
-
-		faqi[2] = new Label(group, SWT.NONE);
-		faqi[2].setBounds(10, 126, 54, 12);
-
-		faqi[3] = new Label(group, SWT.NONE);
-		faqi[3].setBounds(10, 177, 54, 12);
-
-		faqi[4] = new Label(group, SWT.NONE);
-		faqi[4].setBounds(10, 226, 54, 12);
-
-		for (int i = 0; i < faqi.length; i++) {
-			faqi[i].setText("空位");
-			faqi[i].setVisible(false);
-		}
-		Group group_1 = new Group(container, SWT.NONE);
-		group_1.setText("应战方");
-		group_1.setBounds(349, 273, 243, 262);
-
-		yingzhan[0] = new Label(group_1, SWT.NONE);
-		yingzhan[0].setBounds(10, 32, 54, 12);
-
-		yingzhan[1] = new Label(group_1, SWT.NONE);
-		yingzhan[1].setBounds(10, 78, 54, 12);
-
-		yingzhan[2] = new Label(group_1, SWT.NONE);
-		yingzhan[2].setBounds(10, 126, 54, 12);
-
-		yingzhan[3] = new Label(group_1, SWT.NONE);
-		yingzhan[3].setBounds(10, 177, 54, 12);
-
-		yingzhan[4] = new Label(group_1, SWT.NONE);
-		yingzhan[4].setBounds(10, 226, 54, 12);
-
-		for (int i = 0; i < faqi.length; i++) {
-			yingzhan[i].setText("空位");
-			yingzhan[i].setVisible(false);
-		}
-
-		
-
-		btn_start_game = new Button(container, SWT.NONE);
-		btn_start_game.setImage(image_start_game);
-		btn_start_game.setBounds(408, 10, 193, 38);
-		btn_start_game.setEnabled(false);
-		btn_start_game.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				GameClient.getInstance().sendMessageToGameServer(
-						new StartGamePKMessage1004());
-				btn_start_game.setEnabled(false);
-			}
-		});
-		
-		Button query = new Button(container, SWT.NONE);
+		Button query = new Button(container, SWT.CENTER);
 		query.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -212,27 +171,11 @@ public class TestDemo extends ApplicationWindow {
 		query.setImage(image_query);
 		query.setBounds(209, 10, 193, 38);
 		
-		 btn_end_game = new Button(container, SWT.NONE);
-		 btn_end_game.setImage(image_end_game);
-		btn_end_game.setEnabled(false);
-		btn_end_game.setBounds(607, 10, 193, 38);
-		
 		Browser browser = new Browser(container, SWT.BORDER);
-		browser.setUrl("www.baidu.com");
-		browser.setBounds(0, 0, 300, 200);
-		
-		
-		
-		btn_end_game.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				GameClient.getInstance().sendMessageToGameServer(
-						new EndGamePKMessage1005());
-				btn_end_game.setEnabled(false);
-			}
-		});
+		browser.setBounds(1196, 64, 298, 600);
+
 		return container;
-  }
+	}
 
 	@Override
 	protected void handleShellCloseEvent() {
@@ -324,7 +267,7 @@ public class TestDemo extends ApplicationWindow {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(1024, 768);
+		return new Point(1500, 768);
 	}
 
 	public void RefreshLables(PKUser[] users) {
