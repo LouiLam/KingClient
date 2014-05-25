@@ -78,7 +78,7 @@ private String curMap,curArea;
 		image_pk_flow=new Image(Display.getDefault(),"pk_flow.png");
 		image_zhogncai_way=new Image(Display.getDefault(),"zhongcai_way.png");
 		image_pk_point_count=new Image(Display.getDefault(),"pk_point_count.png");
-		setShellStyle(SWT.CLOSE | SWT.TITLE);
+		setShellStyle(SWT.CLOSE | SWT.MIN | SWT.TITLE);
 	}
 
 	public void PKCreateSuccess(String id, int type, String area, String title,
@@ -337,8 +337,8 @@ private String curMap,curArea;
 		pk_flow.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-//				QueryDia pkDia = new QueryDia(KingMain.this.getShell());
-//				pkDia.open();
+				UrlDia dia=new UrlDia(KingMain.this.getShell(),"http://www.hexcm.com/yxlm/single/lc.html");
+				dia.open();
 			}
 		});
 		pk_flow.setImage(image_pk_flow);
@@ -348,8 +348,8 @@ private String curMap,curArea;
 		zhogncai_way.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-//				QueryDia pkDia = new QueryDia(KingMain.this.getShell());
-//				pkDia.open();
+				UrlDia dia=new UrlDia(KingMain.this.getShell(),"http://www.hexcm.com/yxlm/single/zc.html");
+				dia.open();
 			}
 		});
 		zhogncai_way.setImage(image_zhogncai_way);
@@ -359,8 +359,8 @@ private String curMap,curArea;
 		pk_point_count.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-//				QueryDia pkDia = new QueryDia(KingMain.this.getShell());
-//				pkDia.open();
+				UrlDia dia=new UrlDia(KingMain.this.getShell(),"http://www.hexcm.com/yxlm/single/ds.html");
+				dia.open();
 			}
 		});
 		pk_point_count.setImage(image_pk_point_count);

@@ -47,11 +47,12 @@ import org.json.JSONObject;
 
 public class KingLogin extends ApplicationWindow {
 	public static String id, roleName;
+	public static boolean isFirstRun=false;
 	Image image, image_reg, image_login;
 	Button btn_isAutoSave;
 	String autoSave = "0";
 	boolean isBreak=true;
-
+	
 	/**
 	 * Create the application window,
 	 */
@@ -94,6 +95,11 @@ public class KingLogin extends ApplicationWindow {
 	 */
 	@Override
 	protected Control createContents(Composite parent) {
+		if(KingLogin.isFirstRun)
+		{
+			UrlDia dia=new UrlDia(KingLogin.this.getShell(),"http://www.hexcm.com/yxlm/single/lc1.html");
+			dia.open();
+		}
 		parent.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 
 		// parent.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_GREEN));
