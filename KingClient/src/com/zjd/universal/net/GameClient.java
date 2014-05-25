@@ -27,17 +27,13 @@ public class GameClient {
 
     public static final int LOGIN_PROT = 4322;
 
-<<<<<<< HEAD
    public static String GAME_IP="113.10.242.132";
-=======
-    public static String GAME_IP="113.10.242.132";
->>>>>>> f14f80045b82c7041f6864171962a1b69d83801f
 //    public static String GAME_IP="louislam0714.xicp.net";
 
     
 //    public static String GAME_IP="218.76.35.162";
     
-//    public static String GAME_IP="192.168.1.205";
+//    public static String GAME_IP="192.168.1.100";
 //    public static String GAME_IP="192.168.1.9";
     
     public static int GAME_PORT=4322;

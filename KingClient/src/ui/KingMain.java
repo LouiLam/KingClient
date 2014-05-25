@@ -15,15 +15,12 @@ import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.TableEditor;
-import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -31,13 +28,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.wb.swt.SWTResourceManager;
+
+import com.zjd.universal.net.GameClient;
 
 public class KingMain extends ApplicationWindow {
 	private Table table;
@@ -253,9 +250,9 @@ public class KingMain extends ApplicationWindow {
 		// }
 		// });
 
-		// GameClient.getInstance().onCreate();
-		// GameClient.getInstance().connectGameServer(GameClient.GAME_IP,
-		// GameClient.GAME_PORT);
+		 GameClient.getInstance().onCreate();
+		 GameClient.getInstance().connectGameServer(GameClient.GAME_IP,
+		 GameClient.GAME_PORT);
 		return parent;
 	}
 
