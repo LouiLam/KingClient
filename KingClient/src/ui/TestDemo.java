@@ -13,6 +13,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
@@ -36,6 +37,7 @@ import send.StartGamePKMessage1004;
 
 import com.zjd.universal.net.GameClient;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.widgets.Combo;
 
 public class TestDemo extends ApplicationWindow {
 	private Table table;
@@ -47,7 +49,8 @@ public class TestDemo extends ApplicationWindow {
 	private TabItem tabItem[]=new TabItem[5];
 	private String tabItemText[]={"首页","个人设置","挑战记录","充值管理","礼品兑换"};
 	private Image image_join_tz,image_join_yz,image_create_tz,image_query,image_end_game,image_start_game;
-
+	private Image image_pk_flow,image_zhogncai_way,image_pk_point_count;
+	private String curMap,curArea;
 	/**
 	 * Create the application window.
 	 */
@@ -63,6 +66,9 @@ public class TestDemo extends ApplicationWindow {
 		image_query=new Image(Display.getDefault(),"query.png");
 		image_end_game=new Image(Display.getDefault(),"end_game.png");
 		image_start_game=new Image(Display.getDefault(),"start_game.png");
+		image_pk_flow=new Image(Display.getDefault(),"pk_flow.png");
+		image_zhogncai_way=new Image(Display.getDefault(),"zhongcai_way.png");
+		image_pk_point_count=new Image(Display.getDefault(),"pk_point_count.png");
 		setShellStyle(SWT.CLOSE | SWT.TITLE);
 	}
 
@@ -119,7 +125,7 @@ public class TestDemo extends ApplicationWindow {
 		table = new Table(container, SWT.BORDER | SWT.MULTI);
 		table.setLinesVisible(false);
 		table.setHeaderVisible(true);
-		table.setBounds(0, 64, 1190, 600);
+		table.setBounds(2, 64, 1024-289, 587);
 		table.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 		TableColumn column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(115);
@@ -133,6 +139,13 @@ public class TestDemo extends ApplicationWindow {
 		column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(130);
 		column.setText("挑战图");
+		column = new TableColumn(table, SWT.CENTER);// 挑战方
+		column.setWidth(108);
+		column.setText("挑战方");
+		column = new TableColumn(table, SWT.CENTER);// 应战方
+		column.setWidth(108);
+		column.setText("应战方");
+	
 		column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(110);
 		column.setText("对战人数");
@@ -142,12 +155,7 @@ public class TestDemo extends ApplicationWindow {
 		column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(220);
 		column.setText("当前人数（挑-应）");
-		column = new TableColumn(table, SWT.CENTER);// 挑战方
-		column.setWidth(108);
-		column.setText("挑战方");
-		column = new TableColumn(table, SWT.CENTER);// 应战方
-		column.setWidth(108);
-		column.setText("应战方");
+	
 		btn_create_tz = new Button(container, SWT.CENTER);
 		btn_create_tz.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -157,22 +165,138 @@ public class TestDemo extends ApplicationWindow {
 				pkDia.open();
 			}
 		});
-		btn_create_tz.setBounds(10, 10, 193, 38);
+		btn_create_tz.setBounds(287, 11, 137, 40);
 		btn_create_tz.setImage(image_create_tz);
 
-		Button query = new Button(container, SWT.CENTER);
-		query.addSelectionListener(new SelectionAdapter() {
+//		Button query = new Button(container, SWT.CENTER);
+//		query.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				QueryDia pkDia = new QueryDia(TestDemo.this.getShell());
+//				pkDia.open();
+//			}
+//		});
+//		query.setImage(image_query);
+//		query.setBounds(476, 11, 193, 38);
+		
+		Button pk_flow = new Button(container, SWT.CENTER);
+		pk_flow.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				QueryDia pkDia = new QueryDia(TestDemo.this.getShell());
 				pkDia.open();
 			}
 		});
-		query.setImage(image_query);
-		query.setBounds(209, 10, 193, 38);
+		pk_flow.setImage(image_pk_flow);
+		pk_flow.setBounds(430, 11, 137, 40);
+		
+		Button zhogncai_way = new Button(container, SWT.CENTER);
+		zhogncai_way.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				QueryDia pkDia = new QueryDia(TestDemo.this.getShell());
+				pkDia.open();
+			}
+		});
+		zhogncai_way.setImage(image_zhogncai_way);
+		zhogncai_way.setBounds(573, 11, 137, 40);
+		
+		Button pk_point_count = new Button(container, SWT.CENTER);
+		pk_point_count.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				QueryDia pkDia = new QueryDia(TestDemo.this.getShell());
+				pkDia.open();
+			}
+		});
+		pk_point_count.setImage(image_pk_point_count);
+		pk_point_count.setBounds(716, 11, 137, 40);
+		
+//		image_zhogncai_way=new Image(Display.getDefault(),"zhogncai_way.png");
+//		image_pk_point_count=new Image(Display.getDefault(),"pk_point_count.png");
 		
 		Browser browser = new Browser(container, SWT.BORDER);
-		browser.setBounds(1196, 64, 298, 600);
+		browser.setBounds(1024-285, 64, 278, 587);
+		browser.setUrl("http://www.hexcm.com/yxlm/index_right.php?uid=" + PKUser.uid);
+		browser.setJavascriptEnabled(true);
+		Combo area = new Combo(container, SWT.NONE);
+		area.setBounds(10, 20, 84, 21);
+		area.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+		area.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+			
+				curArea=((Combo)arg0.getSource()).getText();
+				RefreshTableFilter(null, curArea);
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				curArea=((Combo)arg0.getSource()).getText();
+				RefreshTableFilter(null, curArea);
+				
+			}
+		});
+      
+		area.add("艾欧尼亚(电信)");
+		area.add("祖安(电信)");
+		area.add("诺克萨斯(电信)");
+		area.add("班德尔城(电信)");
+		area.add("皮尔特沃夫(电信)");
+		area.add("战争学院(电信)");
+		area.add("巨神峰(电信)");
+		area.add("雷瑟守备(电信)");
+		area.add("钢铁烈阳(电信)");
+		area.add("裁决之地(电信)");
+		area.add("黑色玫瑰(电信)");
+		area.add("暗影岛(电信)");
+		area.add("均衡教派(电信)");
+		area.add("水晶之痕(电信)");
+		area.add("影流(电信)");
+		area.add("守望之海(电信)");
+		area.add("征服之海(电信)");
+		area.add("卡拉曼达(电信)");
+		area.add("皮城警备(电信)");
+
+		area.add("比尔吉沃特(网通)");
+		area.add("德玛西亚(网通)");
+		area.add("费雷尔卓德(网通)");
+		area.add("无畏先锋(网通)");
+		area.add("怒瑞玛(网通)");
+		area.add("扭曲丛林(网通)");
+		area.setText("选择区服");
+		
+		
+		Combo map = new Combo(container, SWT.NONE);
+		map.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+		map.setBounds(111, 20, 84, 21);
+		map.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				System.out.println(((Combo)arg0.getSource()).getText());
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				System.out.println(((Combo)arg0.getSource()).getText());
+				
+			}
+		});
+		map.add("扭曲丛林");
+		map.add("召唤师峡谷");
+		map.setText("选择地图");
+		
+		Button btnNewButton = new Button(container, SWT.NONE);
+		btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			}
+		});
+		btnNewButton.setBounds(201, 16, 80, 27);
+		btnNewButton.setText("筛选");
+		
 
 		return container;
 	}
@@ -451,4 +575,6 @@ public class TestDemo extends ApplicationWindow {
 		}
 
 	}
+	//筛选刷新
+	public void RefreshTableFilter(String map,String area) {}
 }

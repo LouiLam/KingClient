@@ -7,6 +7,7 @@ import object.PK;
 import object.PKManager;
 import object.PKUser;
 
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
@@ -87,10 +88,15 @@ public class CreatePKResultMessageReceive2002 extends SocketMessageReceived {
 
 			@Override
 			public void run() {
-				KingMain kingMain = (KingMain) JfaceWindowManager
-						.getCurWindow();
-				kingMain.RefreshTable();
-				kingMain.PKCreateSuccess(id, type, area, title,point);
+				
+				KingMain kingMain = null;
+				for (Window window : JfaceWindowManager.wm.getWindows()) {
+					if (window instanceof KingMain) {
+						kingMain = (KingMain) window;
+						kingMain.RefreshTable();
+						kingMain.PKCreateSuccess(id, type, area, title,point);
+					}
+				}
 			}
 		});
 

@@ -8,12 +8,13 @@ import java.util.HashMap;
 public class PKManager {
 
 	private static PKManager myself;
-	private  HashMap<Long, PK> pkMap;
-	private  ArrayList<PK> pkList;
-
+	private HashMap<Long, PK> pkMap;
+	private ArrayList<PK> pkList;
+	private ArrayList<PK> pkListFilter;
 	private PKManager() {
 		pkMap = new HashMap<Long, PK>();
 		pkList = new ArrayList<PK>();
+		pkListFilter= new ArrayList<PK>();
 	}
 
 	public static PKManager getInstance() {
@@ -26,11 +27,15 @@ public class PKManager {
 	public void clear() {
 		pkMap.clear();
 		pkList.clear();
+		pkListFilter.clear();
 	}
 
-	public  void add(PK pk) {
+	public void add(PK pk) {
 		pkMap.put(pk.sql_id, pk);
 		pkList.add(pk);
+	}
+	public void addFilter(PK pk) {
+		pkListFilter.add(pk);
 	}
 
 	/**
@@ -41,37 +46,48 @@ public class PKManager {
 	public int getPKNum() {
 		return pkList.size();
 	}
-
+	public int getFilterPKNum() {
+		return pkListFilter.size();
+	}
 	/**
 	 * 获取挑战条目
 	 * 
 	 * @return
 	 */
-	public  PK getPKByIndex(int index) {
+	public PK getPKByIndex(int index) {
 		return pkList.get(index);
 	}
 	/**
+	 * 获取 过滤挑战条目
+	 * 
+	 * @return
+	 */
+	public PK getFilterPKByIndex(int index) {
+		return pkListFilter.get(index);
+	}
+	/**
 	 * 获取挑战条目
 	 * 
 	 * @return
 	 */
-	public  PK getPKBySQLID(long sql_id) {
+	public PK getPKBySQLID(long sql_id) {
 		return pkMap.get(sql_id);
 	}
+
 	public static void main(String[] args) {
-		
+
 		try {
-			System.out.println(URLEncoder.encode("","UTF-8"));
+			System.out.println(URLEncoder.encode("", "UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		PK pk=new PK(null, null, null, null, null, null, 0, 0, 0,null);
+		PK pk = new PK(null, null, null, null, null, null, 0, 0, 0, null);
 		PKManager.getInstance().add(pk);
-		PK pk1=PKManager.getInstance().getPKBySQLID(0);
-		pk1.faqiSeatCount=10;
-		pk1.yingzhanSeatCount=10;
-		PK pk2=PKManager.getInstance().getPKByIndex(0);
+		PK pk1 = PKManager.getInstance().getPKBySQLID(0);
+		pk1.faqiSeatCount = 10;
+		pk1.yingzhanSeatCount = 10;
+		PK pk2 = PKManager.getInstance().getPKByIndex(0);
 		System.out.println(pk2.faqiSeatCount);
 	}
 }
