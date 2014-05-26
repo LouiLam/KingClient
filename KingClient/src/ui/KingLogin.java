@@ -21,6 +21,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.window.ApplicationWindow;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -160,12 +161,17 @@ public class KingLogin extends ApplicationWindow {
 		});
 
 		reg.setBounds(10, 218, 138, 37);
-		Label login = new Label(container, SWT.NONE);
+		final Label login = new Label(container, SWT.NONE);
 		login.setImage(image_login);
 
 		login.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
+				login.setImage(image_reg);
+			}
+			@Override
+			public void mouseUp(MouseEvent e) {
+				
 				if (combo.getText() == null
 						|| combo.getText().trim().length() == 0
 						|| pwd_text.getText() == null
@@ -176,47 +182,16 @@ public class KingLogin extends ApplicationWindow {
 					mb.open();
 					return;
 				}
-				httpPost();
-//				ProgressMonitorDialog dialog = new ProgressMonitorDialog(
-//						getShell());
-//				try {
-//					dialog.run(true, true, new IRunnableWithProgress() {
-//
-//						@Override
-//						public void run(IProgressMonitor monitor)
-//								throws InvocationTargetException,
-//								InterruptedException {
-//						
-//							monitor.beginTask("wait ...", 10);
-//							int i=0;
-//							while (isBreak) {
-//								i++;
-//								Thread.sleep(100);
-//								monitor.worked(1);
-//								if (monitor.isCanceled()) {
-//									throw new InterruptedException();
-//								}
-//								if(i>10)
-//								{
-//								i=0;
-//								monitor.beginTask("wait ...", 10);
-//								}
-//							}
-//							monitor.done();
-//						
-//							
-//						}
-//					});
-//					MessageDialog.openInformation(getShell(), "登录提示",
-//							"登录完成");
-//				} catch (InvocationTargetException s) {
-//					MessageDialog.openError(getShell(), "InvocationTargetException", 
-//							s.getMessage());
-//				} catch (InterruptedException s) {
-//					MessageDialog.openInformation(getShell(), "InterruptedException",
-//							"User cancels it.");
-//				}
-			
+				login.setImage(image_login);
+				Display.getDefault().asyncExec(new Runnable() {
+					
+					@Override
+					public void run() {
+						httpPost();
+					}
+				});
+				
+				
 			}
 		});
 		login.setBounds(206, 218, 138, 37);
