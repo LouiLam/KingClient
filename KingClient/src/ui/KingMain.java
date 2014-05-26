@@ -57,6 +57,7 @@ public class KingMain extends ApplicationWindow {
 			image_table_bg, tab_bg;
 	private Image image_pk_flow,image_zhogncai_way,image_pk_point_count;
 private String curMap,curArea;
+private Image icon;
 	/**
 	 * Create the application window.
 	 */
@@ -64,6 +65,7 @@ private String curMap,curArea;
 
 		super(null);
 		setWindowManager(JfaceWindowManager.wm);
+		icon = new Image(Display.getDefault(), "1.jpg");
 		// createActions();
 		// addStatusLine();
 		for (int i = 0; i < 5; i++) {
@@ -310,6 +312,8 @@ private String curMap,curArea;
 		column.setWidth(220);
 		column.setText("当前人数（挑-应）");
 	
+		
+		//发起挑战按钮
 		btn_create_tz = new Button(container, SWT.CENTER);
 		btn_create_tz.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -550,6 +554,7 @@ private String curMap,curArea;
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText("\u6211\u662F\u738B\u8005" + "----id:" + KingLogin.id);
+		newShell.setImage(icon);
 
 	}
 
@@ -668,17 +673,30 @@ private String curMap,curArea;
 
 	// 房主退出
 	public void HostLeave(String id) {
+		if (!id.equals(KingLogin.id))// 非房主弹出此对话框
+		{
+			tableEnable();
+			MessageBox mb = new MessageBox(KingMain.this.getShell(),
+					SWT.ICON_INFORMATION | SWT.OK);
+			mb.setMessage("房主退出房间，挑战解散");//
+			mb.open();
+		}
+		//不管是不是房主这个按钮有要允许点击
+		btn_create_tz.setEnabled(true);
+
+	}
+	// 房主强制退出
+	public void HostCrashLeave(String id) {
 		if (!id.equals(KingLogin.id))// 自己是房主 不需要弹出此对话框
 		{
 			tableEnable();
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
-			mb.setMessage("房主异常退出，挑战解散");//
+			mb.setMessage("房主异常退出房间，挑战解散");//
 			mb.open();
 		}
 
 	}
-
 	ArrayList<Control> listControl = new ArrayList<Control>();
 
 	public void RefreshTable() {

@@ -14,7 +14,7 @@ import ui.KingMain;
 import ui.WaitDia;
 
 /**
- * 离开房间
+ * 房主强制或正常或崩溃离开房间
  * 
  * @author Administrator
  * 
@@ -67,8 +67,8 @@ public class HostLeavePKResultMessageRecevie2009 extends SocketMessageReceived {
 			public void run() {
 				for (Window window : JfaceWindowManager.wm.getWindows()) {
 					if (window instanceof KingMain) {
-						KingMain mian = (KingMain) window;
-						mian.HostLeave(id);
+						KingMain main = (KingMain) window;
+						main.HostLeave(id);
 					}
 					if (window instanceof WaitDia) {
 						WaitDia waitDia = (WaitDia) window;

@@ -1,2 +1,4 @@
 test	test	0
 lgc	123456	1
+ceshi1	123456	1
+lg2	123456	1

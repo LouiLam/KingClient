@@ -1,7 +1,6 @@
 package ui;
 
 import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,11 +19,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.StatusLineManager;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -306,6 +301,7 @@ public class KingLogin extends ApplicationWindow {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText("欢迎您登录我是王者");
+		newShell.setImage(image);
 	}
 
 	/**

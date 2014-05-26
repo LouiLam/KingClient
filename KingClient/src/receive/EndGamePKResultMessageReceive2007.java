@@ -33,6 +33,7 @@ public class EndGamePKResultMessageReceive2007 extends SocketMessageReceived {
 						}
 					}
 					if(kingMain==null){return;}
+					System.out.println("结束游戏");
 					kingMain.EndGameResult(status);
 				}
 			});
