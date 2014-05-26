@@ -55,9 +55,10 @@ public class KingMain extends ApplicationWindow {
 
 	private Image image_join_tz, image_join_yz, image_create_tz, image_query,
 			image_table_bg, tab_bg;
-	private Image image_pk_flow,image_zhogncai_way,image_pk_point_count;
-private String curMap,curArea;
-private Image icon;
+	private Image image_pk_flow, image_zhogncai_way, image_pk_point_count;
+	private String curMap, curArea;
+	private Image icon;
+
 	/**
 	 * Create the application window.
 	 */
@@ -77,9 +78,10 @@ private Image icon;
 		image_query = new Image(Display.getDefault(), "query.png");
 		image_table_bg = new Image(Display.getDefault(), "green.jpg");
 		tab_bg = new Image(Display.getDefault(), "tab_bg.png");
-		image_pk_flow=new Image(Display.getDefault(),"pk_flow.png");
-		image_zhogncai_way=new Image(Display.getDefault(),"zhongcai_way.png");
-		image_pk_point_count=new Image(Display.getDefault(),"pk_point_count.png");
+		image_pk_flow = new Image(Display.getDefault(), "pk_flow.png");
+		image_zhogncai_way = new Image(Display.getDefault(), "zhongcai_way.png");
+		image_pk_point_count = new Image(Display.getDefault(),
+				"pk_point_count.png");
 		setShellStyle(SWT.CLOSE | SWT.MIN | SWT.TITLE);
 	}
 
@@ -208,13 +210,15 @@ private Image icon;
 			if (i == 0) {
 				tabItem[i] = getTabControlOne(parent);
 			} else {
-				tabItem[i] = getTabContrlOther(parent, urlText[i]+"?uid="+ PKUser.uid);
+				tabItem[i] = getTabContrlOther(parent, urlText[i] + "?uid="
+						+ PKUser.uid);
 			}
 
 			tabItem[i].setBackground(SWTResourceManager
-					.getColor(SWT.COLOR_CYAN));
+					.getColor(0,108,147));
 			tabItem[i].setBounds(0, tab_bg.getBounds().height,
-					getInitialSize().x, getInitialSize().y-tab_bg.getBounds().height);
+					getInitialSize().x, getInitialSize().y
+							- tab_bg.getBounds().height);
 			// tabItem[i].setLayoutData(new RowData(getInitialSize().x,
 			// parent.getClientArea().height-tab_bg.getBounds().height));
 			tabItem[i].setVisible(false);
@@ -248,9 +252,9 @@ private Image icon;
 		// }
 		// });
 
-		 GameClient.getInstance().onCreate();
-		 GameClient.getInstance().connectGameServer(GameClient.GAME_IP,
-		 GameClient.GAME_PORT);
+		GameClient.getInstance().onCreate();
+		GameClient.getInstance().connectGameServer(GameClient.GAME_IP,
+				GameClient.GAME_PORT);
 		return parent;
 	}
 
@@ -281,14 +285,14 @@ private Image icon;
 		table = new Table(container, SWT.BORDER | SWT.MULTI);
 		table.setLinesVisible(false);
 		table.setHeaderVisible(true);
-		table.setBounds(2, 64, 1024-289, 587);
+		table.setBounds(2, 64, 1024 - 289, 587);
 		table.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 		TableColumn column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(115);
-		column.setText("房主");
+		column.setText("对战人数");
 		column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(110);
-		column.setText("标题");
+		column.setText("当前人数（挑-应）");
 		column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(160);
 		column.setText("游戏区");
@@ -301,19 +305,18 @@ private Image icon;
 		column = new TableColumn(table, SWT.CENTER);// 应战方
 		column.setWidth(108);
 		column.setText("应战方");
-	
+
 		column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(110);
-		column.setText("对战人数");
+		column.setText("房主");
 		column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(120);
 		column.setText("挑战点");
 		column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(220);
-		column.setText("当前人数（挑-应）");
-	
-		
-		//发起挑战按钮
+		column.setText("标题");
+
+		// 发起挑战按钮
 		btn_create_tz = new Button(container, SWT.CENTER);
 		btn_create_tz.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -326,75 +329,79 @@ private Image icon;
 		btn_create_tz.setBounds(287, 11, 137, 40);
 		btn_create_tz.setImage(image_create_tz);
 
-//		Button query = new Button(container, SWT.CENTER);
-//		query.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				QueryDia pkDia = new QueryDia(TestDemo.this.getShell());
-//				pkDia.open();
-//			}
-//		});
-//		query.setImage(image_query);
-//		query.setBounds(476, 11, 193, 38);
-		
+		// Button query = new Button(container, SWT.CENTER);
+		// query.addSelectionListener(new SelectionAdapter() {
+		// @Override
+		// public void widgetSelected(SelectionEvent e) {
+		// QueryDia pkDia = new QueryDia(TestDemo.this.getShell());
+		// pkDia.open();
+		// }
+		// });
+		// query.setImage(image_query);
+		// query.setBounds(476, 11, 193, 38);
+
 		Button pk_flow = new Button(container, SWT.CENTER);
 		pk_flow.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				UrlDia dia=new UrlDia(KingMain.this.getShell(),"http://www.hexcm.com/yxlm/single/lc.html");
+				UrlDia dia = new UrlDia(KingMain.this.getShell(),
+						"http://www.hexcm.com/yxlm/single/lc.html");
 				dia.open();
 			}
 		});
 		pk_flow.setImage(image_pk_flow);
 		pk_flow.setBounds(430, 11, 137, 40);
-		
+
 		Button zhogncai_way = new Button(container, SWT.CENTER);
 		zhogncai_way.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				UrlDia dia=new UrlDia(KingMain.this.getShell(),"http://www.hexcm.com/yxlm/single/zc.html");
+				UrlDia dia = new UrlDia(KingMain.this.getShell(),
+						"http://www.hexcm.com/yxlm/single/zc.html");
 				dia.open();
 			}
 		});
 		zhogncai_way.setImage(image_zhogncai_way);
 		zhogncai_way.setBounds(576, 11, 137, 40);
-		
+
 		Button pk_point_count = new Button(container, SWT.CENTER);
 		pk_point_count.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				UrlDia dia=new UrlDia(KingMain.this.getShell(),"http://www.hexcm.com/yxlm/single/ds.html");
+				UrlDia dia = new UrlDia(KingMain.this.getShell(),
+						"http://www.hexcm.com/yxlm/single/ds.html");
 				dia.open();
 			}
 		});
 		pk_point_count.setImage(image_pk_point_count);
 		pk_point_count.setBounds(716, 11, 137, 40);
-		
+
 		Browser browser = new Browser(container, SWT.BORDER);
-		browser.setBounds(1024-285, 64, 278, 587);
-		browser.setUrl("http://www.hexcm.com/yxlm/index_right.php?uid=" + PKUser.uid);
+		browser.setBounds(1024 - 285, 64, 278, 587);
+		browser.setUrl("http://www.hexcm.com/yxlm/index_right.php?uid="
+				+ PKUser.uid);
 		browser.setJavascriptEnabled(true);
 		Combo area = new Combo(container, SWT.NONE);
 		area.setBounds(10, 20, 84, 21);
 		area.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 		area.addSelectionListener(new SelectionListener() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-			
-				curArea=((Combo)arg0.getSource()).getText();
-				if(curArea.equals("选择区服")){
-					curArea=null;
+
+				curArea = ((Combo) arg0.getSource()).getText();
+				if (curArea.equals("选择区服")) {
+					curArea = null;
 				}
 			}
-			
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
-				curArea=((Combo)arg0.getSource()).getText();
-				if(curArea.equals("选择区服")){
-					curArea=null;
+				curArea = ((Combo) arg0.getSource()).getText();
+				if (curArea.equals("选择区服")) {
+					curArea = null;
 				}
-				
+
 			}
 		});
 		area.add("选择区服");
@@ -425,26 +432,26 @@ private Image icon;
 		area.add("怒瑞玛(网通)");
 		area.add("扭曲丛林(网通)");
 		area.setText("选择区服");
-		
+
 		Combo map = new Combo(container, SWT.NONE);
 		map.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 		map.setBounds(111, 20, 84, 21);
 		map.addSelectionListener(new SelectionListener() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				curMap=((Combo)arg0.getSource()).getText();
-				if(curMap.equals("选择地图")){
-					curMap=null;
+				curMap = ((Combo) arg0.getSource()).getText();
+				if (curMap.equals("选择地图")) {
+					curMap = null;
 				}
-				
+
 			}
-			
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
-				curMap=((Combo)arg0.getSource()).getText();
-				if(curMap.equals("选择地图")){
-					curMap=null;
+				curMap = ((Combo) arg0.getSource()).getText();
+				if (curMap.equals("选择地图")) {
+					curMap = null;
 				}
 			}
 		});
@@ -452,22 +459,22 @@ private Image icon;
 		map.add("扭曲丛林");
 		map.add("召唤师峡谷");
 		map.setText("选择地图");
-		
+
 		Button btnNewButton = new Button(container, SWT.NONE);
 		btnNewButton.setBounds(201, 16, 80, 27);
 		btnNewButton.setText("筛选");
 		btnNewButton.addSelectionListener(new SelectionListener() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-			
+
 				RefreshTableFilter(curMap, curArea);
 			}
-			
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 				RefreshTableFilter(curMap, curArea);
-				
+
 			}
 		});
 
@@ -681,10 +688,11 @@ private Image icon;
 			mb.setMessage("房主退出房间，挑战解散");//
 			mb.open();
 		}
-		//不管是不是房主这个按钮有要允许点击
+		// 不管是不是房主这个按钮有要允许点击
 		btn_create_tz.setEnabled(true);
 
 	}
+
 	// 房主强制退出
 	public void HostCrashLeave(String id) {
 		if (!id.equals(KingLogin.id))// 自己是房主 不需要弹出此对话框
@@ -697,6 +705,7 @@ private Image icon;
 		}
 
 	}
+
 	ArrayList<Control> listControl = new ArrayList<Control>();
 
 	public void RefreshTable() {
@@ -716,22 +725,30 @@ private Image icon;
 		for (int i = 0; i < items.length; i++) {
 			PK pk = PKManager.getInstance().getPKByIndex(i);
 			TableEditor editor = new TableEditor(table);
-			Label textName = new Label(table, SWT.CENTER);
-			textName.setText(pk.id);
-			textName.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			Label textType = new Label(table, SWT.CENTER);
+			textType.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			textType.setText(pk.type + "v" + pk.type);
 			editor.grabHorizontal = true;
-			editor.setEditor(textName, items[i], 0);
-			textName.setToolTipText(pk.id);
-			listControl.add(textName);
+			editor.setEditor(textType, items[i], 0);
+			textType.setToolTipText(pk.type + "v" + pk.type);
+			listControl.add(textType);
 
 			editor = new TableEditor(table);
-			Label textTitle = new Label(table, SWT.CENTER);
-			textTitle.setText(pk.title);
-			textTitle.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			Label textCurNum = new Label(table, SWT.CENTER);
+			if (pk.password.equals("")) {
+				textCurNum.setText(pk.faqiSeatCount + "-"
+						+ +pk.yingzhanSeatCount);
+			} else {
+				textCurNum.setText(pk.faqiSeatCount + "-"
+						+ pk.yingzhanSeatCount + "(密)");
+			}
+			textCurNum
+					.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
-			editor.setEditor(textTitle, items[i], 1);
-			textTitle.setToolTipText(pk.title);
-			listControl.add(textTitle);
+			editor.setEditor(textCurNum, items[i], 1);
+			textCurNum.setToolTipText(pk.faqiSeatCount + "-"
+					+ pk.yingzhanSeatCount);
+			listControl.add(textCurNum);
 
 			editor = new TableEditor(table);
 			Label textArea = new Label(table, SWT.CENTER);
@@ -750,7 +767,7 @@ private Image icon;
 			editor.setEditor(textMap, items[i], 3);
 			textMap.setToolTipText(pk.map);
 			listControl.add(textMap);
-			
+
 			editor = new TableEditor(table);
 			Button join_tz = new Button(table, SWT.CENTER);
 			join_tz.setImage(image_join_tz);
@@ -804,20 +821,19 @@ private Image icon;
 			editor.grabHorizontal = true;
 			editor.setEditor(join_yz, items[i], 5);
 			listControl.add(join_yz);
-			
-		
 
 			editor = new TableEditor(table);
-			Label textType = new Label(table, SWT.CENTER);
-			textType.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			textType.setText(pk.type + "v" + pk.type);
+			Label textName = new Label(table, SWT.CENTER);
+			textName.setText(pk.id);
+			textName.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
-			editor.setEditor(textType, items[i], 6);
-			textType.setToolTipText(pk.type + "v" + pk.type);
-			listControl.add(textType);
+			editor.setEditor(textName, items[i], 6);
+			textName.setToolTipText(pk.id);
+			listControl.add(textName);
 
 			editor = new TableEditor(table);
 			Label textPoint = new Label(table, SWT.CENTER);
+			System.out.println("pk.point:" + pk.point);
 			textPoint.setText(pk.point + "");
 			textPoint.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
@@ -826,28 +842,20 @@ private Image icon;
 			listControl.add(textPoint);
 
 			editor = new TableEditor(table);
-			Label textCurNum = new Label(table, SWT.CENTER);
-			if (pk.password.equals("")) {
-				textCurNum.setText(pk.faqiSeatCount + "-"
-						+ +pk.yingzhanSeatCount);
-			} else {
-				textCurNum.setText(pk.faqiSeatCount + "-"
-						+ +pk.yingzhanSeatCount + "(密)");
-			}
-			textCurNum
-					.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			Label textTitle = new Label(table, SWT.CENTER);
+			textTitle.setText(pk.title);
+			textTitle.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
-			editor.setEditor(textCurNum, items[i], 8);
-			textCurNum.setToolTipText(pk.faqiSeatCount + "-"
-					+ +pk.yingzhanSeatCount);
-			listControl.add(textCurNum);
+			editor.setEditor(textTitle, items[i], 8);
+			textTitle.setToolTipText(pk.title);
+			listControl.add(textTitle);
 
-		
 		}
 
 	}
-	//筛选刷新
-	public void RefreshTableFilter(String map,String area) {
+
+	// 筛选刷新
+	public void RefreshTableFilter(String map, String area) {
 
 		table.clearAll();
 		table.removeAll();
@@ -857,67 +865,66 @@ private Image icon;
 		table.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		table.setBackgroundImage(image_table_bg);
 		listControl.clear();
-		
-		System.out.println("map:"+map+"area:"+area);
-			for (int i = 0; i < PKManager.getInstance().getPKNum(); i++) {
-				PK pk = PKManager.getInstance().getPKByIndex(i);
-				if(map!=null&&area!=null)
-				{
-					if(pk.map.equals(map)&&pk.area.equals(area))
-					{
-						 PKManager.getInstance().addFilter(pk);
-					}
+
+		System.out.println("map:" + map + "area:" + area);
+		for (int i = 0; i < PKManager.getInstance().getPKNum(); i++) {
+			PK pk = PKManager.getInstance().getPKByIndex(i);
+			if (map != null && area != null) {
+				if (pk.map.equals(map) && pk.area.equals(area)) {
+					PKManager.getInstance().addFilter(pk);
 				}
-				if(map==null&&area!=null)
-				{
-					System.out.println("pk.area:"+pk.area);
-					if(pk.area.equals(area))
-					{
-						
-						 PKManager.getInstance().addFilter(pk);
-					}
+			}
+			if (map == null && area != null) {
+				System.out.println("pk.area:" + pk.area);
+				if (pk.area.equals(area)) {
+
+					PKManager.getInstance().addFilter(pk);
 				}
-				if(area==null&map!=null)
-				{
-					if(pk.map.equals(area))
-					{
-						System.out.println("area==null&map!=null");
-						 PKManager.getInstance().addFilter(pk);
-					}
+			}
+			if (area == null & map != null) {
+				if (pk.map.equals(area)) {
+					System.out.println("area==null&map!=null");
+					PKManager.getInstance().addFilter(pk);
 				}
-				if(area==null&map==null)
-				{
-					RefreshTable();
-					return;
-				}
-			}	
-		
-		
+			}
+			if (area == null & map == null) {
+				RefreshTable();
+				return;
+			}
+		}
+
 		for (int i = 0; i < PKManager.getInstance().getFilterPKNum(); i++) {
 			TableItem item = new TableItem(table, SWT.NONE);
 		}
-		
-		
+
 		TableItem[] items = table.getItems();
 		for (int i = 0; i < items.length; i++) {
 			PK pk = PKManager.getInstance().getFilterPKByIndex(i);
 			TableEditor editor = new TableEditor(table);
-			Label textName = new Label(table, SWT.CENTER);
-			textName.setText(pk.id);
-			textName.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			Label textType = new Label(table, SWT.CENTER);
+			textType.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			textType.setText(pk.type + "v" + pk.type);
 			editor.grabHorizontal = true;
-			editor.setEditor(textName, items[i], 0);
-			textName.setToolTipText(pk.id);
-			listControl.add(textName);
+			editor.setEditor(textType, items[i], 0);
+			textType.setToolTipText(pk.type + "v" + pk.type);
+			listControl.add(textType);
 
 			editor = new TableEditor(table);
-			Label textTitle = new Label(table, SWT.CENTER);
-			textTitle.setText(pk.title);
-			textTitle.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			Label textCurNum = new Label(table, SWT.CENTER);
+			if (pk.password.equals("")) {
+				textCurNum.setText(pk.faqiSeatCount + "-"
+						+ +pk.yingzhanSeatCount);
+			} else {
+				textCurNum.setText(pk.faqiSeatCount + "-"
+						+ pk.yingzhanSeatCount + "(密)");
+			}
+			textCurNum
+					.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
-			editor.setEditor(textTitle, items[i], 1);
-			textTitle.setToolTipText(pk.title);
-			listControl.add(textTitle);
+			editor.setEditor(textCurNum, items[i], 1);
+			textCurNum.setToolTipText(pk.faqiSeatCount + "-"
+					+ pk.yingzhanSeatCount);
+			listControl.add(textCurNum);
 
 			editor = new TableEditor(table);
 			Label textArea = new Label(table, SWT.CENTER);
@@ -936,7 +943,7 @@ private Image icon;
 			editor.setEditor(textMap, items[i], 3);
 			textMap.setToolTipText(pk.map);
 			listControl.add(textMap);
-			
+
 			editor = new TableEditor(table);
 			Button join_tz = new Button(table, SWT.CENTER);
 			join_tz.setImage(image_join_tz);
@@ -990,20 +997,19 @@ private Image icon;
 			editor.grabHorizontal = true;
 			editor.setEditor(join_yz, items[i], 5);
 			listControl.add(join_yz);
-			
-		
 
 			editor = new TableEditor(table);
-			Label textType = new Label(table, SWT.CENTER);
-			textType.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			textType.setText(pk.type + "v" + pk.type);
+			Label textName = new Label(table, SWT.CENTER);
+			textName.setText(pk.id);
+			textName.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
-			editor.setEditor(textType, items[i], 6);
-			textType.setToolTipText(pk.type + "v" + pk.type);
-			listControl.add(textType);
+			editor.setEditor(textName, items[i], 6);
+			textName.setToolTipText(pk.id);
+			listControl.add(textName);
 
 			editor = new TableEditor(table);
 			Label textPoint = new Label(table, SWT.CENTER);
+			System.out.println("pk.point:" + pk.point);
 			textPoint.setText(pk.point + "");
 			textPoint.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
@@ -1012,23 +1018,14 @@ private Image icon;
 			listControl.add(textPoint);
 
 			editor = new TableEditor(table);
-			Label textCurNum = new Label(table, SWT.CENTER);
-			if (pk.password.equals("")) {
-				textCurNum.setText(pk.faqiSeatCount + "-"
-						+ +pk.yingzhanSeatCount);
-			} else {
-				textCurNum.setText(pk.faqiSeatCount + "-"
-						+ +pk.yingzhanSeatCount + "(密)");
-			}
-			textCurNum
-					.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			Label textTitle = new Label(table, SWT.CENTER);
+			textTitle.setText(pk.title);
+			textTitle.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
-			editor.setEditor(textCurNum, items[i], 8);
-			textCurNum.setToolTipText(pk.faqiSeatCount + "-"
-					+ +pk.yingzhanSeatCount);
-			listControl.add(textCurNum);
+			editor.setEditor(textTitle, items[i], 8);
+			textTitle.setToolTipText(pk.title);
+			listControl.add(textTitle);
 
-		
 		}
 
 	}
