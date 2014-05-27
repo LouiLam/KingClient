@@ -833,7 +833,6 @@ public class KingMain extends ApplicationWindow {
 
 			editor = new TableEditor(table);
 			Label textPoint = new Label(table, SWT.CENTER);
-			System.out.println("pk.point:" + pk.point);
 			textPoint.setText(pk.point + "");
 			textPoint.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
@@ -1009,7 +1008,6 @@ public class KingMain extends ApplicationWindow {
 
 			editor = new TableEditor(table);
 			Label textPoint = new Label(table, SWT.CENTER);
-			System.out.println("pk.point:" + pk.point);
 			textPoint.setText(pk.point + "");
 			textPoint.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
