@@ -41,6 +41,7 @@ public class MessageHandler extends SimpleChannelHandler {
 	
 	 @Override  
 	 public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
+			System.out.println("客户读异常断开连接");
 		 if(e.getCause() instanceof IOException){
 		 }else{
 			 e.getCause().printStackTrace();
@@ -48,6 +49,7 @@ public class MessageHandler extends SimpleChannelHandler {
 	 }
 	 @Override  
 	 public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) {
+		 System.out.println("客户读关闭连接");
 		 try{
 		 }catch(Exception e1){
 			 e1.printStackTrace();
