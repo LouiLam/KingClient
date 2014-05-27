@@ -15,6 +15,7 @@ import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.TableEditor;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -54,10 +55,10 @@ public class KingMain extends ApplicationWindow {
 			"http://www.hexcm.com/yxlm/dj.php" };
 
 	private Image image_join_tz, image_join_yz, image_create_tz, image_query,
-			image_table_bg, tab_bg;
+			image_table_bg;
 	private Image image_pk_flow, image_zhogncai_way, image_pk_point_count;
 	private String curMap, curArea;
-	private Image icon;
+	private Image icon,image_shaixuan,image_bg_menu,image_bg_top;
 
 	/**
 	 * Create the application window.
@@ -76,12 +77,15 @@ public class KingMain extends ApplicationWindow {
 		image_join_yz = new Image(Display.getDefault(), "join_yz.jpg");
 		image_create_tz = new Image(Display.getDefault(), "create_tz.png");
 		image_query = new Image(Display.getDefault(), "query.png");
-		image_table_bg = new Image(Display.getDefault(), "green.jpg");
-		tab_bg = new Image(Display.getDefault(), "tab_bg.png");
+		image_table_bg = new Image(Display.getDefault(), "table_bg.jpg");
 		image_pk_flow = new Image(Display.getDefault(), "pk_flow.png");
 		image_zhogncai_way = new Image(Display.getDefault(), "zhongcai_way.png");
 		image_pk_point_count = new Image(Display.getDefault(),
 				"pk_point_count.png");
+		image_shaixuan=new Image(Display.getDefault(),
+				"button_sx.png");
+		image_bg_menu=new Image(Display.getDefault(), "bg_menu.jpg");
+		image_bg_top=new Image(Display.getDefault(), "bg_top.jpg");
 		setShellStyle(SWT.CLOSE | SWT.MIN | SWT.TITLE);
 	}
 
@@ -162,9 +166,10 @@ public class KingMain extends ApplicationWindow {
 		parent.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
 		Composite composite = new Composite(parent, SWT.NONE);
-		// 设置容器框大小
+		// 设置容器上部菜单框大小
 		composite
-				.setBounds(0, 0, getInitialSize().x, tab_bg.getBounds().height);
+				.setBounds(0, 0, getInitialSize().x, image_bg_menu.getBounds().height);
+
 		// 设置布局
 		// composite.setLayoutData(new RowData(getInitialSize().x,
 		// tab_bg.getBounds().height));
@@ -172,13 +177,13 @@ public class KingMain extends ApplicationWindow {
 		// r1.spacing=110;
 		// composite.setLayout(r1);
 
-		composite.setBackgroundImage(tab_bg);
+		composite.setBackgroundImage(image_bg_menu);
 
 		// 设置容器里的控件
 		for (int i = 0; i < 5; i++) {
 			Label label = new Label(composite, SWT.NONE);
 			label.setImage(image[i]);
-			label.setBounds(10 + i * (image[i].getBounds().width + 50), 0,
+			label.setBounds(10 + i * (image[i].getBounds().width + 10), 0,
 					image[i].getBounds().width, image[i].getBounds().height);
 			label.setData(i);
 			label.addMouseListener(new MouseListener() {
@@ -213,12 +218,14 @@ public class KingMain extends ApplicationWindow {
 				tabItem[i] = getTabContrlOther(parent, urlText[i] + "?uid="
 						+ PKUser.uid);
 			}
-
-			tabItem[i].setBackground(SWTResourceManager
-					.getColor(0,108,147));
-			tabItem[i].setBounds(0, tab_bg.getBounds().height,
+			tabItem[i].setBackgroundMode(SWT.INHERIT_DEFAULT);
+			tabItem[i].setBackgroundImage(image_bg_top);
+			
+//			(SWTResourceManager
+//					.getColor(0,108,147));
+			tabItem[i].setBounds(0, image_bg_menu.getBounds().height,
 					getInitialSize().x, getInitialSize().y
-							- tab_bg.getBounds().height);
+							- image_bg_menu.getBounds().height);
 			// tabItem[i].setLayoutData(new RowData(getInitialSize().x,
 			// parent.getClientArea().height-tab_bg.getBounds().height));
 			tabItem[i].setVisible(false);
@@ -263,6 +270,8 @@ public class KingMain extends ApplicationWindow {
 		Browser browser = new Browser(container, SWT.BORDER);
 		browser.setUrl(url);
 		browser.setBounds(0, 0, 1020, 768);
+//		browser.getVerticalBar().setVisible(false);
+//		browser.getHorizontalBar().setVisible(false);
 		// GridData layoutData = new GridData(GridData.FILL_BOTH);
 		// layoutData.horizontalSpan = 2;
 		// layoutData.verticalSpan = 2;
@@ -281,13 +290,15 @@ public class KingMain extends ApplicationWindow {
 	 */
 	private Composite getTabControlOne(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
+	
 		container.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 		table = new Table(container, SWT.BORDER | SWT.MULTI);
 		table.setLinesVisible(false);
 		table.setHeaderVisible(true);
-		table.setBounds(2, 64, 1024 - 289, 587);
+		table.setBounds(2, 48, 1024 - 289, 580);
 		table.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 		TableColumn column = new TableColumn(table, SWT.CENTER);
+//		column.setImage(title1);
 		column.setWidth(115);
 		column.setText("对战人数");
 		column = new TableColumn(table, SWT.CENTER);
@@ -326,7 +337,7 @@ public class KingMain extends ApplicationWindow {
 				pkDia.open();
 			}
 		});
-		btn_create_tz.setBounds(287, 11, 137, 40);
+		btn_create_tz.setBounds(287, 11, 108, 30);
 		btn_create_tz.setImage(image_create_tz);
 
 		// Button query = new Button(container, SWT.CENTER);
@@ -350,7 +361,7 @@ public class KingMain extends ApplicationWindow {
 			}
 		});
 		pk_flow.setImage(image_pk_flow);
-		pk_flow.setBounds(430, 11, 137, 40);
+		pk_flow.setBounds(659, 11, 108, 30);
 
 		Button zhogncai_way = new Button(container, SWT.CENTER);
 		zhogncai_way.addSelectionListener(new SelectionAdapter() {
@@ -362,7 +373,7 @@ public class KingMain extends ApplicationWindow {
 			}
 		});
 		zhogncai_way.setImage(image_zhogncai_way);
-		zhogncai_way.setBounds(576, 11, 137, 40);
+		zhogncai_way.setBounds(773, 11, 108, 30);
 
 		Button pk_point_count = new Button(container, SWT.CENTER);
 		pk_point_count.addSelectionListener(new SelectionAdapter() {
@@ -374,15 +385,17 @@ public class KingMain extends ApplicationWindow {
 			}
 		});
 		pk_point_count.setImage(image_pk_point_count);
-		pk_point_count.setBounds(716, 11, 137, 40);
+		pk_point_count.setBounds(889, 11, 108, 30);
 
-		Browser browser = new Browser(container, SWT.BORDER);
-		browser.setBounds(1024 - 285, 64, 278, 587);
+		Browser browser = new Browser(container, SWT.NONE);
+		browser.setBounds(1024 - 285, 48, 278, 587);
+//		browser.setUrl("http://www.hexcm.com/yxlm/single/lc1.html");
+		
 		browser.setUrl("http://www.hexcm.com/yxlm/index_right.php?uid="
 				+ PKUser.uid);
 		browser.setJavascriptEnabled(true);
 		Combo area = new Combo(container, SWT.NONE);
-		area.setBounds(10, 20, 84, 21);
+		area.setBounds(10, 16, 84, 21);
 		area.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 		area.addSelectionListener(new SelectionListener() {
 
@@ -435,7 +448,7 @@ public class KingMain extends ApplicationWindow {
 
 		Combo map = new Combo(container, SWT.NONE);
 		map.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-		map.setBounds(111, 20, 84, 21);
+		map.setBounds(111, 16, 84, 21);
 		map.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -460,23 +473,18 @@ public class KingMain extends ApplicationWindow {
 		map.add("召唤师峡谷");
 		map.setText("选择地图");
 
-		Button btnNewButton = new Button(container, SWT.NONE);
-		btnNewButton.setBounds(201, 16, 80, 27);
-		btnNewButton.setText("筛选");
-		btnNewButton.addSelectionListener(new SelectionListener() {
-
+		Label shaixuan = new Label(container, SWT.NONE);
+		shaixuan.setBounds(201, 12, 80, 27);
+		shaixuan.setImage(image_shaixuan);
+		shaixuan.addMouseListener(new MouseAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-
+			public void mouseDown(MouseEvent e) {
 				RefreshTableFilter(curMap, curArea);
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				RefreshTableFilter(curMap, curArea);
-
 			}
 		});
+		
+		
+		
 
 		return container;
 	}
@@ -728,6 +736,7 @@ public class KingMain extends ApplicationWindow {
 			Label textType = new Label(table, SWT.CENTER);
 			textType.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			textType.setText(pk.type + "v" + pk.type);
+			textType.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 			editor.grabHorizontal = true;
 			editor.setEditor(textType, items[i], 0);
 			textType.setToolTipText(pk.type + "v" + pk.type);
@@ -735,6 +744,7 @@ public class KingMain extends ApplicationWindow {
 
 			editor = new TableEditor(table);
 			Label textCurNum = new Label(table, SWT.CENTER);
+			textCurNum.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 			if (pk.password.equals("")) {
 				textCurNum.setText(pk.faqiSeatCount + "-"
 						+ +pk.yingzhanSeatCount);
@@ -752,6 +762,7 @@ public class KingMain extends ApplicationWindow {
 
 			editor = new TableEditor(table);
 			Label textArea = new Label(table, SWT.CENTER);
+			textArea.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 			textArea.setText(pk.area);
 			textArea.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
@@ -762,6 +773,7 @@ public class KingMain extends ApplicationWindow {
 			editor = new TableEditor(table);
 			Label textMap = new Label(table, SWT.CENTER);
 			textMap.setText(pk.map);
+			textMap.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 			textMap.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
 			editor.setEditor(textMap, items[i], 3);
@@ -824,6 +836,7 @@ public class KingMain extends ApplicationWindow {
 
 			editor = new TableEditor(table);
 			Label textName = new Label(table, SWT.CENTER);
+			textName.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 			textName.setText(pk.id);
 			textName.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
@@ -833,6 +846,7 @@ public class KingMain extends ApplicationWindow {
 
 			editor = new TableEditor(table);
 			Label textPoint = new Label(table, SWT.CENTER);
+			textPoint.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 			textPoint.setText(pk.point + "");
 			textPoint.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
@@ -842,6 +856,7 @@ public class KingMain extends ApplicationWindow {
 
 			editor = new TableEditor(table);
 			Label textTitle = new Label(table, SWT.CENTER);
+			textTitle.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 			textTitle.setText(pk.title);
 			textTitle.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;

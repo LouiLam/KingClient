@@ -45,6 +45,7 @@ public class KingLogin extends ApplicationWindow {
 	public static String id, roleName;
 	public static boolean isFirstRun=false;
 	Image image, image_reg, image_login;
+	
 	Button btn_isAutoSave;
 	String autoSave = "0";
 	boolean isBreak=true;
@@ -165,10 +166,10 @@ public class KingLogin extends ApplicationWindow {
 		login.setImage(image_login);
 
 		login.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				login.setImage(image_reg);
-			}
+//			@Override
+//			public void mouseDown(MouseEvent e) {
+//				login.setImage(image_reg);
+//			}
 			@Override
 			public void mouseUp(MouseEvent e) {
 				
@@ -182,14 +183,15 @@ public class KingLogin extends ApplicationWindow {
 					mb.open();
 					return;
 				}
-				login.setImage(image_login);
-				Display.getDefault().asyncExec(new Runnable() {
-					
-					@Override
-					public void run() {
-						httpPost();
-					}
-				});
+				httpPost();
+//				login.setImage(image_login);
+//				Display.getDefault().asyncExec(new Runnable() {
+//					
+//					@Override
+//					public void run() {
+//						httpPost();
+//					}
+//				});
 				
 				
 			}
