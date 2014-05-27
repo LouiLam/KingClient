@@ -42,8 +42,9 @@ import com.zjd.universal.net.GameClient;
 public class KingMain extends ApplicationWindow {
 	private Table table;
 
-	private Button btn_create_tz;
+	private Label btn_create_tz;
 	private Image image[] = new Image[5];
+	private Image image_pressed[] = new Image[5];
 	// private TabItem tabItem[] = new TabItem[5];
 	Composite[] tabItem = new Composite[5];
 	// private String tabItemText[] = { "对战信息", "个人设置", "挑战记录", "充值管理",
@@ -58,8 +59,8 @@ public class KingMain extends ApplicationWindow {
 			image_table_bg;
 	private Image image_pk_flow, image_zhogncai_way, image_pk_point_count;
 	private String curMap, curArea;
-	private Image icon,image_shaixuan,image_bg_menu,image_bg_top;
-
+	private Image icon, image_shaixuan, image_bg_menu, image_bg_top;
+	Browser browser ;
 	/**
 	 * Create the application window.
 	 */
@@ -72,6 +73,7 @@ public class KingMain extends ApplicationWindow {
 		// addStatusLine();
 		for (int i = 0; i < 5; i++) {
 			image[i] = new Image(Display.getDefault(), "tab" + i + ".png");
+			image_pressed[i]= new Image(Display.getDefault(), "tab_pressed" + i + ".png");
 		}
 		image_join_tz = new Image(Display.getDefault(), "join_tz.jpg");
 		image_join_yz = new Image(Display.getDefault(), "join_yz.jpg");
@@ -82,10 +84,9 @@ public class KingMain extends ApplicationWindow {
 		image_zhogncai_way = new Image(Display.getDefault(), "zhongcai_way.png");
 		image_pk_point_count = new Image(Display.getDefault(),
 				"pk_point_count.png");
-		image_shaixuan=new Image(Display.getDefault(),
-				"button_sx.png");
-		image_bg_menu=new Image(Display.getDefault(), "bg_menu.jpg");
-		image_bg_top=new Image(Display.getDefault(), "bg_top.jpg");
+		image_shaixuan = new Image(Display.getDefault(), "button_sx.png");
+		image_bg_menu = new Image(Display.getDefault(), "bg_menu.jpg");
+		image_bg_top = new Image(Display.getDefault(), "bg_top.jpg");
 		setShellStyle(SWT.CLOSE | SWT.MIN | SWT.TITLE);
 	}
 
@@ -164,11 +165,12 @@ public class KingMain extends ApplicationWindow {
 		// parent.setLayout(r);
 		// parent.setLayout(new abso)
 		parent.setBackgroundMode(SWT.INHERIT_DEFAULT);
+		parent.setBackgroundImage(image_bg_top);
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		// 设置容器上部菜单框大小
-		composite
-				.setBounds(0, 0, getInitialSize().x, image_bg_menu.getBounds().height);
+		composite.setBounds(0, 0, getInitialSize().x,
+				image_bg_menu.getBounds().height);
 
 		// 设置布局
 		// composite.setLayoutData(new RowData(getInitialSize().x,
@@ -181,27 +183,33 @@ public class KingMain extends ApplicationWindow {
 
 		// 设置容器里的控件
 		for (int i = 0; i < 5; i++) {
-			Label label = new Label(composite, SWT.NONE);
+			final Label label = new Label(composite, SWT.NONE);
 			label.setImage(image[i]);
 			label.setBounds(10 + i * (image[i].getBounds().width + 10), 0,
 					image[i].getBounds().width, image[i].getBounds().height);
 			label.setData(i);
 			label.addMouseListener(new MouseListener() {
-
 				@Override
 				public void mouseUp(MouseEvent arg0) {
-
+					
+					Widget d = (Widget) arg0.getSource();
+					int index = (int) d.getData();
+					label.setImage(image[index]);
+					for (int i = 0; i < 5; i++) {
+						tabItem[i].setVisible(false);
+					}
+					browser.setVisible(false);
+					table.setVisible(true);
+					tabItem[index].setVisible(true);
+					System.out.println("index" + index);
 				}
 
 				@Override
 				public void mouseDown(MouseEvent arg0) {
 					Widget d = (Widget) arg0.getSource();
 					int index = (int) d.getData();
-					for (int i = 0; i < 5; i++) {
-						tabItem[i].setVisible(false);
-					}
-					tabItem[index].setVisible(true);
-					System.out.println("index" + index);
+					label.setImage(image_pressed[index]);
+
 				}
 
 				@Override
@@ -210,7 +218,6 @@ public class KingMain extends ApplicationWindow {
 				}
 			});
 		}
-
 		for (int i = 0; i < 5; i++) {
 			if (i == 0) {
 				tabItem[i] = getTabControlOne(parent);
@@ -218,16 +225,10 @@ public class KingMain extends ApplicationWindow {
 				tabItem[i] = getTabContrlOther(parent, urlText[i] + "?uid="
 						+ PKUser.uid);
 			}
-			tabItem[i].setBackgroundMode(SWT.INHERIT_DEFAULT);
 			tabItem[i].setBackgroundImage(image_bg_top);
-			
-//			(SWTResourceManager
-//					.getColor(0,108,147));
 			tabItem[i].setBounds(0, image_bg_menu.getBounds().height,
-					getInitialSize().x, getInitialSize().y
-							- image_bg_menu.getBounds().height);
-			// tabItem[i].setLayoutData(new RowData(getInitialSize().x,
-			// parent.getClientArea().height-tab_bg.getBounds().height));
+					getInitialSize().x,
+					getInitialSize().y - image_bg_menu.getBounds().height);
 			tabItem[i].setVisible(false);
 		}
 		tabItem[0].setVisible(true);
@@ -266,19 +267,20 @@ public class KingMain extends ApplicationWindow {
 	}
 
 	private Composite getTabContrlOther(Composite parent, String url) {
-		Composite container = new Composite(parent, SWT.NONE);
-		Browser browser = new Browser(container, SWT.BORDER);
+		// Composite container = new Composite(parent, SWT.NONE);
+
+		Browser browser = new Browser(parent, SWT.BORDER);
 		browser.setUrl(url);
 		browser.setBounds(0, 0, 1020, 768);
-//		browser.getVerticalBar().setVisible(false);
-//		browser.getHorizontalBar().setVisible(false);
+		// browser.getVerticalBar().setVisible(false);
+		// browser.getHorizontalBar().setVisible(false);
 		// GridData layoutData = new GridData(GridData.FILL_BOTH);
 		// layoutData.horizontalSpan = 2;
 		// layoutData.verticalSpan = 2;
 		// browser.setLayoutData(tabFolder.getLayoutData());
 		// browser.setBounds(5,30,1024,768);
 		browser.setJavascriptEnabled(true);
-		return container;
+		return browser;
 	}
 
 	/**
@@ -290,7 +292,7 @@ public class KingMain extends ApplicationWindow {
 	 */
 	private Composite getTabControlOne(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
-	
+
 		container.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 		table = new Table(container, SWT.BORDER | SWT.MULTI);
 		table.setLinesVisible(false);
@@ -298,7 +300,7 @@ public class KingMain extends ApplicationWindow {
 		table.setBounds(2, 48, 1024 - 289, 580);
 		table.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 		TableColumn column = new TableColumn(table, SWT.CENTER);
-//		column.setImage(title1);
+		// column.setImage(title1);
 		column.setWidth(115);
 		column.setText("对战人数");
 		column = new TableColumn(table, SWT.CENTER);
@@ -328,15 +330,16 @@ public class KingMain extends ApplicationWindow {
 		column.setText("标题");
 
 		// 发起挑战按钮
-		btn_create_tz = new Button(container, SWT.CENTER);
-		btn_create_tz.addSelectionListener(new SelectionAdapter() {
+		btn_create_tz = new Label(container, SWT.CENTER);
+		btn_create_tz.addMouseListener(new MouseAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void mouseDown(MouseEvent e) {
 				CrateDiaRoleName pkDia = new CrateDiaRoleName(KingMain.this
 						.getShell());
 				pkDia.open();
 			}
 		});
+
 		btn_create_tz.setBounds(287, 11, 108, 30);
 		btn_create_tz.setImage(image_create_tz);
 
@@ -350,38 +353,49 @@ public class KingMain extends ApplicationWindow {
 		// });
 		// query.setImage(image_query);
 		// query.setBounds(476, 11, 193, 38);
-
-		Button pk_flow = new Button(container, SWT.CENTER);
-		pk_flow.addSelectionListener(new SelectionAdapter() {
+		browser= new Browser(container, SWT.BORDER);
+		browser.setVisible(false);
+		browser.setBounds(0, 48, 1024, 600);
+		Label pk_flow = new Label(container, SWT.CENTER);
+		pk_flow.addMouseListener(new MouseAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				UrlDia dia = new UrlDia(KingMain.this.getShell(),
-						"http://www.hexcm.com/yxlm/single/lc.html");
-				dia.open();
+			public void mouseDown(MouseEvent e) {
+				browser.setUrl("http://www.hexcm.com/yxlm/single/lc.html");
+				browser.setJavascriptEnabled(true);
+				browser.setVisible(true);
+				table.setVisible(false);
 			}
+
 		});
+
 		pk_flow.setImage(image_pk_flow);
 		pk_flow.setBounds(659, 11, 108, 30);
 
-		Button zhogncai_way = new Button(container, SWT.CENTER);
-		zhogncai_way.addSelectionListener(new SelectionAdapter() {
+		Label zhogncai_way = new Label(container, SWT.CENTER);
+		zhogncai_way.addMouseListener(new MouseAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				UrlDia dia = new UrlDia(KingMain.this.getShell(),
-						"http://www.hexcm.com/yxlm/single/zc.html");
-				dia.open();
+			public void mouseDown(MouseEvent e) {
+				browser.setUrl("http://www.hexcm.com/yxlm/single/zc.html");
+				browser.setJavascriptEnabled(true);
+				browser.setVisible(true);
+				table.setVisible(false);
 			}
 		});
 		zhogncai_way.setImage(image_zhogncai_way);
 		zhogncai_way.setBounds(773, 11, 108, 30);
 
-		Button pk_point_count = new Button(container, SWT.CENTER);
-		pk_point_count.addSelectionListener(new SelectionAdapter() {
+		Label pk_point_count = new Label(container, SWT.CENTER);
+		pk_point_count.addMouseListener(new MouseAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				UrlDia dia = new UrlDia(KingMain.this.getShell(),
-						"http://www.hexcm.com/yxlm/single/ds.html");
-				dia.open();
+			public void mouseDown(MouseEvent e) {
+				
+				browser.setUrl("http://www.hexcm.com/yxlm/single/ds.html");
+				browser.setJavascriptEnabled(true);
+				browser.setVisible(true);
+				table.setVisible(false);
+//				UrlDia dia = new UrlDia(KingMain.this.getShell(),
+//						"http://www.hexcm.com/yxlm/single/ds.html");
+//				dia.open();
 			}
 		});
 		pk_point_count.setImage(image_pk_point_count);
@@ -389,8 +403,8 @@ public class KingMain extends ApplicationWindow {
 
 		Browser browser = new Browser(container, SWT.NONE);
 		browser.setBounds(1024 - 285, 48, 278, 587);
-//		browser.setUrl("http://www.hexcm.com/yxlm/single/lc1.html");
-		
+		// browser.setUrl("http://www.hexcm.com/yxlm/single/lc1.html");
+
 		browser.setUrl("http://www.hexcm.com/yxlm/index_right.php?uid="
 				+ PKUser.uid);
 		browser.setJavascriptEnabled(true);
@@ -482,9 +496,6 @@ public class KingMain extends ApplicationWindow {
 				RefreshTableFilter(curMap, curArea);
 			}
 		});
-		
-		
-		
 
 		return container;
 	}
@@ -744,7 +755,8 @@ public class KingMain extends ApplicationWindow {
 
 			editor = new TableEditor(table);
 			Label textCurNum = new Label(table, SWT.CENTER);
-			textCurNum.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+			textCurNum.setForeground(SWTResourceManager
+					.getColor(SWT.COLOR_WHITE));
 			if (pk.password.equals("")) {
 				textCurNum.setText(pk.faqiSeatCount + "-"
 						+ +pk.yingzhanSeatCount);
@@ -846,7 +858,8 @@ public class KingMain extends ApplicationWindow {
 
 			editor = new TableEditor(table);
 			Label textPoint = new Label(table, SWT.CENTER);
-			textPoint.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+			textPoint.setForeground(SWTResourceManager
+					.getColor(SWT.COLOR_WHITE));
 			textPoint.setText(pk.point + "");
 			textPoint.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
@@ -856,7 +869,8 @@ public class KingMain extends ApplicationWindow {
 
 			editor = new TableEditor(table);
 			Label textTitle = new Label(table, SWT.CENTER);
-			textTitle.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+			textTitle.setForeground(SWTResourceManager
+					.getColor(SWT.COLOR_WHITE));
 			textTitle.setText(pk.title);
 			textTitle.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
