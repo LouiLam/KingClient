@@ -14,6 +14,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
@@ -35,15 +37,15 @@ import send.NormalLeavePKMessage1006;
 import com.zjd.universal.net.GameClient;
 
 public abstract class WaitDia extends Dialog {
-	private Image image_table_bg, image_wati_icon, image_wait_tz,
-			image_wait_yz, image_wait_vs;
-
+	private Image image_table_bg, image_tx_icon, image_wait_tz,
+			image_wait_yz, image_wait_vs,iamge_copy;
+	Label startGame,endGame;
 	Label faqi[] = new Label[5];
 	Label faqiName[] = new Label[5];
-	Button faqiNameCopy[] = new Button[5];
+	Label faqiNameCopy[] = new Label[5];
 	Label yingzhan[] = new Label[5];
 	Label yingzhanName[] = new Label[5];
-	Button yingzhanNameCopy[] = new Button[5];
+	Label yingzhanNameCopy[] = new Label[5];
 	PKUser users[] = null;
 	int curTime;
 	Label time;
@@ -51,7 +53,7 @@ public abstract class WaitDia extends Dialog {
 	String area;
 	String title;
 	Label label_2;
-
+	 Image image_start_game,image_end_game,iamge_bg_head;
 	/**
 	 * Create the dialog.
 	 * 
@@ -67,11 +69,15 @@ public abstract class WaitDia extends Dialog {
 		this.area = area;
 		this.title = title;
 		this.point = point;
-		image_table_bg = new Image(Display.getDefault(), "green.jpg");
-		image_wati_icon = new Image(Display.getDefault(), "wait_icon.png");
+		image_start_game=new Image(Display.getDefault(),"bt_ks.png");
+		image_end_game=new Image(Display.getDefault(),"bt_js.png");
+		image_table_bg = new Image(Display.getDefault(), "wait_dia_bg.jpg");
+		image_tx_icon = new Image(Display.getDefault(), "tx.png");
 		image_wait_tz = new Image(Display.getDefault(), "wait_tz.png");
 		image_wait_yz = new Image(Display.getDefault(), "wait_yz.png");
 		image_wait_vs = new Image(Display.getDefault(), "vs.png");
+		iamge_copy=new  Image(Display.getDefault(), "copy.png");
+		iamge_bg_head=new  Image(Display.getDefault(), "bg_head.png");
 
 	}
 
@@ -94,12 +100,12 @@ public abstract class WaitDia extends Dialog {
 		this.area = area;
 		this.title = title;
 		this.point = point;
-		image_table_bg = new Image(Display.getDefault(), "green.jpg");
-		image_wati_icon = new Image(Display.getDefault(), "wait_icon.png");
+		image_table_bg = new Image(Display.getDefault(), "wait_dia_bg.jpg");
+		image_tx_icon = new Image(Display.getDefault(), "tx.png");
 		image_wait_tz = new Image(Display.getDefault(), "wait_tz.png");
 		image_wait_yz = new Image(Display.getDefault(), "wait_yz.png");
 		image_wait_vs = new Image(Display.getDefault(), "vs.png");
-
+		iamge_copy=new  Image(Display.getDefault(), "copy.png");
 	}
 
 	@Override
@@ -197,124 +203,66 @@ public abstract class WaitDia extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 
+		
 		Composite container = (Composite) super.createDialogArea(parent);
 		container.setLayout(null);
+		parent.setBackgroundMode(SWT.INHERIT_DEFAULT);
+		parent.setBackgroundImage(image_table_bg);
 
-		Label label = new Label(container, SWT.NONE);
-		label.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-		label.setBounds(25, 10, 26, 13);
-		label.setText("标题:");
-		label.pack();
-		label = new Label(container, SWT.NONE);
-		label.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-		label.setText("地图:");
-		label.setBounds(25, 41, 26, 13);
-		label.pack();
-		label = new Label(container, SWT.NONE);
-		label.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-		label.setText("对局人数:");
-		label.setBounds(25, 72, 52, 13);
-		label.pack();
-		label_2 = new Label(container, SWT.NONE);
-		label_2.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-		label_2.setText("距离可退出游戏时间还剩：");
-		label_2.setBounds(558, 46, 156, 13);
-		label_2.setVisible(false);
-		Composite composite = new Composite(container, SWT.NONE);
-		composite.setBounds(10, 91, 998, 567);
-		composite.setBackgroundMode(SWT.INHERIT_DEFAULT);
-		composite.setBackgroundImage(image_table_bg);
+	
+	
+		Label wait_tz = new Label(container, SWT.NONE);
+		wait_tz.setBounds(147, 55, 162, 69);
+		wait_tz.setImage(image_wait_tz);
+		Label wait_yz = new Label(container, SWT.NONE);
+		wait_yz.setBounds(720, 55, 162, 69);
+		wait_yz.setImage(image_wait_yz);
 
-		Label lblNewLabel = new Label(composite, SWT.NONE);
-		lblNewLabel.setBounds(10, 96, 223, 38);
-		lblNewLabel.setImage(image_wait_tz);
-		Label lblNewLabel_1 = new Label(composite, SWT.NONE);
-		lblNewLabel_1.setBounds(10, 419, 223, 38);
-		lblNewLabel_1.setImage(image_wait_yz);
+		Composite faqi_group = new Composite(container, SWT.NONE);
+		faqi_group.setBounds(124, 130, 200, 580);
+	
+		Composite item_faqi_group = new Composite(faqi_group, SWT.NONE);
+		item_faqi_group.setBounds(0, 25, 200, 86);
+		createItem(item_faqi_group,0,true);
+		item_faqi_group = new Composite(faqi_group, SWT.NONE);
+		item_faqi_group.setBounds(0, 136, 200, 86);
+		createItem(item_faqi_group,1,true);
+		item_faqi_group = new Composite(faqi_group, SWT.NONE);
+		 item_faqi_group.setBounds(0, 247, 200, 86);
+		createItem(item_faqi_group,2,true);
+		item_faqi_group = new Composite(faqi_group, SWT.NONE);
+		item_faqi_group.setBounds(0, 358, 200, 86);
+		createItem(item_faqi_group,3,true);
+		item_faqi_group = new Composite(faqi_group, SWT.NONE);
+		item_faqi_group.setBounds(0, 469, 200, 86);
+		createItem(item_faqi_group,4,true);
+		
+		
+		
 
-		Composite faqi_group = new Composite(composite, SWT.NONE);
-		faqi_group.setBounds(299, 10, 664, 200);
+		Label wait_vs = new Label(container, SWT.NONE);
+		wait_vs.setBounds(459, 315, 100, 80);
+		wait_vs.setImage(image_wait_vs);
 
-		for (int i = 0; i < faqiName.length; i++) {
-			faqiName[i] = new Label(faqi_group, SWT.CENTER);
-			faqiName[i].setFont(SWTResourceManager
-					.getFont("宋体", 10, SWT.NORMAL));
-			faqiName[i].setBounds(32 + i * 126, 155, 94, 20);
-			faqiNameCopy[i] = new Button(faqi_group, SWT.CENTER);
-			faqiNameCopy[i].setFont(SWTResourceManager.getFont("宋体", 10,
-					SWT.NORMAL));
-			faqiNameCopy[i].setBounds(32  + i * 126, 155+20, 94, 20);
-			faqiNameCopy[i].setText("复制玩家名字");
-			faqiNameCopy[i].setData(i);
-			faqiNameCopy[i].addSelectionListener(new SelectionListener() {
-
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					final Clipboard cb = new Clipboard(getParentShell().getDisplay());
-					int index = (int) ((Widget) arg0.getSource()).getData();
-					TextTransfer textTransfer = TextTransfer.getInstance();
-					cb.setContents(new Object[] { faqiName[index].getText() },
-							new Transfer[] { textTransfer });
-					MessageBox messageBox=new MessageBox(getParentShell(), SWT.OK);
-					 messageBox.setMessage("复制成功，请直接Ctrl+V或者鼠标右键选择粘贴");  
-					 messageBox.open();
-				}
-
-				@Override
-				public void widgetDefaultSelected(SelectionEvent arg0) {
-					widgetSelected(arg0);
-
-				}
-			});
-			faqi[i] = new Label(faqi_group, SWT.NONE);
-			faqi[i].setBounds(32 + i * 126, 20, 94, 116);
-			faqi[i].setImage(image_wati_icon);
-		}
-
-		Label lblNewLabel_3 = new Label(composite, SWT.NONE);
-		lblNewLabel_3.setBounds(589, 241, 94, 74);
-		lblNewLabel_3.setImage(image_wait_vs);
-
-		Composite yingzhan_group = new Composite(composite, SWT.NONE);
-		yingzhan_group.setBounds(299, 361, 664, 200);
-		for (int i = 0; i < yingzhanName.length; i++) {
-			yingzhanName[i] = new Label(yingzhan_group, SWT.CENTER);
-			yingzhanName[i].setFont(SWTResourceManager.getFont("宋体", 10,
-					SWT.NORMAL));
-			yingzhanName[i].setBounds(32 + i * 126, 155, 94, 20);
-			yingzhanNameCopy[i] = new Button(yingzhan_group, SWT.CENTER);
-			yingzhanNameCopy[i].setFont(SWTResourceManager.getFont("宋体", 10,
-					SWT.NORMAL));
-			yingzhanNameCopy[i].setBounds(32  + i * 126, 155+20, 94, 20);
-			yingzhanNameCopy[i].setText("复制玩家名字");
-			yingzhanNameCopy[i].setData(i);
-			yingzhanNameCopy[i].addSelectionListener(new SelectionListener() {
-
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					final Clipboard cb = new Clipboard(getParentShell().getDisplay());
-					int index = (int) ((Widget) arg0.getSource()).getData();
-					TextTransfer textTransfer = TextTransfer.getInstance();
-					cb.setContents(new Object[] { yingzhanName[index].getText() },
-							new Transfer[] { textTransfer });
-					MessageBox messageBox=new MessageBox(getParentShell(), SWT.OK);
-					 messageBox.setMessage("复制成功，请直接Ctrl+V或者鼠标右键选择粘贴");  
-					 messageBox.open();
-
-				}
-
-				@Override
-				public void widgetDefaultSelected(SelectionEvent arg0) {
-					widgetSelected(arg0);
-
-				}
-			});
-			
-			
-			yingzhan[i] = new Label(yingzhan_group, SWT.NONE);
-			yingzhan[i].setBounds(32 + i * 126, 20, 94, 116);
-			yingzhan[i].setImage(image_wati_icon);
-		}
+		Composite yingzhan_group = new Composite(container, SWT.NONE);
+		yingzhan_group.setBounds(700, 130, 200, 580);
+		Composite item_yingzhan_group = new Composite(yingzhan_group, SWT.NONE);
+		item_yingzhan_group.setBounds(0, 25, 200, 86);
+		createItem(item_yingzhan_group,0,false);
+		item_yingzhan_group = new Composite(yingzhan_group, SWT.NONE);
+		item_yingzhan_group.setBounds(0, 136, 200, 86);
+		createItem(item_yingzhan_group,1,false);
+		item_yingzhan_group = new Composite(yingzhan_group, SWT.NONE);
+		item_yingzhan_group.setBounds(0, 247, 200, 86);
+		createItem(item_yingzhan_group,2,false);
+		item_yingzhan_group = new Composite(yingzhan_group, SWT.NONE);
+		item_yingzhan_group.setBounds(0, 358, 200, 86);
+		createItem(item_yingzhan_group,3,false);
+		item_yingzhan_group = new Composite(yingzhan_group, SWT.NONE);
+		item_yingzhan_group.setBounds(0, 469, 200, 86);
+		createItem(item_yingzhan_group,4,false);
+		
+	
 
 		for (int i = 0; i < yingzhanName.length; i++) {
 			faqi[i].setVisible(false);
@@ -322,26 +270,67 @@ public abstract class WaitDia extends Dialog {
 			yingzhanNameCopy[i].setVisible(false);
 			faqiNameCopy[i].setVisible(false);
 		}
+		startGame = new Label(container, SWT.NONE);
+		startGame.setBounds(413, 567, 191, 61);
+		startGame.setImage(image_start_game);
+		endGame = new Label(container, SWT.NONE);
+		endGame.setBounds(413, 635, 191, 61);
+		endGame.setImage(image_end_game);
+		startGame.setEnabled(false);
+		endGame.setEnabled(false);
 		createDialogAreaDoSomeThing(container);
 
-		time = new Label(container, SWT.NONE);
-		time.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-		time.setBounds(720, 44, 202, 17);
+	
 
-		Label titleLabel = new Label(container, SWT.NONE);
-		titleLabel.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-		titleLabel.setBounds(82, 10, 61, 17);
-		titleLabel.setText(title);
-		titleLabel.pack();
-		Label areaLabel = new Label(container, SWT.NONE);
+		
+	
+		
+		
+		Composite composite_titlebar = new Composite(container, SWT.NONE);
+		composite_titlebar.setBounds(0, 0, 1024, 28);
+		composite_titlebar.setBackgroundImage(iamge_bg_head);
+		
+//		Label label = new Label(composite_titlebar, SWT.NONE);
+//		label.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+//		label.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+//		label.setBounds(25, 7, 26, 13);
+//		label.setText("标题:");
+//		label.pack();
+//		Label titleLabel = new Label(composite_titlebar, SWT.NONE);
+//		titleLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+//		titleLabel.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+//		titleLabel.setBounds(82, 7, 61, 17);
+//		titleLabel.setText(title);
+//		titleLabel.pack();
+		label_1 = new Label(composite_titlebar, SWT.NONE);
+		label_1.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		label_1.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+		label_1.setText("游戏区：");
+		label_1.setBounds(0, 7, 26, 13);
+		label_1.pack();
+		Label areaLabel = new Label(composite_titlebar, SWT.NONE);
+		areaLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		areaLabel.setText(area);
 		areaLabel.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-		areaLabel.setBounds(82, 41, 61, 17);
+		areaLabel.setBounds(57, 7, 61, 17);
 		areaLabel.pack();
-		Label typeLabel = new Label(container, SWT.CENTER);
+		Label typeLabel = new Label(composite_titlebar, SWT.CENTER);
+		typeLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		typeLabel.setText(type + "v" + type);
 		typeLabel.setFont(SWTResourceManager.getFont("宋体", 11, SWT.NORMAL));
-		typeLabel.setBounds(83, 68, 61, 17);
+		typeLabel.setBounds(146, 5, 61, 17);
+		label_2 = new Label(composite_titlebar, SWT.NONE);
+		label_2.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		label_2.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+		label_2.setText("距离可退出游戏时间还剩：");
+		label_2.setBounds(213, 7, 156, 13);
+		label_2.setVisible(false);
+	
+		time = new Label(composite_titlebar, SWT.NONE);
+		time.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		time.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+		time.setBounds(375, 5, 202, 17);
+		
 		if (users != null) {
 			RefreshLables(users);
 		}
@@ -403,7 +392,6 @@ public abstract class WaitDia extends Dialog {
 		// try {
 		// DateTimeDia.timeMillis=0;
 		// } catch (Exception e1) {
-		// // TODO Auto-generated catch block
 		// e1.printStackTrace();
 		// }
 		// }
@@ -421,7 +409,63 @@ public abstract class WaitDia extends Dialog {
 	protected Point getInitialSize() {
 		return new Point(1024, 768);
 	}
-
+	private void createItem(Composite item_group,int index,boolean isFaQi)
+	{
+		
+		Label headIcon = new Label(item_group, SWT.NONE);
+		if(isFaQi)
+		faqi[index]=headIcon;
+		else
+		yingzhan[index]=headIcon;
+		headIcon.setImage(image_tx_icon);
+		headIcon.setBounds(10, 0, 93, 86);
+		
+		Label name = new Label(item_group, SWT.CENTER);
+		if(isFaQi)
+		faqiName[index]=name;
+		else
+		yingzhanName[index]=name;
+		name.setBounds(109, 15, 61, 17);
+		name.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		name.setFont(SWTResourceManager
+				.getFont("宋体", 10, SWT.NORMAL));
+	
+		Label copy = new Label(item_group, SWT.NONE);
+		if(isFaQi)
+		faqiNameCopy[index]= copy;
+		else
+		yingzhanNameCopy[index]= copy;
+		
+		copy.setBounds(109, 47, 64, 22);
+		copy.setImage(iamge_copy);
+		copy.setData("index", index);
+		copy.setData("isFaQi",isFaQi);
+		copy.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				final Clipboard cb = new Clipboard(getParentShell().getDisplay());
+				int index = (int) ((Widget) e.getSource()).getData("index");
+				boolean isFaQi = (boolean) ((Widget) e.getSource()).getData("isFaQi");
+				System.out.println("name:"+index);
+				String str=null;
+				if(isFaQi)
+				{
+					str= faqiName[index].getText();
+				}
+				else
+				{
+					str= yingzhanName[index].getText();
+				}
+				TextTransfer textTransfer = TextTransfer.getInstance();
+				cb.setContents(new Object[] {str},
+						new Transfer[] { textTransfer });
+				MessageBox messageBox=new MessageBox(getParentShell(), SWT.OK);
+				 messageBox.setMessage("复制成功，请直接Ctrl+V或者鼠标右键选择粘贴");  
+				 messageBox.open();
+			}
+		});
+	}
 	ArrayList<JSONObject> list = new ArrayList<JSONObject>();
 	ArrayList<Control> listControl = new ArrayList<Control>();
+	private Label label_1;
 }

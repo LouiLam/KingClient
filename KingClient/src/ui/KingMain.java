@@ -55,7 +55,7 @@ public class KingMain extends ApplicationWindow {
 			"http://www.hexcm.com/yxlm/cz.php",
 			"http://www.hexcm.com/yxlm/dj.php" };
 
-	private Image image_join_tz, image_join_yz, image_create_tz, image_query,
+	private Image image_join, image_create_tz, image_query,
 			image_table_bg;
 	private Image image_pk_flow, image_zhogncai_way, image_pk_point_count;
 	private String curMap, curArea;
@@ -75,8 +75,7 @@ public class KingMain extends ApplicationWindow {
 			image[i] = new Image(Display.getDefault(), "tab" + i + ".png");
 			image_pressed[i]= new Image(Display.getDefault(), "tab_pressed" + i + ".png");
 		}
-		image_join_tz = new Image(Display.getDefault(), "join_tz.jpg");
-		image_join_yz = new Image(Display.getDefault(), "join_yz.jpg");
+		image_join = new Image(Display.getDefault(), "bt_join.png");
 		image_create_tz = new Image(Display.getDefault(), "create_tz.png");
 		image_query = new Image(Display.getDefault(), "query.png");
 		image_table_bg = new Image(Display.getDefault(), "table_bg.jpg");
@@ -618,7 +617,7 @@ public class KingMain extends ApplicationWindow {
 		if (JfaceWindowManager.getCurWindow() instanceof CreatePKWaitDia) {
 			CreatePKWaitDia dia = (CreatePKWaitDia) JfaceWindowManager
 					.getCurWindow();
-			dia.btn_start_game.setEnabled(true);
+			dia.startGame.setEnabled(true);
 		}
 		MessageBox mb = new MessageBox(KingMain.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
@@ -631,7 +630,7 @@ public class KingMain extends ApplicationWindow {
 		if (JfaceWindowManager.getCurWindow() instanceof CreatePKWaitDia) {
 			CreatePKWaitDia dia = (CreatePKWaitDia) JfaceWindowManager
 					.getCurWindow();
-			dia.btn_start_game.setEnabled(false);
+			dia.startGame.setEnabled(false);
 		}
 		MessageBox mb = new MessageBox(KingMain.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
@@ -650,7 +649,7 @@ public class KingMain extends ApplicationWindow {
 				if (JfaceWindowManager.getCurWindow() instanceof CreatePKWaitDia) {
 					CreatePKWaitDia dia = (CreatePKWaitDia) JfaceWindowManager
 							.getCurWindow();
-					dia.btn_end_game.setEnabled(true);
+					dia.endGame.setEnabled(true);
 					dia.hideTime();
 				}
 			} else {
@@ -793,27 +792,20 @@ public class KingMain extends ApplicationWindow {
 			listControl.add(textMap);
 
 			editor = new TableEditor(table);
-			Button join_tz = new Button(table, SWT.CENTER);
-			join_tz.setImage(image_join_tz);
+			Label join_tz = new Label(table, SWT.CENTER);
+			join_tz.setImage(image_join);
 			join_tz.setData(i);
-			join_tz.addSelectionListener(new SelectionAdapter() {
-
+			join_tz.addMouseListener(new MouseAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e) {
-
+				public void mouseDown(MouseEvent e) {
 					int index = (int) ((Button) e.getSource()).getData();
 					PK pk = PKManager.getInstance().getPKByIndex(index);
 					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
 							.getShell(), index, 1, pk.password);
 					pkDia.open();
-
-				}
-
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
-					widgetSelected(e);
 				}
 			});
+			
 			editor.minimumWidth = join_tz.getSize().x;
 			editor.minimumHeight = join_tz.getSize().y;
 			editor.grabHorizontal = true;
@@ -821,23 +813,18 @@ public class KingMain extends ApplicationWindow {
 			listControl.add(join_tz);
 
 			editor = new TableEditor(table);
-			Button join_yz = new Button(table, SWT.CENTER);
-			join_yz.setImage(image_join_yz);
+			Label join_yz = new Label(table, SWT.CENTER);
+			join_yz.setImage(image_join);
 			join_yz.setData(i);
-			join_yz.addSelectionListener(new SelectionAdapter() {
+			join_yz.addMouseListener(new MouseAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e) {
-					int index = (int) ((Button) e.getSource()).getData();
+				public void mouseDown(MouseEvent e) {
+					int index = (int) ((Widget) e.getSource()).getData();
 					PK pk = PKManager.getInstance().getPKByIndex(index);
 					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
 							.getShell(), index, 2, pk.password);
 					pkDia.open();
 
-				}
-
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
-					widgetSelected(e);
 				}
 			});
 			editor.minimumWidth = join_yz.getSize().x;
@@ -933,6 +920,8 @@ public class KingMain extends ApplicationWindow {
 			textType.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			textType.setText(pk.type + "v" + pk.type);
 			editor.grabHorizontal = true;
+			editor.grabVertical=true;
+			editor.minimumHeight=100;
 			editor.setEditor(textType, items[i], 0);
 			textType.setToolTipText(pk.type + "v" + pk.type);
 			listControl.add(textType);
@@ -973,25 +962,19 @@ public class KingMain extends ApplicationWindow {
 			listControl.add(textMap);
 
 			editor = new TableEditor(table);
-			Button join_tz = new Button(table, SWT.CENTER);
-			join_tz.setImage(image_join_tz);
+			Label join_tz = new Label(table, SWT.CENTER);
+			join_tz.setImage(image_join);
 			join_tz.setData(i);
-			join_tz.addSelectionListener(new SelectionAdapter() {
+			join_tz.addMouseListener(new MouseAdapter() {
 
 				@Override
-				public void widgetSelected(SelectionEvent e) {
-
+				public void mouseDown(MouseEvent e) {
 					int index = (int) ((Button) e.getSource()).getData();
 					PK pk = PKManager.getInstance().getPKByIndex(index);
 					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
 							.getShell(), index, 1, pk.password);
 					pkDia.open();
 
-				}
-
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
-					widgetSelected(e);
 				}
 			});
 			editor.minimumWidth = join_tz.getSize().x;
@@ -1001,24 +984,19 @@ public class KingMain extends ApplicationWindow {
 			listControl.add(join_tz);
 
 			editor = new TableEditor(table);
-			Button join_yz = new Button(table, SWT.CENTER);
-			join_yz.setImage(image_join_yz);
+			Label join_yz = new Label(table, SWT.CENTER);
+			join_yz.setImage(image_join);
 			join_yz.setData(i);
-			join_yz.addSelectionListener(new SelectionAdapter() {
+			join_yz.addMouseListener(new MouseAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e) {
+				public void mouseDown(MouseEvent e) {
 					int index = (int) ((Button) e.getSource()).getData();
 					PK pk = PKManager.getInstance().getPKByIndex(index);
 					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
 							.getShell(), index, 2, pk.password);
 					pkDia.open();
-
 				}
 
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
-					widgetSelected(e);
-				}
 			});
 			editor.minimumWidth = join_yz.getSize().x;
 			editor.minimumHeight = join_yz.getSize().y;
