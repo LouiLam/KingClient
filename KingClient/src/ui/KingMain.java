@@ -84,7 +84,7 @@ public class KingMain extends ApplicationWindow {
 		image_pk_point_count = new Image(Display.getDefault(),
 				"pk_point_count.png");
 		image_shaixuan = new Image(Display.getDefault(), "button_sx.png");
-		image_bg_menu = new Image(Display.getDefault(), "bg_menu.jpg");
+		image_bg_menu = new Image(Display.getDefault(), "bg_menu.png");
 		image_bg_top = new Image(Display.getDefault(), "bg_top.jpg");
 		setShellStyle(SWT.CLOSE | SWT.MIN | SWT.TITLE);
 	}
