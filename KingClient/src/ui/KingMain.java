@@ -679,7 +679,7 @@ public class KingMain extends ApplicationWindow {
 			mb.setMessage("您的帐号在其他地方已登录，您可以重新登录或修改密码,你的网络连接已经断开，您可以重新登录");
 			mb.open();
 			GameClient.getInstance().disConnect();
-
+			System.exit(0);
 	}
 
 	// 房主退出
