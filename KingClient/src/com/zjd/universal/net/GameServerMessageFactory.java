@@ -10,6 +10,7 @@ import receive.JoinPKResultMessageReceive2003;
 import receive.CrashLeavePKResultMessageRecevie2004;
 import receive.NoCanStartGamePKMessageReceive2010;
 import receive.NormalLeavePKResultMessageRecevie2011;
+import receive.RepeatLoginErrorMessageRecevie2014;
 import receive.RoomPKBeginMessageReceive2013;
 import receive.RoomPKMessageReceive2001;
 import receive.RoomPKFinishMessageReceive2008;
@@ -48,6 +49,8 @@ public class GameServerMessageFactory {
 			return new ForceLeavePKResultMessageReceive2012();
 		case 2013:
 			return new RoomPKBeginMessageReceive2013();
+		case 2014:
+			return new RepeatLoginErrorMessageRecevie2014();
 			
 		default:
 			break;

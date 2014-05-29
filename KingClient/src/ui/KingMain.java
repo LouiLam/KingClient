@@ -431,32 +431,10 @@ public class KingMain extends ApplicationWindow {
 			}
 		});
 		area.add("选择区服");
-		area.add("艾欧尼亚(电信)");
-		area.add("祖安(电信)");
-		area.add("诺克萨斯(电信)");
-		area.add("班德尔城(电信)");
-		area.add("皮尔特沃夫(电信)");
-		area.add("战争学院(电信)");
-		area.add("巨神峰(电信)");
-		area.add("雷瑟守备(电信)");
-		area.add("钢铁烈阳(电信)");
-		area.add("裁决之地(电信)");
-		area.add("黑色玫瑰(电信)");
-		area.add("暗影岛(电信)");
-		area.add("均衡教派(电信)");
-		area.add("水晶之痕(电信)");
-		area.add("影流(电信)");
-		area.add("守望之海(电信)");
-		area.add("征服之海(电信)");
-		area.add("卡拉曼达(电信)");
-		area.add("皮城警备(电信)");
-
-		area.add("比尔吉沃特(网通)");
-		area.add("德玛西亚(网通)");
-		area.add("费雷尔卓德(网通)");
-		area.add("无畏先锋(网通)");
-		area.add("怒瑞玛(网通)");
-		area.add("扭曲丛林(网通)");
+		for (String str : 	KingLogin.AREA) {
+			area.add(str);
+		}
+		
 		area.setText("选择区服");
 
 		Combo map = new Combo(container, SWT.NONE);
@@ -693,6 +671,14 @@ public class KingMain extends ApplicationWindow {
 			mb.setMessage("结束游戏失败");//
 			mb.open();
 		}
+
+	}
+	public void RepeatLoginError() {
+			MessageBox mb = new MessageBox(KingMain.this.getShell(),
+					SWT.ICON_INFORMATION | SWT.OK);
+			mb.setMessage("您的帐号在其他地方已登录，您可以重新登录或修改密码,你的网络连接已经断开，您可以重新登录");
+			mb.open();
+			GameClient.getInstance().disConnect();
 
 	}
 
