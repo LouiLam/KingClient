@@ -93,6 +93,8 @@ public class KingMain extends ApplicationWindow {
 			int point) {
 		if (id.equals(KingLogin.id)) {
 			PKUser.type = type;
+			PKUser.myPoint=point;
+			PKUser.myCamp=1;
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("挑战发起成功，作为发起人，你现在不能加入其他挑战房间！");
@@ -108,9 +110,11 @@ public class KingMain extends ApplicationWindow {
 	}
 
 	public void PKJoinSuccess(String roleName, int type, PKUser users[],
-			String area, String title, int point) {
+			String area, String title, int point,int camp) {
 		if (roleName.equals(KingLogin.roleName)) {
 			PKUser.type = type;
+			PKUser.myPoint=point;
+			PKUser.myCamp=camp;
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("加入成功，作为加入人，你现在不能加入其他挑战房间！");
@@ -648,11 +652,21 @@ public class KingMain extends ApplicationWindow {
 
 	}
 
-	public void EndGameResult(int status) {
+	public void EndGameResult(int status,int win_side) {
+//		win_side	1：挑战方胜   2：应战方胜
 		if (status == 0) {
+			
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
-			mb.setMessage("房主结束游戏成功，房间解散");//
+			// 阵营 1发起 2应战
+			if(win_side==PKUser.myCamp)
+			{
+				mb.setMessage("房主结束游戏成功，房间解散,您属于获胜方，挑战+"+PKUser.myPoint*9/10);//}
+			}
+			else
+			{
+				mb.setMessage("房主结束游戏成功，房间解散,您属于失败方，挑战-"+PKUser.myPoint);//}
+			}
 			mb.open();
 			if (JfaceWindowManager.getCurWindow() instanceof WaitDia) {
 				WaitDia dia = (WaitDia) JfaceWindowManager.getCurWindow();
@@ -665,7 +679,15 @@ public class KingMain extends ApplicationWindow {
 
 			btn_create_tz.setEnabled(true);
 			State.CurState = State.STATE_GAME_END;
-		} else {
+		} else if(status == 2)
+		{
+			MessageBox mb = new MessageBox(KingMain.this.getShell(),
+					SWT.ICON_INFORMATION | SWT.OK);
+			mb.setMessage("结束游戏失败:当前游戏没有结束或者游戏结束超时");//
+			mb.open();
+		}
+		else
+		{
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("结束游戏失败");//
@@ -681,7 +703,12 @@ public class KingMain extends ApplicationWindow {
 			GameClient.getInstance().disConnect();
 			System.exit(0);
 	}
-
+	public void RoleNameError() {
+		MessageBox mb = new MessageBox(KingMain.this.getShell(),
+				SWT.ICON_INFORMATION | SWT.OK);
+		mb.setMessage("您的角色名在游戏里不存在或者为空，请输入正确角色名");
+		mb.open();
+}
 	// 房主退出
 	public void HostLeave(String id) {
 		if (!id.equals(KingLogin.id))// 非房主弹出此对话框

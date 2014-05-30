@@ -15,13 +15,12 @@ public class EndGamePKResultMessageReceive2007 extends SocketMessageReceived {
 	/**
 	 * 	0表示成功 否则失败
 	 */
-	int status;
+	int status,win_side;
 	@Override
 	public void parse(ChannelBuffer buffer) {
 		
 		status=buffer.readInt();
-			
-	
+		win_side=buffer.readInt();
 			Display.getDefault().asyncExec(new Runnable() {
 				
 				@Override
@@ -34,7 +33,7 @@ public class EndGamePKResultMessageReceive2007 extends SocketMessageReceived {
 					}
 					if(kingMain==null){return;}
 					System.out.println("结束游戏");
-					kingMain.EndGameResult(status);
+					kingMain.EndGameResult(status,win_side);
 				}
 			});
 		

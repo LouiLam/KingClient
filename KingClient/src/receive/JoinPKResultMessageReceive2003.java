@@ -23,8 +23,9 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 	String id, roleName, title, area;
 	PKUser users[] = new PKUser[10];
 	int type;
-	int status, point;
+	int status, point,camp;  
 	int faqiSeatCount, yingzhanSeatCount;
+	
 	long sql_id;
 	@Override
 	public void parse(ChannelBuffer buffer) {
@@ -33,6 +34,8 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 
 		type = buffer.readInt();
 		point = buffer.readInt();
+		// 阵营 1发起 2应战
+		camp= buffer.readInt();
 		faqiSeatCount = buffer.readInt();
 		yingzhanSeatCount = buffer.readInt();
 		sql_id= buffer.readLong();
@@ -105,10 +108,14 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 				{
 					kingMain.PopErrorJoinMessage(roleName,status);
 				}
+				else if(status == -3) //角色名的問題
+				{
+					kingMain.RoleNameError();
+				}
 				else {
 					kingMain.RefreshTable();
 					kingMain.PKJoinSuccess(roleName, type, users, area, title,
-							point);
+							point,camp);
 					if (waitDia != null) {
 						waitDia.RefreshLables(users);
 					}
