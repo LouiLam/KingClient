@@ -107,6 +107,8 @@ public class JoinDiaRoleName extends Dialog {
 				{
 					str=passwordText.getText();
 				}
+				System.out.println("加入房间sqlid"+PKManager.getInstance()
+						.getPKByIndex(index).sql_id);
 				GameClient.getInstance().sendMessageToGameServer(
 						new JoinPKMessage1003(PKManager.getInstance()
 								.getPKByIndex(index).sql_id,camp,KingLogin.id,

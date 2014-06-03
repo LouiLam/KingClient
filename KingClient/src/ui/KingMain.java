@@ -893,7 +893,8 @@ public class KingMain extends ApplicationWindow {
 		table.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		table.setBackgroundImage(image_table_bg);
 		listControl.clear();
-
+		PKManager.getInstance().Filterclear();
+		
 		System.out.println("map:" + map + "area:" + area);
 		for (int i = 0; i < PKManager.getInstance().getPKNum(); i++) {
 			PK pk = PKManager.getInstance().getPKByIndex(i);
@@ -932,15 +933,16 @@ public class KingMain extends ApplicationWindow {
 			Label textType = new Label(table, SWT.CENTER);
 			textType.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			textType.setText(pk.type + "v" + pk.type);
+			textType.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 			editor.grabHorizontal = true;
-			editor.grabVertical=true;
-			editor.minimumHeight=100;
 			editor.setEditor(textType, items[i], 0);
 			textType.setToolTipText(pk.type + "v" + pk.type);
 			listControl.add(textType);
 
 			editor = new TableEditor(table);
 			Label textCurNum = new Label(table, SWT.CENTER);
+			textCurNum.setForeground(SWTResourceManager
+					.getColor(SWT.COLOR_WHITE));
 			if (pk.password.equals("")) {
 				textCurNum.setText(pk.faqiSeatCount + "-"
 						+ +pk.yingzhanSeatCount);
@@ -958,6 +960,7 @@ public class KingMain extends ApplicationWindow {
 
 			editor = new TableEditor(table);
 			Label textArea = new Label(table, SWT.CENTER);
+			textArea.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 			textArea.setText(pk.area);
 			textArea.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
@@ -968,6 +971,7 @@ public class KingMain extends ApplicationWindow {
 			editor = new TableEditor(table);
 			Label textMap = new Label(table, SWT.CENTER);
 			textMap.setText(pk.map);
+			textMap.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 			textMap.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
 			editor.setEditor(textMap, items[i], 3);
@@ -979,7 +983,6 @@ public class KingMain extends ApplicationWindow {
 			join_tz.setImage(image_join);
 			join_tz.setData(i);
 			join_tz.addMouseListener(new MouseAdapter() {
-
 				@Override
 				public void mouseDown(MouseEvent e) {
 					int index = (int) ((Button) e.getSource()).getData();
@@ -987,9 +990,9 @@ public class KingMain extends ApplicationWindow {
 					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
 							.getShell(), index, 1, pk.password);
 					pkDia.open();
-
 				}
 			});
+			
 			editor.minimumWidth = join_tz.getSize().x;
 			editor.minimumHeight = join_tz.getSize().y;
 			editor.grabHorizontal = true;
@@ -1003,13 +1006,13 @@ public class KingMain extends ApplicationWindow {
 			join_yz.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDown(MouseEvent e) {
-					int index = (int) ((Button) e.getSource()).getData();
+					int index = (int) ((Widget) e.getSource()).getData();
 					PK pk = PKManager.getInstance().getPKByIndex(index);
 					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
 							.getShell(), index, 2, pk.password);
 					pkDia.open();
-				}
 
+				}
 			});
 			editor.minimumWidth = join_yz.getSize().x;
 			editor.minimumHeight = join_yz.getSize().y;
@@ -1019,6 +1022,7 @@ public class KingMain extends ApplicationWindow {
 
 			editor = new TableEditor(table);
 			Label textName = new Label(table, SWT.CENTER);
+			textName.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 			textName.setText(pk.id);
 			textName.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
@@ -1028,6 +1032,8 @@ public class KingMain extends ApplicationWindow {
 
 			editor = new TableEditor(table);
 			Label textPoint = new Label(table, SWT.CENTER);
+			textPoint.setForeground(SWTResourceManager
+					.getColor(SWT.COLOR_WHITE));
 			textPoint.setText(pk.point + "");
 			textPoint.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
@@ -1037,6 +1043,8 @@ public class KingMain extends ApplicationWindow {
 
 			editor = new TableEditor(table);
 			Label textTitle = new Label(table, SWT.CENTER);
+			textTitle.setForeground(SWTResourceManager
+					.getColor(SWT.COLOR_WHITE));
 			textTitle.setText(pk.title);
 			textTitle.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;

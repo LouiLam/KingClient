@@ -4,6 +4,9 @@ package com.zjd.universal.net;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import object.TaskScheduled;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.Channel;
@@ -12,6 +15,7 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
+import send.HeartMessage1000;
 import send.LoginMessage1001;
 import send.SocketMessageToSend;
 import ui.KingLogin;
@@ -27,14 +31,14 @@ public class GameClient {
 
     public static final int LOGIN_PROT = 4322;
 
-   public static String GAME_IP="113.10.242.132";
+//   public static String GAME_IP="113.10.242.132";
 //    public static String GAME_IP="louislam0714.xicp.net";
 
     
 //    public static String GAME_IP="218.76.35.162";
     
 //    public static String GAME_IP="192.168.1.101";
-//    public static String GAME_IP="192.168.1.205";
+    public static String GAME_IP="192.168.1.205";
 //    public static String GAME_IP="192.168.1.9";
     
     public static int GAME_PORT=4322;
@@ -96,13 +100,21 @@ public class GameClient {
 
         ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(ip, port));
         connectFuture.addListener(new ChannelFutureListener() {
-            public void operationComplete(ChannelFuture cf) {
+            public void operationComplete(final ChannelFuture cf) {
                 if (cf.getChannel().isConnected()) {
 //                    cf.getChannel().setAttachment(new NetCommun());
                     channelList.add(cf.getChannel());
                     gameChannel = cf.getChannel();
                     sendMessage(cf.getChannel(), new LoginMessage1001(KingLogin.id));
 //                    sendMessage(cf.getChannel(), new Send1_2GRLoginByUserIDMessage());
+                    TaskScheduled.scheduleAtFixedRate(new Runnable() {
+						
+						@Override
+						public void run() {
+							   sendMessage(cf.getChannel(), new HeartMessage1000());
+							
+						}
+					}, 0, 60, TimeUnit.SECONDS);
                 }
             }
         });
@@ -124,7 +136,7 @@ public class GameClient {
     public void onCreate() {
         ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
                 Executors.newCachedThreadPool());
-        ServerPipelineFactory tcpClientPipelineFactory = new ServerPipelineFactory();
+        ClientPipelineFactory tcpClientPipelineFactory = new ClientPipelineFactory();
         bootstrap = new ClientBootstrap(factory);
         bootstrap.setPipelineFactory(tcpClientPipelineFactory);
         bootstrap.setOption("tcpNoDelay", true);

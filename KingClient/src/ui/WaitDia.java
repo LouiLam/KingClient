@@ -172,10 +172,12 @@ public abstract class WaitDia extends Dialog {
 			if (users[i] != null) {
 				if (users[i].camp == 1) {
 					faqiName[users[i].seatID].setText(users[i].roleName);
+					faqiName[users[i].seatID].pack();
 					faqi[users[i].seatID].setVisible(true);
 					faqiNameCopy[users[i].seatID].setVisible(true);
 				} else {
 					yingzhanName[users[i].seatID].setText(users[i].roleName);
+					yingzhanName[users[i].seatID].pack();
 					yingzhan[users[i].seatID].setVisible(true);
 					yingzhanNameCopy[users[i].seatID].setVisible(true);
 				}
@@ -425,7 +427,7 @@ public abstract class WaitDia extends Dialog {
 		faqiName[index]=name;
 		else
 		yingzhanName[index]=name;
-		name.setBounds(109, 15, 61, 17);
+		name.setBounds(109, 11, 91, 30);
 		name.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		name.setFont(SWTResourceManager
 				.getFont("宋体", 10, SWT.NORMAL));
@@ -436,7 +438,7 @@ public abstract class WaitDia extends Dialog {
 		else
 		yingzhanNameCopy[index]= copy;
 		
-		copy.setBounds(109, 47, 64, 22);
+		copy.setBounds(109, 52, 64, 22);
 		copy.setImage(iamge_copy);
 		copy.setData("index", index);
 		copy.setData("isFaQi",isFaQi);

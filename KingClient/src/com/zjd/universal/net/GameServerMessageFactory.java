@@ -5,6 +5,7 @@ import receive.CanStartGamePKMessageReceive2005;
 import receive.CreatePKResultMessageReceive2002;
 import receive.EndGamePKResultMessageReceive2007;
 import receive.ForceLeavePKResultMessageReceive2012;
+import receive.HeartMessageRecevie2000;
 import receive.HostLeavePKResultMessageRecevie2009;
 import receive.JoinPKResultMessageReceive2003;
 import receive.CrashLeavePKResultMessageRecevie2004;
@@ -24,6 +25,8 @@ public class GameServerMessageFactory {
 
     public static SocketMessageReceived getMessage(int mainID) {
     	switch (mainID) {
+    	case 2000:
+			return new HeartMessageRecevie2000();
 		case 2001:
 			return new RoomPKMessageReceive2001();
 		case 2002:

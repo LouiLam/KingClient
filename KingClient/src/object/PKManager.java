@@ -29,7 +29,9 @@ public class PKManager {
 		pkList.clear();
 		pkListFilter.clear();
 	}
-
+	public void Filterclear() {
+		pkListFilter.clear();
+	}
 	public void add(PK pk) {
 		pkMap.put(pk.sql_id, pk);
 		pkList.add(pk);
