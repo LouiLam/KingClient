@@ -31,14 +31,14 @@ public class GameClient {
 
     public static final int LOGIN_PROT = 4322;
 
-//   public static String GAME_IP="113.10.242.132";
+   public static String GAME_IP="113.10.242.132";
 //    public static String GAME_IP="louislam0714.xicp.net";
 
     
 //    public static String GAME_IP="218.76.35.162";
     
 //    public static String GAME_IP="192.168.1.101";
-    public static String GAME_IP="192.168.1.205";
+//    public static String GAME_IP="192.168.1.205";
 //    public static String GAME_IP="192.168.1.9";
     
     public static int GAME_PORT=4322;
@@ -107,14 +107,14 @@ public class GameClient {
                     gameChannel = cf.getChannel();
                     sendMessage(cf.getChannel(), new LoginMessage1001(KingLogin.id));
 //                    sendMessage(cf.getChannel(), new Send1_2GRLoginByUserIDMessage());
-                    TaskScheduled.scheduleAtFixedRate(new Runnable() {
+                    TaskScheduled.scheduleAtFixedRateForever(new Runnable() {
 						
 						@Override
 						public void run() {
 							   sendMessage(cf.getChannel(), new HeartMessage1000());
 							
 						}
-					}, 0, 60, TimeUnit.SECONDS);
+					}, 0, 30, TimeUnit.SECONDS);
                 }
             }
         });

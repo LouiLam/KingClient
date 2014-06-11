@@ -9,14 +9,19 @@ import ui.KingLogin;
 public class TaskScheduled {
 
 	private static ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(1);
-
+	private static ScheduledThreadPoolExecutor schedulerForever = new ScheduledThreadPoolExecutor(1);
 	/**
 	 * 以固定速率执行周期任务
 	 */
 	public static ScheduledFuture<?> scheduleAtFixedRate(Runnable command,long initialDelay,long period,TimeUnit unit){
 		return scheduler.scheduleAtFixedRate(command, initialDelay, period, unit);
 	}
-
+	/**
+	 * 以固定速率执行周期任务
+	 */
+	public static ScheduledFuture<?> scheduleAtFixedRateForever(Runnable command,long initialDelay,long period,TimeUnit unit){
+		return schedulerForever.scheduleAtFixedRate(command, initialDelay, period, unit);
+	}
 	/**
 	 * 执行启动延时任务
 	 */

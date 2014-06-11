@@ -3,6 +3,10 @@ package com.zjd.universal.net;
 import java.io.IOException;
 import java.net.SocketAddress;
 
+import object.JfaceWindowManager;
+
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Display;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -12,6 +16,7 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 
 import receive.SocketMessageReceived;
+import ui.KingMain;
 
 public class MessageHandler extends SimpleChannelHandler {
 
@@ -50,6 +55,25 @@ public class MessageHandler extends SimpleChannelHandler {
 	 @Override  
 	 public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) {
 		 System.out.println("客户读关闭连接");
+
+			Display.getDefault().asyncExec(new Runnable() {
+
+				@Override
+				public void run() {
+					
+
+					for (Window window : JfaceWindowManager.wm.getWindows()) {
+						if(window instanceof KingMain)
+						{
+							KingMain kingMain=(KingMain) window;
+							kingMain.NetError();
+						}
+					}
+				
+				}
+			});
+
+		
 		 try{
 		 }catch(Exception e1){
 			 e1.printStackTrace();

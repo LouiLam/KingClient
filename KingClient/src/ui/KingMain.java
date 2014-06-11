@@ -14,6 +14,8 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.OpenWindowListener;
+import org.eclipse.swt.browser.WindowEvent;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -269,7 +271,7 @@ public class KingMain extends ApplicationWindow {
 		return parent;
 	}
 
-	private Composite getTabContrlOther(Composite parent, String url) {
+	private Composite getTabContrlOther(Composite parent, final String url) {
 		// Composite container = new Composite(parent, SWT.NONE);
 
 		Browser browser = new Browser(parent, SWT.BORDER);
@@ -283,6 +285,17 @@ public class KingMain extends ApplicationWindow {
 		// browser.setLayoutData(tabFolder.getLayoutData());
 		// browser.setBounds(5,30,1024,768);
 		browser.setJavascriptEnabled(true);
+		browser.addOpenWindowListener(new OpenWindowListener() {
+			
+			@Override
+			public void open(WindowEvent arg0) {
+				if(!arg0.browser.getUrl().equals(url))
+				{
+					arg0.browser.close();
+				}
+				
+			}
+		});
 		return browser;
 	}
 
@@ -703,6 +716,14 @@ public class KingMain extends ApplicationWindow {
 			GameClient.getInstance().disConnect();
 			System.exit(0);
 	}
+	public void NetError() {
+		MessageBox mb = new MessageBox(KingMain.this.getShell(),
+				SWT.ICON_INFORMATION | SWT.OK);
+		mb.setMessage("由于网络原因或其他异常情况，你的网络连接已经断开，您可以重新登录");
+		mb.open();
+		GameClient.getInstance().disConnect();
+		System.exit(0);
+}
 	public void RoleNameError() {
 		MessageBox mb = new MessageBox(KingMain.this.getShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
