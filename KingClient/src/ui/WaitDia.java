@@ -64,7 +64,7 @@ public abstract class WaitDia extends Dialog {
 			String title, int point) {
 		super(parentShell);
 		setWindowManager(JfaceWindowManager.wm);
-		setShellStyle(SWT.DIALOG_TRIM);
+		setShellStyle(SWT.DIALOG_TRIM | SWT.MIN);
 		this.curTime = curTime;
 		this.type = type;
 		this.area = area;
@@ -96,6 +96,7 @@ public abstract class WaitDia extends Dialog {
 			String area, String title, int point) {
 		super(parentShell);
 		setWindowManager(JfaceWindowManager.wm);
+		setShellStyle(SWT.DIALOG_TRIM | SWT.MIN);
 		this.users = users;
 		this.curTime = curTime;
 		this.type = type;
