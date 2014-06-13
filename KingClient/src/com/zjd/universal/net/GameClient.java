@@ -97,16 +97,17 @@ public class GameClient {
         } else {
         }
         channelList.clear();
-
+        System.out.println("服务器连接准备");
         ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(ip, port));
         connectFuture.addListener(new ChannelFutureListener() {
             public void operationComplete(final ChannelFuture cf) {
                 if (cf.getChannel().isConnected()) {
+                	System.out.println("服务器连接成功1");
 //                    cf.getChannel().setAttachment(new NetCommun());
                     channelList.add(cf.getChannel());
                     gameChannel = cf.getChannel();
                     sendMessage(cf.getChannel(), new LoginMessage1001(KingLogin.id));
-//                    sendMessage(cf.getChannel(), new Send1_2GRLoginByUserIDMessage());
+                    System.out.println("服务器连接成功2");
                     TaskScheduled.scheduleAtFixedRateForever(new Runnable() {
 						
 						@Override

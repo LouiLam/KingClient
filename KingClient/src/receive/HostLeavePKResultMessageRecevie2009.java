@@ -69,6 +69,7 @@ public class HostLeavePKResultMessageRecevie2009 extends SocketMessageReceived {
 					if (window instanceof KingMain) {
 						KingMain main = (KingMain) window;
 						main.HostLeave(id);
+						main.enable();
 					}
 					if (window instanceof WaitDia) {
 						WaitDia waitDia = (WaitDia) window;

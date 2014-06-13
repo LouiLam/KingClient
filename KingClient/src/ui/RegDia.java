@@ -1,9 +1,11 @@
 package ui;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import object.JfaceWindowManager;
 
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -14,7 +16,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -28,12 +29,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.json.JSONObject;
 
 public class RegDia extends Dialog {
 	private Text id_text;
 	private Text pwd_text;
 	private Text pwdok_text;
-	private Text text_3;
+	private Text mail;
 	private Text text_4;
 	private Text text_5;
 
@@ -46,7 +48,7 @@ public class RegDia extends Dialog {
 		super(parentShell);
 		setWindowManager(JfaceWindowManager.wm);
 		setShellStyle(SWT.DIALOG_TRIM);
-//		getShell().setImage(parentShell.getImage());
+		// getShell().setImage(parentShell.getImage());
 	}
 
 	@Override
@@ -64,13 +66,13 @@ public class RegDia extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
-		
-		
+
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.numColumns = 3;
 
 		Label lblNewLabel = new Label(container, SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
 		lblNewLabel.setText("\u7528\u6237\u540D\uFF1A");
 		new Label(container, SWT.NONE);
 
@@ -81,7 +83,8 @@ public class RegDia extends Dialog {
 		id_text.setToolTipText("\u5e10\u53f7\u6700\u957f20\u4e2a\u5b57\u7b26\uff0c\u4e2d\u6587\u4e3a2\u4e2a\u5b57\u7b26");// �ʺ��20���ַ�����Ϊ2���ַ�
 
 		Label lblNewLabel_1 = new Label(container, SWT.NONE);
-		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
 		lblNewLabel_1.setText("\u767B\u5F55\u5BC6\u7801\uFF1A");
 		new Label(container, SWT.NONE);
 
@@ -92,7 +95,8 @@ public class RegDia extends Dialog {
 		pwd_text.setToolTipText("\u5bc6\u7801\u6700\u957f36\u4e2a\u5b57\u7b26");
 
 		Label lblNewLabel_2 = new Label(container, SWT.NONE);
-		lblNewLabel_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
 		lblNewLabel_2.setText("\u786E\u8BA4\u5BC6\u7801\uFF1A");
 		new Label(container, SWT.NONE);
 
@@ -101,16 +105,17 @@ public class RegDia extends Dialog {
 				false, 1, 1));
 		pwdok_text.setTextLimit(36);
 		Label label = new Label(container, SWT.NONE);
-		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
+				1, 1));
 		label.setText("\u90AE\u7BB1\uFF1A");
 		new Label(container, SWT.NONE);
 
-		text_3 = new Text(container, SWT.BORDER);
-		text_3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
-				1));
+		mail = new Text(container, SWT.BORDER);
+		mail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label lblNewLabel_3 = new Label(container, SWT.NONE);
-		lblNewLabel_3.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_3.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
 		lblNewLabel_3.setText("QQ\uFF1A");
 
 		new Label(container, SWT.NONE);
@@ -122,7 +127,8 @@ public class RegDia extends Dialog {
 		text_4.setEditable(false);
 
 		Label lblNewLabel_4 = new Label(container, SWT.NONE);
-		lblNewLabel_4.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_4.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
 		lblNewLabel_4.setText("\u624B\u673A\uFF1A");
 		new Label(container, SWT.NONE);
 
@@ -158,7 +164,8 @@ public class RegDia extends Dialog {
 					return;
 				}
 				if (pwdok_text.getText().equals(pwd_text.getText())) {
-					httpPost();
+					httpPost(id_text.getText(), pwd_text.getText(),
+							pwdok_text.getText(), mail.getText());
 				} else {
 					MessageBox mb = new MessageBox(
 							RegDia.this.getParentShell(), SWT.ICON_INFORMATION
@@ -188,27 +195,39 @@ public class RegDia extends Dialog {
 		return new Point(450, 300);
 	}
 
-	public void httpPost() {
+	public void httpPost(String id, String pwd, String pwdok, String mail) {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(
 				"http://www.hexcm.com/yxlm/member/reg_new.php?dopost=regbase&step=1");
 
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-		nvps.add(new BasicNameValuePair("userid", "111"));
-		nvps.add(new BasicNameValuePair("userpwd", "111"));
-		nvps.add(new BasicNameValuePair("userpwdok", "111"));
-		nvps.add(new BasicNameValuePair("email", "111"));
+		nvps.add(new BasicNameValuePair("userid", id));
+		nvps.add(new BasicNameValuePair("userpwd", pwd));
+		nvps.add(new BasicNameValuePair("userpwdok", pwdok));
+		nvps.add(new BasicNameValuePair("email", mail));
 		try {
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps));
 			CloseableHttpResponse httppHttpResponse2 = httpClient
 					.execute(httpPost);
-			System.out.println(httppHttpResponse2.getStatusLine());
-			System.out.println(EntityUtils.toString(httppHttpResponse2
-					.getEntity()));
-			MessageBox mb = new MessageBox(RegDia.this.getParentShell(),
-					SWT.ICON_INFORMATION | SWT.OK);
-			mb.setMessage("\u6CE8\u518C\u6210\u529F");// ע��ɹ�
-			mb.open();
+			if (httppHttpResponse2.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				String entity = EntityUtils.toString(httppHttpResponse2
+						.getEntity());
+				System.out.println(entity);
+				JSONObject obj = new JSONObject(entity);
+//				int value = Integer.parseInt(obj.get("value") + "");
+				MessageBox mb = new MessageBox(
+						RegDia.this.getParentShell(), SWT.ICON_INFORMATION
+								| SWT.OK);
+				mb.setMessage(obj.getString("msg"));// ע��ɹ�
+				mb.open();
+			} else {
+				MessageBox mb = new MessageBox(RegDia.this.getParentShell(),
+						SWT.ICON_INFORMATION | SWT.OK);
+				mb.setMessage("error!StatusCode:"
+						+ httppHttpResponse2.getStatusLine().getStatusCode());// http״̬�����
+				mb.open();
+			}
+
 			httppHttpResponse2.close();
 			httpClient.close();
 		} catch (Exception e) {

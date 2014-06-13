@@ -64,6 +64,7 @@ public abstract class WaitDia extends Dialog {
 			String title, int point) {
 		super(parentShell);
 		setWindowManager(JfaceWindowManager.wm);
+		setShellStyle(SWT.DIALOG_TRIM);
 		this.curTime = curTime;
 		this.type = type;
 		this.area = area;
@@ -84,6 +85,7 @@ public abstract class WaitDia extends Dialog {
 	public void myClose() {
 		if (State.CurState == State.STATE_GAME_EXCEPTION_EXIT)// 房主退出的时候，加入者直接关掉定时器
 		{
+			curTime=0;
 			TaskScheduled.clear();
 			State.CurState = State.STATE_GAME_NULL;
 		}
@@ -100,6 +102,7 @@ public abstract class WaitDia extends Dialog {
 		this.area = area;
 		this.title = title;
 		this.point = point;
+		image_end_game=new Image(Display.getDefault(),"bt_js.png");
 		image_table_bg = new Image(Display.getDefault(), "wait_dia_bg.jpg");
 		image_tx_icon = new Image(Display.getDefault(), "tx.png");
 		image_wait_tz = new Image(Display.getDefault(), "wait_tz.png");
@@ -111,7 +114,7 @@ public abstract class WaitDia extends Dialog {
 	@Override
 	protected void handleShellCloseEvent() {
 		if (curTime > 1) {
-
+			curTime=0;
 			MessageBox mb = new MessageBox(getParentShell(),
 					SWT.ICON_INFORMATION | SWT.OK | SWT.CANCEL);
 			mb.setMessage("现在还未到游戏可退出时间，如果强行退出，您会被扣除" + point + "积分");//
@@ -128,6 +131,7 @@ public abstract class WaitDia extends Dialog {
 						main.tableEnable();
 					}
 				}
+				curTime=0;
 				TaskScheduled.clear();
 
 				super.handleShellCloseEvent();
@@ -150,7 +154,7 @@ public abstract class WaitDia extends Dialog {
 						main.tableEnable();
 					}
 				}
-
+				curTime=0;
 				TaskScheduled.clear();
 				super.handleShellCloseEvent();
 			} else {
@@ -363,6 +367,7 @@ public abstract class WaitDia extends Dialog {
 	}
 
 	public void hideTime() {
+		curTime=0;
 		TaskScheduled.clear();
 		time.setText("");
 		label_2.setVisible(false);

@@ -86,7 +86,7 @@ public class KingMain extends ApplicationWindow {
 		image_pk_point_count = new Image(Display.getDefault(),
 				"pk_point_count.png");
 		image_shaixuan = new Image(Display.getDefault(), "button_sx.png");
-		image_bg_menu = new Image(Display.getDefault(), "bg_menu.png");
+		image_bg_menu = new Image(Display.getDefault(), "bg_menu.jpg");
 		image_bg_top = new Image(Display.getDefault(), "bg_top.jpg");
 		setShellStyle(SWT.CLOSE | SWT.MIN | SWT.TITLE);
 	}
@@ -107,16 +107,19 @@ public class KingMain extends ApplicationWindow {
 
 			CreatePKWaitDia waitDia = new CreatePKWaitDia(getShell(), type,
 					area, title, point);
+			waitDia.setBlockOnOpen(false);
 			waitDia.open();
+			disable();
 		}
 	}
 
 	public void PKJoinSuccess(String roleName, int type, PKUser users[],
-			String area, String title, int point,int camp) {
+			String area, String title, int point,int camp,long sql_id) {
 		if (roleName.equals(KingLogin.roleName)) {
 			PKUser.type = type;
 			PKUser.myPoint=point;
 			PKUser.myCamp=camp;
+			PKUser.sql_id=sql_id;
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("加入成功，作为加入人，你现在不能加入其他挑战房间！");
@@ -125,7 +128,9 @@ public class KingMain extends ApplicationWindow {
 			btn_create_tz.setEnabled(false);
 			JoinPKWaitDia waitDia = new JoinPKWaitDia(getShell(), users, type,
 					area, title, point);
+			waitDia.setBlockOnOpen(false);
 			waitDia.open();
+			disable();
 		}
 	}
 
@@ -479,6 +484,8 @@ public class KingMain extends ApplicationWindow {
 		map.add("选择地图");
 		map.add("扭曲丛林");
 		map.add("召唤师峡谷");
+		map.add("水晶之痕");
+		map.add("嚎哭深渊");
 		map.setText("选择地图");
 
 		Label shaixuan = new Label(container, SWT.NONE);
@@ -651,6 +658,7 @@ public class KingMain extends ApplicationWindow {
 				mb.setMessage("房主已经点击开始游戏了，游戏开始");
 				if (JfaceWindowManager.getCurWindow() instanceof WaitDia) {
 					WaitDia dia = (WaitDia) JfaceWindowManager.getCurWindow();
+					dia.endGame.setEnabled(true);
 					dia.hideTime();
 				}
 			}
@@ -681,6 +689,7 @@ public class KingMain extends ApplicationWindow {
 				mb.setMessage("房主结束游戏成功，房间解散,您属于失败方，挑战-"+PKUser.myPoint);//}
 			}
 			mb.open();
+			enable();
 			if (JfaceWindowManager.getCurWindow() instanceof WaitDia) {
 				WaitDia dia = (WaitDia) JfaceWindowManager.getCurWindow();
 				dia.myClose();
@@ -698,6 +707,10 @@ public class KingMain extends ApplicationWindow {
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("结束游戏失败:当前游戏没有结束或者游戏结束超时");//
 			mb.open();
+			if (JfaceWindowManager.getCurWindow() instanceof WaitDia) {
+				WaitDia waitDia = (WaitDia) JfaceWindowManager.getCurWindow();
+				waitDia.endGame.setEnabled(true);
+			}
 		}
 		else
 		{
@@ -705,6 +718,10 @@ public class KingMain extends ApplicationWindow {
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("结束游戏失败");//
 			mb.open();
+			if (JfaceWindowManager.getCurWindow() instanceof WaitDia) {
+				WaitDia waitDia = (WaitDia) JfaceWindowManager.getCurWindow();
+				waitDia.endGame.setEnabled(true);
+			}
 		}
 
 	}
@@ -759,7 +776,18 @@ public class KingMain extends ApplicationWindow {
 	}
 
 	ArrayList<Control> listControl = new ArrayList<Control>();
-
+	public void disable()
+	{
+		for (Control control : listControl) {
+			control.setEnabled(false);
+		}
+	}
+	public void enable()
+	{
+		for (Control control : listControl) {
+			control.setEnabled(true);
+		}
+	}
 	public void RefreshTable() {
 
 		table.clearAll();
@@ -832,7 +860,7 @@ public class KingMain extends ApplicationWindow {
 			join_tz.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDown(MouseEvent e) {
-					int index = (int) ((Button) e.getSource()).getData();
+					int index = (int) ((Label) e.getSource()).getData();
 					PK pk = PKManager.getInstance().getPKByIndex(index);
 					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
 							.getShell(), index, 1, pk.password);

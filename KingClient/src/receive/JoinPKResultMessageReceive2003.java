@@ -62,7 +62,6 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 			buffer.readBytes(areaBytes);
 			area = new String(areaBytes, "utf-8");
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -115,7 +114,7 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 				else {
 					kingMain.RefreshTable();
 					kingMain.PKJoinSuccess(roleName, type, users, area, title,
-							point,camp);
+							point,camp,sql_id);
 					if (waitDia != null) {
 						waitDia.RefreshLables(users);
 					}

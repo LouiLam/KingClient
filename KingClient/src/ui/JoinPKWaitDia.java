@@ -2,8 +2,14 @@ package ui;
 
 import object.PKUser;
 
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+
+import send.EndGamePKMessage1005;
+
+import com.zjd.universal.net.GameClient;
 
 public class JoinPKWaitDia extends WaitDia {
 //	public JoinPKWaitDia(Shell parentShell) {
@@ -17,8 +23,14 @@ public class JoinPKWaitDia extends WaitDia {
 	}
 	@Override
 	void createDialogAreaDoSomeThing(Composite container) {
-		// TODO Auto-generated method stub
-		
+		endGame.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				GameClient.getInstance().sendMessageToGameServer(
+						new EndGamePKMessage1005());
+				endGame.setEnabled(false);
+			}
+		});
 	}
 
 

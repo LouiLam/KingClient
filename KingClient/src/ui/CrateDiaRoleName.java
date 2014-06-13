@@ -100,6 +100,10 @@ public class CrateDiaRoleName extends Dialog {
 		map.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		map.add("扭曲丛林");
 		map.add("召唤师峡谷");
+		map.add("水晶之痕");
+		map.add("嚎哭深渊");
+		
+
 		map.select(0);
 		new Label(container, SWT.NONE);
 
