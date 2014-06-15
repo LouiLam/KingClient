@@ -243,7 +243,7 @@ public class CrateDiaRoleName extends Dialog {
 	public void httpPostFightAdd() {
 		
 		CloseableHttpClient httpClient = HttpClients.createDefault();
-		HttpPost httpPost = new HttpPost("http://www.hexcm.com/yxlm/member/fight_add.php");
+		HttpPost httpPost = new HttpPost("http://198.204.255.98/yxlm/member/fight_add.php");
 
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("action", "dopost"));
