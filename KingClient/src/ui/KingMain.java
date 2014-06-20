@@ -51,11 +51,11 @@ public class KingMain extends ApplicationWindow {
 	Composite[] tabItem = new Composite[5];
 	// private String tabItemText[] = { "对战信息", "个人设置", "挑战记录", "充值管理",
 	// "礼品兑换" };
-	private String urlText[] = { "http://198.204.255.98/yxlm/setting.php",
-			"http://198.204.255.98/yxlm/setting.php",
-			"http://198.204.255.98/yxlm/lszj.php",
-			"http://198.204.255.98/yxlm/cz.php",
-			"http://198.204.255.98/yxlm/dj.php" };
+	private String urlText[] = { "http://www.hexcm.com/yxlm/setting.php",
+			"http://www.hexcm.com/yxlm/setting.php",
+			"http://www.hexcm.com/yxlm/lszj.php",
+			"http://www.hexcm.com/yxlm/cz.php",
+			"http://www.hexcm.com/yxlm/dj.php" };
 
 	private Image image_join, image_create_tz, image_query,
 			image_table_bg;
@@ -162,18 +162,6 @@ public class KingMain extends ApplicationWindow {
 	@Override
 	protected Control createContents(final Composite parent) {
 		parent.setLayout(null);
-		// System.out.println(getInitialSize().x+","+getInitialSize().y+","+
-		// tab_bg.getBounds().height);
-
-		// RowLayout r=new RowLayout(SWT.VERTICAL);
-		// r.spacing=0;
-		// r.fill=true;
-		// r.marginWidth=0;
-		// r.marginLeft=0;
-		// r.marginHeight=0;
-		// r.marginTop=0;
-		// parent.setLayout(r);
-		// parent.setLayout(new abso)
 		parent.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		parent.setBackgroundImage(image_bg_top);
 
@@ -243,32 +231,6 @@ public class KingMain extends ApplicationWindow {
 		}
 		tabItem[0].setVisible(true);
 
-		// Composite composite = new Composite(container, SWT.NONE);
-		// composite.setBounds(0, 0, 64, parent.get());
-		// final TabFolder tabFolder = new TabFolder(parent, SWT.None);
-		// tabFolder.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-		// tabFolder.setBounds(10, 0, 881, 649);
-		// tabFolder.setVisible(false);
-		// for (int i = 0; i < 5; i++) {
-		// tabItem[i] = new TabItem(tabFolder, SWT.NONE);
-		// tabItem[i].setImage(image[i]);
-		//
-		// if (i == 0) {
-		// tabItem[i].setControl(getTabControlOne(tabFolder));
-		// } else {
-		// tabItem[i].setControl(getTabContrlOther(tabFolder, urlText[i]
-		// + "?uid=" + PKUser.uid));
-		// }
-		// }
-		//
-		// tabFolder.setSelection(0);
-		// tabFolder.addSelectionListener(new SelectionAdapter() {
-		// public void widgetSelected(
-		// org.eclipse.swt.events.SelectionEvent event) {
-		// System.out.println(tabFolder.getSelection()[0].getText()
-		// + " selected");
-		// }
-		// });
 
 		GameClient.getInstance().onCreate();
 		GameClient.getInstance().connectGameServer(GameClient.GAME_IP,
@@ -277,18 +239,10 @@ public class KingMain extends ApplicationWindow {
 	}
 
 	private Composite getTabContrlOther(Composite parent, final String url) {
-		// Composite container = new Composite(parent, SWT.NONE);
 
 		Browser browser = new Browser(parent, SWT.BORDER);
 		browser.setUrl(url);
 		browser.setBounds(0, 0, 1020, 768);
-		// browser.getVerticalBar().setVisible(false);
-		// browser.getHorizontalBar().setVisible(false);
-		// GridData layoutData = new GridData(GridData.FILL_BOTH);
-		// layoutData.horizontalSpan = 2;
-		// layoutData.verticalSpan = 2;
-		// browser.setLayoutData(tabFolder.getLayoutData());
-		// browser.setBounds(5,30,1024,768);
 		browser.setJavascriptEnabled(true);
 		browser.addOpenWindowListener(new OpenWindowListener() {
 			
@@ -321,17 +275,19 @@ public class KingMain extends ApplicationWindow {
 		table.setBounds(2, 48, 1024 - 289, 580);
 		table.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 		TableColumn column = new TableColumn(table, SWT.CENTER);
-		// column.setImage(title1);
-		column.setWidth(115);
+		column.setWidth(90);
 		column.setText("对战人数");
 		column = new TableColumn(table, SWT.CENTER);
-		column.setWidth(110);
+		column.setWidth(105);
+		column.setText("挑战点");
+		column = new TableColumn(table, SWT.CENTER);
+		column.setWidth(90);
 		column.setText("当前人数（挑-应）");
 		column = new TableColumn(table, SWT.CENTER);
-		column.setWidth(160);
+		column.setWidth(125);
 		column.setText("游戏区");
 		column = new TableColumn(table, SWT.CENTER);
-		column.setWidth(130);
+		column.setWidth(105);
 		column.setText("挑战图");
 		column = new TableColumn(table, SWT.CENTER);// 挑战方
 		column.setWidth(108);
@@ -343,9 +299,7 @@ public class KingMain extends ApplicationWindow {
 		column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(110);
 		column.setText("房主");
-		column = new TableColumn(table, SWT.CENTER);
-		column.setWidth(120);
-		column.setText("挑战点");
+		
 		column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(220);
 		column.setText("标题");
@@ -381,7 +335,7 @@ public class KingMain extends ApplicationWindow {
 		pk_flow.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				browser.setUrl("http://198.204.255.98/yxlm/single/lc.html");
+				browser.setUrl("http://www.hexcm.com/yxlm/single/lc.html");
 				browser.setJavascriptEnabled(true);
 				browser.setVisible(true);
 				table.setVisible(false);
@@ -396,7 +350,7 @@ public class KingMain extends ApplicationWindow {
 		zhogncai_way.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				browser.setUrl("http://198.204.255.98/yxlm/single/zc.html");
+				browser.setUrl("http://www.hexcm.com/yxlm/single/zc.html");
 				browser.setJavascriptEnabled(true);
 				browser.setVisible(true);
 				table.setVisible(false);
@@ -410,12 +364,12 @@ public class KingMain extends ApplicationWindow {
 			@Override
 			public void mouseDown(MouseEvent e) {
 				
-				browser.setUrl("http://198.204.255.98/yxlm/single/ds.html");
+				browser.setUrl("http://www.hexcm.com/yxlm/single/ds.html");
 				browser.setJavascriptEnabled(true);
 				browser.setVisible(true);
 				table.setVisible(false);
 //				UrlDia dia = new UrlDia(KingMain.this.getShell(),
-//						"http://198.204.255.98/yxlm/single/ds.html");
+//						"http://www.hexcm.com/yxlm/single/ds.html");
 //				dia.open();
 			}
 		});
@@ -424,9 +378,9 @@ public class KingMain extends ApplicationWindow {
 
 		Browser browser = new Browser(container, SWT.NONE);
 		browser.setBounds(1024 - 285, 48, 278, 587);
-		// browser.setUrl("http://198.204.255.98/yxlm/single/lc1.html");
+		// browser.setUrl("http://www.hexcm.com/yxlm/single/lc1.html");
 
-		browser.setUrl("http://198.204.255.98/yxlm/index_right.php?uid="
+		browser.setUrl("http://www.hexcm.com/yxlm/index_right.php?uid="
 				+ PKUser.uid);
 		browser.setJavascriptEnabled(true);
 		Combo area = new Combo(container, SWT.NONE);
@@ -815,6 +769,17 @@ public class KingMain extends ApplicationWindow {
 			listControl.add(textType);
 
 			editor = new TableEditor(table);
+			Label textPoint = new Label(table, SWT.CENTER);
+			textPoint.setForeground(SWTResourceManager
+					.getColor(SWT.COLOR_WHITE));
+			textPoint.setText(pk.point + "");
+			textPoint.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			editor.grabHorizontal = true;
+			editor.setEditor(textPoint, items[i], 1);
+			textPoint.setToolTipText(pk.point + "");
+			listControl.add(textPoint);
+			
+			editor = new TableEditor(table);
 			Label textCurNum = new Label(table, SWT.CENTER);
 			textCurNum.setForeground(SWTResourceManager
 					.getColor(SWT.COLOR_WHITE));
@@ -828,7 +793,7 @@ public class KingMain extends ApplicationWindow {
 			textCurNum
 					.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
-			editor.setEditor(textCurNum, items[i], 1);
+			editor.setEditor(textCurNum, items[i], 2);
 			textCurNum.setToolTipText(pk.faqiSeatCount + "-"
 					+ pk.yingzhanSeatCount);
 			listControl.add(textCurNum);
@@ -839,7 +804,7 @@ public class KingMain extends ApplicationWindow {
 			textArea.setText(pk.area);
 			textArea.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
-			editor.setEditor(textArea, items[i], 2);
+			editor.setEditor(textArea, items[i], 3);
 			textArea.setToolTipText(pk.area);
 			listControl.add(textArea);
 
@@ -849,7 +814,7 @@ public class KingMain extends ApplicationWindow {
 			textMap.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 			textMap.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
-			editor.setEditor(textMap, items[i], 3);
+			editor.setEditor(textMap, items[i], 4);
 			textMap.setToolTipText(pk.map);
 			listControl.add(textMap);
 
@@ -871,7 +836,7 @@ public class KingMain extends ApplicationWindow {
 			editor.minimumWidth = join_tz.getSize().x;
 			editor.minimumHeight = join_tz.getSize().y;
 			editor.grabHorizontal = true;
-			editor.setEditor(join_tz, items[i], 4);
+			editor.setEditor(join_tz, items[i], 5);
 			listControl.add(join_tz);
 
 			editor = new TableEditor(table);
@@ -892,7 +857,7 @@ public class KingMain extends ApplicationWindow {
 			editor.minimumWidth = join_yz.getSize().x;
 			editor.minimumHeight = join_yz.getSize().y;
 			editor.grabHorizontal = true;
-			editor.setEditor(join_yz, items[i], 5);
+			editor.setEditor(join_yz, items[i], 6);
 			listControl.add(join_yz);
 
 			editor = new TableEditor(table);
@@ -901,20 +866,11 @@ public class KingMain extends ApplicationWindow {
 			textName.setText(pk.id);
 			textName.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
-			editor.setEditor(textName, items[i], 6);
+			editor.setEditor(textName, items[i], 7);
 			textName.setToolTipText(pk.id);
 			listControl.add(textName);
 
-			editor = new TableEditor(table);
-			Label textPoint = new Label(table, SWT.CENTER);
-			textPoint.setForeground(SWTResourceManager
-					.getColor(SWT.COLOR_WHITE));
-			textPoint.setText(pk.point + "");
-			textPoint.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			editor.grabHorizontal = true;
-			editor.setEditor(textPoint, items[i], 7);
-			textPoint.setToolTipText(pk.point + "");
-			listControl.add(textPoint);
+		
 
 			editor = new TableEditor(table);
 			Label textTitle = new Label(table, SWT.CENTER);
@@ -989,6 +945,17 @@ public class KingMain extends ApplicationWindow {
 			listControl.add(textType);
 
 			editor = new TableEditor(table);
+			Label textPoint = new Label(table, SWT.CENTER);
+			textPoint.setForeground(SWTResourceManager
+					.getColor(SWT.COLOR_WHITE));
+			textPoint.setText(pk.point + "");
+			textPoint.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			editor.grabHorizontal = true;
+			editor.setEditor(textPoint, items[i], 1);
+			textPoint.setToolTipText(pk.point + "");
+			listControl.add(textPoint);
+			
+			editor = new TableEditor(table);
 			Label textCurNum = new Label(table, SWT.CENTER);
 			textCurNum.setForeground(SWTResourceManager
 					.getColor(SWT.COLOR_WHITE));
@@ -1002,7 +969,7 @@ public class KingMain extends ApplicationWindow {
 			textCurNum
 					.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
-			editor.setEditor(textCurNum, items[i], 1);
+			editor.setEditor(textCurNum, items[i], 2);
 			textCurNum.setToolTipText(pk.faqiSeatCount + "-"
 					+ pk.yingzhanSeatCount);
 			listControl.add(textCurNum);
@@ -1013,7 +980,7 @@ public class KingMain extends ApplicationWindow {
 			textArea.setText(pk.area);
 			textArea.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
-			editor.setEditor(textArea, items[i], 2);
+			editor.setEditor(textArea, items[i], 3);
 			textArea.setToolTipText(pk.area);
 			listControl.add(textArea);
 
@@ -1023,7 +990,7 @@ public class KingMain extends ApplicationWindow {
 			textMap.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 			textMap.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
-			editor.setEditor(textMap, items[i], 3);
+			editor.setEditor(textMap, items[i], 4);
 			textMap.setToolTipText(pk.map);
 			listControl.add(textMap);
 
@@ -1045,7 +1012,7 @@ public class KingMain extends ApplicationWindow {
 			editor.minimumWidth = join_tz.getSize().x;
 			editor.minimumHeight = join_tz.getSize().y;
 			editor.grabHorizontal = true;
-			editor.setEditor(join_tz, items[i], 4);
+			editor.setEditor(join_tz, items[i], 5);
 			listControl.add(join_tz);
 
 			editor = new TableEditor(table);
@@ -1066,7 +1033,7 @@ public class KingMain extends ApplicationWindow {
 			editor.minimumWidth = join_yz.getSize().x;
 			editor.minimumHeight = join_yz.getSize().y;
 			editor.grabHorizontal = true;
-			editor.setEditor(join_yz, items[i], 5);
+			editor.setEditor(join_yz, items[i], 6);
 			listControl.add(join_yz);
 
 			editor = new TableEditor(table);
@@ -1075,20 +1042,11 @@ public class KingMain extends ApplicationWindow {
 			textName.setText(pk.id);
 			textName.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
-			editor.setEditor(textName, items[i], 6);
+			editor.setEditor(textName, items[i], 7);
 			textName.setToolTipText(pk.id);
 			listControl.add(textName);
 
-			editor = new TableEditor(table);
-			Label textPoint = new Label(table, SWT.CENTER);
-			textPoint.setForeground(SWTResourceManager
-					.getColor(SWT.COLOR_WHITE));
-			textPoint.setText(pk.point + "");
-			textPoint.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			editor.grabHorizontal = true;
-			editor.setEditor(textPoint, items[i], 7);
-			textPoint.setToolTipText(pk.point + "");
-			listControl.add(textPoint);
+		
 
 			editor = new TableEditor(table);
 			Label textTitle = new Label(table, SWT.CENTER);

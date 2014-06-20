@@ -115,7 +115,6 @@ public abstract class WaitDia extends Dialog {
 	@Override
 	protected void handleShellCloseEvent() {
 		if (curTime > 1) {
-			curTime=0;
 			MessageBox mb = new MessageBox(getParentShell(),
 					SWT.ICON_INFORMATION | SWT.OK | SWT.CANCEL);
 			mb.setMessage("现在还未到游戏可退出时间，如果强行退出，您会被扣除" + point + "积分");//

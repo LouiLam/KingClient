@@ -102,7 +102,7 @@ public class KingLogin extends ApplicationWindow {
 		}
 		if(KingLogin.isFirstRun)
 		{
-			UrlDia dia=new UrlDia(KingLogin.this.getShell(),"http://198.204.255.98/yxlm/single/lc1.html");
+			UrlDia dia=new UrlDia(KingLogin.this.getShell(),"http://www.hexcm.com/yxlm/single/lc1.html");
 			dia.open();
 		}
 		parent.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
@@ -297,7 +297,7 @@ public class KingLogin extends ApplicationWindow {
 		return new Point(360, 293);
 	}
 	public static void  httpGet() throws Exception {
-		String url="http://198.204.255.98/yxlm/member/fight_cha.php?action=area";
+		String url="http://www.hexcm.com/yxlm/member/fight_cha.php?action=area";
 		
 		
 		
@@ -346,7 +346,7 @@ public class KingLogin extends ApplicationWindow {
 	public void httpPost() {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(
-				"http://198.204.255.98/yxlm/member/index_do.php?fmdo=login&dopost=login");
+				"http://www.hexcm.com/yxlm/member/index_do.php?fmdo=login&dopost=login");
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("userid", combo.getText()));
 		nvps.add(new BasicNameValuePair("pwd", pwd_text.getText()));
