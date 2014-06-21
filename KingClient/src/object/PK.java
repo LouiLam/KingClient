@@ -15,7 +15,6 @@ public class PK {
 	public int type;//游戏对战人数类型
 	public int point;//挑战点数
 	public long sql_id;//数据库ID
-	public String curNum;
 	public PKUser[]faqi=new PKUser[5];
 	public PKUser[]yingzhan=new PKUser[5];
 	public int faqiSeatCount = 0;

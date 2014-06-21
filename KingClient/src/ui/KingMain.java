@@ -783,10 +783,18 @@ public class KingMain extends ApplicationWindow {
 			Label textCurNum = new Label(table, SWT.CENTER);
 			textCurNum.setForeground(SWTResourceManager
 					.getColor(SWT.COLOR_WHITE));
+			boolean isFull=false;
+			
 			if (pk.password.equals("")) {
 				textCurNum.setText(pk.faqiSeatCount + "-"
-						+ +pk.yingzhanSeatCount);
-			} else {
+						 +pk.yingzhanSeatCount);
+				if(pk.type==pk.faqiSeatCount&&pk.type==pk.yingzhanSeatCount)
+				{
+					textCurNum.setText("满员");
+					isFull=true;
+				}
+			} 
+			else{
 				textCurNum.setText(pk.faqiSeatCount + "-"
 						+ pk.yingzhanSeatCount + "(密)");
 			}
@@ -860,6 +868,12 @@ public class KingMain extends ApplicationWindow {
 			editor.setEditor(join_yz, items[i], 6);
 			listControl.add(join_yz);
 
+			if(isFull)
+			{
+				join_tz.setEnabled(false);
+				join_yz.setEnabled(false);
+			}
+			
 			editor = new TableEditor(table);
 			Label textName = new Label(table, SWT.CENTER);
 			textName.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -959,13 +973,22 @@ public class KingMain extends ApplicationWindow {
 			Label textCurNum = new Label(table, SWT.CENTER);
 			textCurNum.setForeground(SWTResourceManager
 					.getColor(SWT.COLOR_WHITE));
+			
+			boolean isFull=false;
 			if (pk.password.equals("")) {
 				textCurNum.setText(pk.faqiSeatCount + "-"
-						+ +pk.yingzhanSeatCount);
-			} else {
+						 +pk.yingzhanSeatCount);
+				if(pk.type==pk.faqiSeatCount&&pk.type==pk.yingzhanSeatCount)
+				{
+					textCurNum.setText("满员");
+					isFull=true;
+				}
+			} 
+			else{
 				textCurNum.setText(pk.faqiSeatCount + "-"
 						+ pk.yingzhanSeatCount + "(密)");
 			}
+			
 			textCurNum
 					.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 			editor.grabHorizontal = true;
@@ -1035,6 +1058,12 @@ public class KingMain extends ApplicationWindow {
 			editor.grabHorizontal = true;
 			editor.setEditor(join_yz, items[i], 6);
 			listControl.add(join_yz);
+			
+			if(isFull)
+			{
+				join_tz.setEnabled(false);
+				join_yz.setEnabled(false);
+			}
 
 			editor = new TableEditor(table);
 			Label textName = new Label(table, SWT.CENTER);
