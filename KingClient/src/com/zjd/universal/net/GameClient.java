@@ -113,7 +113,7 @@ public class GameClient {
 						@Override
 						public void run() {
 							   sendMessage(cf.getChannel(), new HeartMessage1000());
-							
+							   System.out.println("发送心跳包");
 						}
 					}, 0, 30, TimeUnit.SECONDS);
                 }

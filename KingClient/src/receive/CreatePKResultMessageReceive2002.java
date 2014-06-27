@@ -3,8 +3,6 @@ package receive;
 import java.io.UnsupportedEncodingException;
 
 import object.JfaceWindowManager;
-import object.PK;
-import object.PKManager;
 import object.PKUser;
 
 import org.eclipse.jface.window.Window;
@@ -17,7 +15,7 @@ import ui.KingMain;
 public class CreatePKResultMessageReceive2002 extends SocketMessageReceived {
 	String id = null,roleName=null;
 	int type,point;
-	String area, title;
+	String area, title,map;
 
 	@Override
 	public void parse(ChannelBuffer buffer) {
@@ -53,7 +51,7 @@ public class CreatePKResultMessageReceive2002 extends SocketMessageReceived {
 			int maplength = buffer.readShort();
 			byte mapBytes[] = new byte[maplength];
 			buffer.readBytes(mapBytes);
-			String map = new String(mapBytes, "utf-8");
+			map = new String(mapBytes, "utf-8");
 
 			int titlelength = buffer.readShort();
 			byte titleBytes[] = new byte[titlelength];
@@ -94,7 +92,7 @@ public class CreatePKResultMessageReceive2002 extends SocketMessageReceived {
 					if (window instanceof KingMain) {
 						kingMain = (KingMain) window;
 						kingMain.RefreshTable();
-						kingMain.PKCreateSuccess(id, type, area, title,point);
+						kingMain.PKCreateSuccess(id, type, area, title,point,map);
 					}
 				}
 			}

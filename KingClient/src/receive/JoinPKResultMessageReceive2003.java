@@ -20,7 +20,7 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 	// int camp;
 	// int seatID;
 	// int pkNum;
-	String id, roleName, title, area;
+	String id, roleName, title, area,map;
 	PKUser users[] = new PKUser[10];
 	int type;
 	int status, point,camp;  
@@ -57,10 +57,16 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 			byte titleBytes[] = new byte[titlelength];
 			buffer.readBytes(titleBytes);
 			title = new String(titleBytes, "utf-8");
+			
 			int arealength = buffer.readShort();
 			byte areaBytes[] = new byte[arealength];
 			buffer.readBytes(areaBytes);
 			area = new String(areaBytes, "utf-8");
+			
+			int maplength = buffer.readShort();
+			byte mapBytes[] = new byte[maplength];
+			buffer.readBytes(mapBytes);
+			map = new String(mapBytes, "utf-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -114,7 +120,7 @@ public class JoinPKResultMessageReceive2003 extends SocketMessageReceived {
 				else {
 					kingMain.RefreshTable();
 					kingMain.PKJoinSuccess(roleName, type, users, area, title,
-							point,camp,sql_id);
+							point,camp,sql_id,map);
 					if (waitDia != null) {
 						waitDia.RefreshLables(users);
 					}

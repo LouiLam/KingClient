@@ -92,7 +92,7 @@ public class KingMain extends ApplicationWindow {
 	}
 
 	public void PKCreateSuccess(String id, int type, String area, String title,
-			int point) {
+			int point,String map) {
 		if (id.equals(KingLogin.id)) {
 			PKUser.type = type;
 			PKUser.myPoint=point;
@@ -106,7 +106,7 @@ public class KingMain extends ApplicationWindow {
 			btn_create_tz.setEnabled(false);
 
 			CreatePKWaitDia waitDia = new CreatePKWaitDia(getShell(), type,
-					area, title, point);
+					area, title, point,map);
 			waitDia.setBlockOnOpen(false);
 			waitDia.open();
 			disable();
@@ -114,7 +114,7 @@ public class KingMain extends ApplicationWindow {
 	}
 
 	public void PKJoinSuccess(String roleName, int type, PKUser users[],
-			String area, String title, int point,int camp,long sql_id) {
+			String area, String title, int point,int camp,long sql_id,String map) {
 		if (roleName.equals(KingLogin.roleName)) {
 			PKUser.type = type;
 			PKUser.myPoint=point;
@@ -127,7 +127,7 @@ public class KingMain extends ApplicationWindow {
 			tableDisable();
 			btn_create_tz.setEnabled(false);
 			JoinPKWaitDia waitDia = new JoinPKWaitDia(getShell(), users, type,
-					area, title, point);
+					area, title, point,map);
 			waitDia.setBlockOnOpen(false);
 			waitDia.open();
 			disable();
