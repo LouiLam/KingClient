@@ -17,10 +17,11 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.OpenWindowListener;
 import org.eclipse.swt.browser.WindowEvent;
 import org.eclipse.swt.custom.TableEditor;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
@@ -36,6 +37,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.wb.swt.SWTResourceManager;
 
@@ -62,7 +64,9 @@ public class KingMain extends ApplicationWindow {
 	private Image image_pk_flow, image_zhogncai_way, image_pk_point_count;
 	private String curMap, curArea;
 	private Image icon, image_shaixuan, image_bg_menu, image_bg_top;
-	Browser browser ;
+	private long curSql_id;
+	Browser browser;
+	Text  sql_idText;
 	/**
 	 * Create the application window.
 	 */
@@ -308,14 +312,14 @@ public class KingMain extends ApplicationWindow {
 		btn_create_tz = new Label(container, SWT.CENTER);
 		btn_create_tz.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
+			public void mouseUp(MouseEvent e) {
 				CrateDiaRoleName pkDia = new CrateDiaRoleName(KingMain.this
 						.getShell());
 				pkDia.open();
 			}
 		});
 
-		btn_create_tz.setBounds(287, 11, 108, 30);
+		btn_create_tz.setBounds(390, 11, 108, 30);
 		btn_create_tz.setImage(image_create_tz);
 
 		// Button query = new Button(container, SWT.CENTER);
@@ -334,7 +338,7 @@ public class KingMain extends ApplicationWindow {
 		Label pk_flow = new Label(container, SWT.CENTER);
 		pk_flow.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
+			public void mouseUp(MouseEvent e) {
 				browser.setUrl("http://www.hexcm.com/yxlm/single/lc.html");
 				browser.setJavascriptEnabled(true);
 				browser.setVisible(true);
@@ -349,7 +353,7 @@ public class KingMain extends ApplicationWindow {
 		Label zhogncai_way = new Label(container, SWT.CENTER);
 		zhogncai_way.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
+			public void mouseUp(MouseEvent e) {
 				browser.setUrl("http://www.hexcm.com/yxlm/single/zc.html");
 				browser.setJavascriptEnabled(true);
 				browser.setVisible(true);
@@ -362,7 +366,7 @@ public class KingMain extends ApplicationWindow {
 		Label pk_point_count = new Label(container, SWT.CENTER);
 		pk_point_count.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
+			public void mouseUp(MouseEvent e) {
 				
 				browser.setUrl("http://www.hexcm.com/yxlm/single/ds.html");
 				browser.setJavascriptEnabled(true);
@@ -442,13 +446,40 @@ public class KingMain extends ApplicationWindow {
 		map.add("嚎哭深渊");
 		map.setText("选择地图");
 
+		sql_idText=new Text(container, SWT.NONE);
+		sql_idText.setBounds(212, 16, 84, 21);
+		sql_idText.setToolTipText("输入房间ID搜索房间");
+		sql_idText.setText("输入房间ID搜索房间");
+		sql_idText.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				super.mouseDown(e);
+				sql_idText.selectAll();
+			}
+		});
+		sql_idText.addModifyListener(new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent arg0) {
+				sql_idText=(Text) arg0.getSource();
+				
+			}
+		});
+		
 		Label shaixuan = new Label(container, SWT.NONE);
-		shaixuan.setBounds(201, 12, 80, 27);
+		shaixuan.setBounds(306, 12, 80, 27);
 		shaixuan.setImage(image_shaixuan);
 		shaixuan.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
-				RefreshTableFilter(curMap, curArea);
+			public void mouseUp(MouseEvent e) {
+				try {
+					curSql_id=Long.parseLong(sql_idText.getText());
+				} catch (Exception e2) {
+					curSql_id=-1;
+				}
+				
+				
+				RefreshTableFilter(curMap,curArea,curSql_id);
 			}
 		});
 
@@ -609,7 +640,8 @@ public class KingMain extends ApplicationWindow {
 					dia.hideTime();
 				}
 			} else {
-				mb.setMessage("房主已经点击开始游戏了，游戏开始");
+				mb.setMessage("房主已经点击开始游戏了，游戏开始\n\n"+"1.启动英雄联盟游戏\n\n" + "2.请等待当前游戏的房主将您加入到英雄联盟游戏中\n\n"
+						+ "3.进行英雄联盟比赛\n\n" + "4.比赛结束后请回到当前页面点击\"结束游戏\",系统将会判断比赛胜负");
 				if (JfaceWindowManager.getCurWindow() instanceof WaitDia) {
 					WaitDia dia = (WaitDia) JfaceWindowManager.getCurWindow();
 					dia.endGame.setEnabled(true);
@@ -832,7 +864,7 @@ public class KingMain extends ApplicationWindow {
 			join_tz.setData(i);
 			join_tz.addMouseListener(new MouseAdapter() {
 				@Override
-				public void mouseDown(MouseEvent e) {
+				public void mouseUp(MouseEvent e) {
 					int index = (int) ((Label) e.getSource()).getData();
 					PK pk = PKManager.getInstance().getPKByIndex(index);
 					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
@@ -853,7 +885,7 @@ public class KingMain extends ApplicationWindow {
 			join_yz.setData(i);
 			join_yz.addMouseListener(new MouseAdapter() {
 				@Override
-				public void mouseDown(MouseEvent e) {
+				public void mouseUp(MouseEvent e) {
 					int index = (int) ((Widget) e.getSource()).getData();
 					PK pk = PKManager.getInstance().getPKByIndex(index);
 					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
@@ -902,7 +934,7 @@ public class KingMain extends ApplicationWindow {
 	}
 
 	// 筛选刷新
-	public void RefreshTableFilter(String map, String area) {
+	public void RefreshTableFilter(String map, String area,long sql_id) {
 
 		table.clearAll();
 		table.removeAll();
@@ -916,7 +948,15 @@ public class KingMain extends ApplicationWindow {
 		
 		System.out.println("map:" + map + "area:" + area);
 		for (int i = 0; i < PKManager.getInstance().getPKNum(); i++) {
+			
 			PK pk = PKManager.getInstance().getPKByIndex(i);
+			System.out.println("pk.sql_id:"+pk.sql_id);
+			System.out.println("sql_id:"+sql_id);
+			if(pk.sql_id==sql_id)
+			{
+				PKManager.getInstance().addFilter(pk);
+				break;
+			}
 			if (map != null && area != null) {
 				if (pk.map.equals(map) && pk.area.equals(area)) {
 					PKManager.getInstance().addFilter(pk);
@@ -935,7 +975,7 @@ public class KingMain extends ApplicationWindow {
 					PKManager.getInstance().addFilter(pk);
 				}
 			}
-			if (area == null & map == null) {
+			if (area == null & map == null&sql_id==-1) {
 				RefreshTable();
 				return;
 			}
@@ -1023,7 +1063,7 @@ public class KingMain extends ApplicationWindow {
 			join_tz.setData(i);
 			join_tz.addMouseListener(new MouseAdapter() {
 				@Override
-				public void mouseDown(MouseEvent e) {
+				public void mouseUp(MouseEvent e) {
 					int index = (int) ((Button) e.getSource()).getData();
 					PK pk = PKManager.getInstance().getPKByIndex(index);
 					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
@@ -1044,7 +1084,7 @@ public class KingMain extends ApplicationWindow {
 			join_yz.setData(i);
 			join_yz.addMouseListener(new MouseAdapter() {
 				@Override
-				public void mouseDown(MouseEvent e) {
+				public void mouseUp(MouseEvent e) {
 					int index = (int) ((Widget) e.getSource()).getData();
 					PK pk = PKManager.getInstance().getPKByIndex(index);
 					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this

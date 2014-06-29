@@ -289,7 +289,7 @@ public class TestDemo extends ApplicationWindow {
 		shaixuan.setImage(image_shaixuan);
 		shaixuan.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
+			public void mouseUp(MouseEvent e) {
 				RefreshTableFilter(curMap, curArea);
 			}
 		});

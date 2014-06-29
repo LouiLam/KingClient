@@ -16,10 +16,17 @@ public class UrlDia extends Dialog {
 	 * @param parentShell
 	 */
 	private String url;
+	private int width=1024,height=768;
 	public UrlDia(Shell parentShell,String url) {
 		super(parentShell);
 		this.url=url;
 	}
+	public UrlDia(Shell parentShell,String url,int width,int height) {
+		super(parentShell);
+		this.url=url;
+		this.width=width;
+		this.height=height;
+	} 
 	/**
 	 * Create contents of the dialog.
 	 * @param parent
@@ -32,7 +39,7 @@ public class UrlDia extends Dialog {
 //		GridData gd_browser = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 //		gd_browser.widthHint = 1024;
 //		gd_browser.heightHint = 768;
-		browser.setBounds(0, 0, 1024, 768);
+		browser.setBounds(0, 0, width, height);
 //		browser.setLayoutData(gd_browser);
 		browser.setUrl(url);
 		browser.setJavascriptEnabled(true);
@@ -63,7 +70,7 @@ protected Button createButton(Composite parent, int id, String label,
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(1024, 768);
+		return new Point(width, height);
 	}
 
 }

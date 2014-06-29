@@ -20,8 +20,7 @@ public class CreatePKWaitDia extends WaitDia {
 		int result = super.open();
 		MessageBox mb = new MessageBox(CreatePKWaitDia.this.getParentShell(),
 				SWT.ICON_INFORMATION | SWT.OK);
-		mb.setMessage("1.启动英雄联盟游戏\n\n" + "2.将当前等待界面的玩家加入到英雄联盟游戏中\n\n"
-				+ "3.进行英雄联盟比赛\n\n" + "4.比赛结束后请回到当前页面点击\"结束游戏\",系统将会判断比赛胜负");
+		mb.setMessage("请耐心等待其他玩家加入");
 		mb.open();
 		return result;
 	}
@@ -36,16 +35,21 @@ public class CreatePKWaitDia extends WaitDia {
 
 		startGame.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
+			public void mouseUp(MouseEvent e) {
 				GameClient.getInstance().sendMessageToGameServer(
 						new StartGamePKMessage1004());
 				startGame.setEnabled(false);
+				MessageBox mb = new MessageBox(CreatePKWaitDia.this.getParentShell(),
+						SWT.ICON_INFORMATION | SWT.OK);
+				mb.setMessage("1.启动英雄联盟游戏\n\n" + "2.将当前等待界面的玩家加入到英雄联盟游戏中\n\n"
+						+ "3.进行英雄联盟比赛\n\n" + "4.比赛结束后请回到当前页面点击\"结束游戏\",系统将会判断比赛胜负");
+				mb.open();
 			}
 		});
 
 		endGame.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
+			public void mouseUp(MouseEvent e) {
 				GameClient.getInstance().sendMessageToGameServer(
 						new EndGamePKMessage1005());
 				endGame.setEnabled(false);

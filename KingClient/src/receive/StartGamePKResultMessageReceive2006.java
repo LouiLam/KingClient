@@ -1,10 +1,8 @@
 package receive;
 
 import java.io.UnsupportedEncodingException;
-import java.util.concurrent.TimeUnit;
 
 import object.JfaceWindowManager;
-import object.TaskScheduled;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
@@ -12,7 +10,6 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 
 import ui.KingMain;
-import ui.WaitDia;
 
 
 

@@ -39,7 +39,7 @@ public class GameClient {
     
 //    public static String GAME_IP="218.76.35.162";
 //    public static String GAME_IP="192.168.1.205";
-//    public static String GAME_IP="192.168.1.9";
+//    public static String GAME_IP="192.168.1.100";
     
     public static int GAME_PORT=4322;
 

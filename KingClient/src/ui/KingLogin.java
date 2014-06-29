@@ -163,7 +163,7 @@ public class KingLogin extends ApplicationWindow {
 		reg.setImage(image_reg);
 		reg.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
+			public void mouseUp(MouseEvent e) {
 				RegDia regDia = new RegDia(KingLogin.this.getShell());
 				regDia.open();
 			}
@@ -175,7 +175,7 @@ public class KingLogin extends ApplicationWindow {
 
 		login.addMouseListener(new MouseAdapter() {
 //			@Override
-//			public void mouseDown(MouseEvent e) {
+//			public void mouseUp(MouseEvent e) {
 //				login.setImage(image_reg);
 //			}
 			@Override
@@ -233,7 +233,7 @@ public class KingLogin extends ApplicationWindow {
 		lblNewLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblNewLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
+			public void mouseUp(MouseEvent e) {
 				System.out.println("鼠标点击");
 			}
 		});

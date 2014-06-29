@@ -43,6 +43,7 @@ public abstract class WaitDia extends Dialog {
 	Label yingzhan[] = new Label[5];
 	Label yingzhanName[] = new Label[5];
 	Label yingzhanNameCopy[] = new Label[5];
+	Label timeGroup;
 	PKUser users[] = null;
 	int curTime;
 	Label time;
@@ -83,6 +84,7 @@ public abstract class WaitDia extends Dialog {
 		image_shensu = new Image(Display.getDefault(), "shensu.png");
 		image_zhongcai = new Image(Display.getDefault(), "zhongcai.png");
 		image_blank = new Image(Display.getDefault(), "blank.png");
+
 	}
 
 	public void myClose() {
@@ -114,6 +116,8 @@ public abstract class WaitDia extends Dialog {
 		image_wait_yz = new Image(Display.getDefault(), "wait_yz.png");
 		image_wait_vs = new Image(Display.getDefault(), "vs.png");
 		iamge_copy = new Image(Display.getDefault(), "copy.png");
+		image_shensu = new Image(Display.getDefault(), "shensu.png");
+		image_zhongcai = new Image(Display.getDefault(), "zhongcai.png");
 		image_blank = new Image(Display.getDefault(), "blank.png");
 	}
 
@@ -125,21 +129,28 @@ public abstract class WaitDia extends Dialog {
 			mb.setMessage("现在还未到游戏可退出时间，如果强行退出，您会被扣除" + point + "积分");//
 			int rc = mb.open();
 			if (rc == SWT.OK) {
-				GameClient.getInstance().sendMessageToGameServer(
-						new ForceLeavePKMessage1007());
-				System.out
-						.println("handleShellCloseEvent发送1007" + KingLogin.id);
-				for (Window window : JfaceWindowManager.wm.getWindows()) {
-					if (window instanceof KingMain) {
+				MessageBox mb1 = new MessageBox(getParentShell(),
+						SWT.ICON_INFORMATION | SWT.OK | SWT.CANCEL);
+				mb1.setMessage("您会被扣除" + point + "积分," + "确定退出吗？");//
+				int rc1 = mb1.open();
+				if (rc1 == SWT.OK) {
+					GameClient.getInstance().sendMessageToGameServer(
+							new ForceLeavePKMessage1007());
+					for (Window window : JfaceWindowManager.wm.getWindows()) {
+						if (window instanceof KingMain) {
 
-						KingMain main = (KingMain) window;
-						main.tableEnable();
+							KingMain main = (KingMain) window;
+							main.tableEnable();
+						}
 					}
-				}
-				curTime = 0;
-				TaskScheduled.clear();
+					curTime = 0;
+					TaskScheduled.clear();
 
-				super.handleShellCloseEvent();
+					super.handleShellCloseEvent();
+				} else if (rc == SWT.CANCEL) {
+					return;
+				}
+
 			} else if (rc == SWT.CANCEL) {
 				return;
 			}
@@ -236,27 +247,27 @@ public abstract class WaitDia extends Dialog {
 			faqiShadow[i] = new Label(faqi_group, SWT.NONE);
 			faqiShadow[i].setBounds(0, 25 + 111 * i, 200, 86);
 			faqiShadow[i].setImage(image_blank);
+			faqiShadow[i].setVisible(true);
 		}
 
+		for (int i = type; i < 5; i++) {
+			faqiShadow[i].setVisible(false);
+		}
 		Composite item_faqi_group = new Composite(faqi_group, SWT.NONE);
 		item_faqi_group.setBounds(0, 25, 200, 86);
 		createItem(item_faqi_group, 0, true);
 
 		item_faqi_group = new Composite(faqi_group, SWT.NONE);
 		item_faqi_group.setBounds(0, 136, 200, 86);
-		item_faqi_group.setBackgroundImage(image_blank);
 		createItem(item_faqi_group, 1, true);
 		item_faqi_group = new Composite(faqi_group, SWT.NONE);
 		item_faqi_group.setBounds(0, 247, 200, 86);
-		item_faqi_group.setBackgroundImage(image_blank);
 		createItem(item_faqi_group, 2, true);
 		item_faqi_group = new Composite(faqi_group, SWT.NONE);
 		item_faqi_group.setBounds(0, 358, 200, 86);
-		item_faqi_group.setBackgroundImage(image_blank);
 		createItem(item_faqi_group, 3, true);
 		item_faqi_group = new Composite(faqi_group, SWT.NONE);
 		item_faqi_group.setBounds(0, 469, 200, 86);
-		item_faqi_group.setBackgroundImage(image_blank);
 		createItem(item_faqi_group, 4, true);
 
 		Label wait_vs = new Label(container, SWT.NONE);
@@ -270,7 +281,12 @@ public abstract class WaitDia extends Dialog {
 			yingzhanShadow[i] = new Label(yingzhan_group, SWT.NONE);
 			yingzhanShadow[i].setBounds(0, 25 + 111 * i, 200, 86);
 			yingzhanShadow[i].setImage(image_blank);
+			yingzhanShadow[i].setVisible(true);
 		}
+		for (int i = type; i < 5; i++) {
+			yingzhanShadow[i].setVisible(false);
+		}
+
 		Composite item_yingzhan_group = new Composite(yingzhan_group, SWT.NONE);
 		item_yingzhan_group.setBounds(0, 25, 200, 86);
 		createItem(item_yingzhan_group, 0, false);
@@ -307,7 +323,19 @@ public abstract class WaitDia extends Dialog {
 		shensu.setImage(image_shensu);
 		shensu.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
+			public void mouseUp(MouseEvent e) {
+				if (State.CurState == State.STATE_GAME_START) {
+					UrlDia dia = new UrlDia(WaitDia.this.getParentShell(),
+							"http://www.hexcm.com/yxlm/member/fight_zc.php?action=ss&fid="
+									+ PKUser.sql_id + "&uid=" + PKUser.uid,
+							500, 400);
+					dia.open();
+				} else {
+					MessageBox mb = new MessageBox(getParentShell(),
+							SWT.ICON_INFORMATION | SWT.OK );
+					mb.setMessage("游戏未开始，不能申诉");//
+					mb.open();
+				}
 			}
 		});
 		zhongcai = new Label(container, SWT.NONE);
@@ -315,9 +343,22 @@ public abstract class WaitDia extends Dialog {
 		zhongcai.setImage(image_zhongcai);
 		zhongcai.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
+			public void mouseUp(MouseEvent e) {
+				if (State.CurState == State.STATE_GAME_START) {
+					UrlDia dia = new UrlDia(WaitDia.this.getParentShell(),
+							"http://www.hexcm.com/yxlm/member/fight_zc.php?action=zc&fid="
+									+ PKUser.sql_id + "&uid=" + PKUser.uid,
+							500, 400);
+					dia.open();
+				} else {
+					MessageBox mb = new MessageBox(getParentShell(),
+							SWT.ICON_INFORMATION | SWT.OK);
+					mb.setMessage("游戏未开始，不能仲裁");//
+					mb.open();
+				}
 			}
 		});
+
 		createDialogAreaDoSomeThing(container);
 
 		Composite composite_titlebar = new Composite(container, SWT.NONE);
@@ -361,7 +402,6 @@ public abstract class WaitDia extends Dialog {
 		label_5.setFont(SWTResourceManager.getFont("宋体", 16, SWT.NORMAL));
 		label_5.setBounds(169, 61, 99, 21);
 
-	
 		// Label typeLabel = new Label(composite_titlebar, SWT.CENTER);
 		// typeLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		// typeLabel.setText(type + "v" + type);
@@ -378,9 +418,9 @@ public abstract class WaitDia extends Dialog {
 		time.setBounds(460, 491, 202, 17);
 		time.setForeground(SWTResourceManager.getColor(SWT.COLOR_YELLOW));
 		time.setFont(SWTResourceManager.getFont("宋体", 16, SWT.NORMAL));
-		Label lblNewLabel = new Label(container, SWT.NONE);
-		lblNewLabel.setBounds(409, 438, 200, 98);
-		lblNewLabel.setImage(image_blank);
+		timeGroup = new Label(container, SWT.NONE);
+		timeGroup.setBounds(409, 438, 200, 98);
+		timeGroup.setImage(image_blank);
 		if (users != null) {
 			RefreshLables(users);
 		}
@@ -415,6 +455,7 @@ public abstract class WaitDia extends Dialog {
 		TaskScheduled.clear();
 		time.setText("");
 		label_2.setVisible(false);
+		timeGroup.setVisible(false);
 	}
 
 	public void showTime() {
@@ -462,6 +503,13 @@ public abstract class WaitDia extends Dialog {
 		return new Point(1024, 768);
 	}
 
+	@Override
+	protected void configureShell(Shell newShell) {
+		// TODO Auto-generated method stub
+		super.configureShell(newShell);
+		newShell.setText("等待界面：房间id为" + PKUser.sql_id);
+	}
+
 	private void createItem(Composite item_group, int index, boolean isFaQi) {
 
 		Label headIcon = new Label(item_group, SWT.NONE);
@@ -492,7 +540,7 @@ public abstract class WaitDia extends Dialog {
 		copy.setData("isFaQi", isFaQi);
 		copy.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
+			public void mouseUp(MouseEvent e) {
 				final Clipboard cb = new Clipboard(getParentShell()
 						.getDisplay());
 				int index = (int) ((Widget) e.getSource()).getData("index");
