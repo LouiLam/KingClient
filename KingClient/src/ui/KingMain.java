@@ -11,6 +11,7 @@ import object.State;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -31,7 +32,9 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -45,7 +48,6 @@ import com.zjd.universal.net.GameClient;
 
 public class KingMain extends ApplicationWindow {
 	private Table table;
-
 	private Label btn_create_tz;
 	private Image image[] = new Image[5];
 	private Image image_pressed[] = new Image[5];
@@ -53,16 +55,16 @@ public class KingMain extends ApplicationWindow {
 	Composite[] tabItem = new Composite[5];
 	// private String tabItemText[] = { "对战信息", "个人设置", "挑战记录", "充值管理",
 	// "礼品兑换" };
-	private String urlText[] = { "http://www.hexcm.com/yxlm/setting.php",
-			"http://www.hexcm.com/yxlm/setting.php",
-			"http://www.hexcm.com/yxlm/lszj.php",
-			"http://www.hexcm.com/yxlm/cz.php",
-			"http://www.hexcm.com/yxlm/dj.php" };
+	private String urlText[] = { "http://124.248.237.30/yxlm/setting.php",
+			"http://124.248.237.30/yxlm/setting.php",
+			"http://124.248.237.30/yxlm/lszj.php",
+			"http://124.248.237.30/yxlm/cz.php",
+			"http://124.248.237.30/yxlm/dj.php" };
 
 	private Image image_join, image_create_tz, image_query,
 			image_table_bg;
 	private Image image_pk_flow, image_zhogncai_way, image_pk_point_count;
-	private String curMap, curArea;
+	private String curMap, curArea,curState;
 	private Image icon, image_shaixuan, image_bg_menu, image_bg_top;
 	private long curSql_id;
 	Browser browser;
@@ -273,7 +275,9 @@ public class KingMain extends ApplicationWindow {
 		Composite container = new Composite(parent, SWT.NONE);
 
 		container.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-		table = new Table(container, SWT.BORDER | SWT.MULTI);
+		
+	
+		table = new Table(container, SWT.BORDER | SWT.MULTI| SWT.VIRTUAL);
 		table.setLinesVisible(false);
 		table.setHeaderVisible(true);
 		table.setBounds(2, 48, 1024 - 289, 580);
@@ -308,20 +312,12 @@ public class KingMain extends ApplicationWindow {
 		column.setWidth(220);
 		column.setText("标题");
 
-		// 发起挑战按钮
-		btn_create_tz = new Label(container, SWT.CENTER);
-		btn_create_tz.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseUp(MouseEvent e) {
-				CrateDiaRoleName pkDia = new CrateDiaRoleName(KingMain.this
-						.getShell());
-				pkDia.open();
-			}
-		});
-
-		btn_create_tz.setBounds(390, 11, 108, 30);
-		btn_create_tz.setImage(image_create_tz);
-
+		table.addListener(SWT.SetData, new Listener(){
+	        public void handleEvent(Event event) {
+	            TableItem item = (TableItem)event.item;
+	            int index = event.index;
+	        }
+	    });
 		// Button query = new Button(container, SWT.CENTER);
 		// query.addSelectionListener(new SelectionAdapter() {
 		// @Override
@@ -339,7 +335,7 @@ public class KingMain extends ApplicationWindow {
 		pk_flow.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				browser.setUrl("http://www.hexcm.com/yxlm/single/lc.html");
+				browser.setUrl("http://124.248.237.30/yxlm/single/lc.html");
 				browser.setJavascriptEnabled(true);
 				browser.setVisible(true);
 				table.setVisible(false);
@@ -354,7 +350,7 @@ public class KingMain extends ApplicationWindow {
 		zhogncai_way.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				browser.setUrl("http://www.hexcm.com/yxlm/single/zc.html");
+				browser.setUrl("http://124.248.237.30/yxlm/single/zc.html");
 				browser.setJavascriptEnabled(true);
 				browser.setVisible(true);
 				table.setVisible(false);
@@ -368,12 +364,12 @@ public class KingMain extends ApplicationWindow {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				
-				browser.setUrl("http://www.hexcm.com/yxlm/single/ds.html");
+				browser.setUrl("http://124.248.237.30/yxlm/single/ds.html");
 				browser.setJavascriptEnabled(true);
 				browser.setVisible(true);
 				table.setVisible(false);
 //				UrlDia dia = new UrlDia(KingMain.this.getShell(),
-//						"http://www.hexcm.com/yxlm/single/ds.html");
+//						"http://124.248.237.30/yxlm/single/ds.html");
 //				dia.open();
 			}
 		});
@@ -382,9 +378,9 @@ public class KingMain extends ApplicationWindow {
 
 		Browser browser = new Browser(container, SWT.NONE);
 		browser.setBounds(1024 - 285, 48, 278, 587);
-		// browser.setUrl("http://www.hexcm.com/yxlm/single/lc1.html");
+		// browser.setUrl("http://124.248.237.30/yxlm/single/lc1.html");
 
-		browser.setUrl("http://www.hexcm.com/yxlm/index_right.php?uid="
+		browser.setUrl("http://124.248.237.30/yxlm/index_right.php?uid="
 				+ PKUser.uid);
 		browser.setJavascriptEnabled(true);
 		Combo area = new Combo(container, SWT.NONE);
@@ -446,8 +442,35 @@ public class KingMain extends ApplicationWindow {
 		map.add("嚎哭深渊");
 		map.setText("选择地图");
 
+		Combo state = new Combo(container, SWT.NONE);
+		state.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+		state.setBounds(212, 16, 84, 21);
+		state.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				curState = ((Combo) arg0.getSource()).getText();
+				if (curState.equals("选择状态")) {
+					curState = null;
+				}
+
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				curState = ((Combo) arg0.getSource()).getText();
+				if (curState.equals("选择状态")) {
+					curState = null;
+				}
+			}
+		});
+		state.add("选择状态");
+		state.add("满员");
+		state.add("未满员");
+		state.setText("选择状态");
+		
 		sql_idText=new Text(container, SWT.NONE);
-		sql_idText.setBounds(212, 16, 84, 21);
+		sql_idText.setBounds(310, 16, 84, 21);
 		sql_idText.setToolTipText("输入房间ID搜索房间");
 		sql_idText.setText("输入房间ID搜索房间");
 		sql_idText.addMouseListener(new MouseAdapter() {
@@ -466,8 +489,9 @@ public class KingMain extends ApplicationWindow {
 			}
 		});
 		
+		
 		Label shaixuan = new Label(container, SWT.NONE);
-		shaixuan.setBounds(306, 12, 80, 27);
+		shaixuan.setBounds(405, 12, 80, 27);
 		shaixuan.setImage(image_shaixuan);
 		shaixuan.addMouseListener(new MouseAdapter() {
 			@Override
@@ -479,10 +503,24 @@ public class KingMain extends ApplicationWindow {
 				}
 				
 				
-				RefreshTableFilter(curMap,curArea,curSql_id);
+				RefreshTableFilter(curMap,curArea,curState,curSql_id);
+			}
+		});
+		
+		
+		// 发起挑战按钮
+		btn_create_tz = new Label(container, SWT.CENTER);
+		btn_create_tz.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				CrateDiaRoleName pkDia = new CrateDiaRoleName(KingMain.this
+						.getShell());
+				pkDia.open();
 			}
 		});
 
+		btn_create_tz.setBounds(490, 11, 108, 30);
+		btn_create_tz.setImage(image_create_tz);
 		return container;
 	}
 
@@ -733,6 +771,12 @@ public class KingMain extends ApplicationWindow {
 		mb.setMessage("您的角色名在游戏里不存在或者为空，请输入正确角色名");
 		mb.open();
 }
+	public void PointNotEnoughError() {
+		MessageBox mb = new MessageBox(KingMain.this.getShell(),
+				SWT.ICON_INFORMATION | SWT.OK);
+		mb.setMessage("您的挑战点数余额不够，请充值后在操作");
+		mb.open();
+}
 	// 房主退出
 	public void HostLeave(String id) {
 		if (!id.equals(KingLogin.id))// 非房主弹出此对话框
@@ -784,10 +828,13 @@ public class KingMain extends ApplicationWindow {
 		table.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		table.setBackgroundImage(image_table_bg);
 		listControl.clear();
-		for (int i = 0; i < PKManager.getInstance().getPKNum(); i++) {
-			TableItem item = new TableItem(table, SWT.NONE);
-		}
+//		for (int i = 0; i < PKManager.getInstance().getPKNum(); i++) {
+//			TableItem item = new TableItem(table, SWT.NONE);
+//		}
+		table.setItemCount(PKManager.getInstance().getPKNum());
+	
 		TableItem[] items = table.getItems();
+		System.out.println("items.length:"+items.length);
 		for (int i = 0; i < items.length; i++) {
 			PK pk = PKManager.getInstance().getPKByIndex(i);
 			TableEditor editor = new TableEditor(table);
@@ -934,7 +981,7 @@ public class KingMain extends ApplicationWindow {
 	}
 
 	// 筛选刷新
-	public void RefreshTableFilter(String map, String area,long sql_id) {
+	public void RefreshTableFilter(String map, String area,String state,long sql_id) {
 
 		table.clearAll();
 		table.removeAll();
@@ -945,8 +992,7 @@ public class KingMain extends ApplicationWindow {
 		table.setBackgroundImage(image_table_bg);
 		listControl.clear();
 		PKManager.getInstance().Filterclear();
-		
-		System.out.println("map:" + map + "area:" + area);
+	
 		for (int i = 0; i < PKManager.getInstance().getPKNum(); i++) {
 			
 			PK pk = PKManager.getInstance().getPKByIndex(i);
@@ -957,30 +1003,46 @@ public class KingMain extends ApplicationWindow {
 				PKManager.getInstance().addFilter(pk);
 				break;
 			}
-			if (map != null && area != null) {
+			if (map != null && area != null&&state!=null) {
+				
 				if (pk.map.equals(map) && pk.area.equals(area)) {
-					PKManager.getInstance().addFilter(pk);
+					if(state.equals("满员")&&((pk.faqiSeatCount+pk.yingzhanSeatCount)==pk.type*2))
+					{
+						PKManager.getInstance().addFilter(pk);
+					}
+					else if(state.equals("未满员")&&((pk.faqiSeatCount+pk.yingzhanSeatCount)!=pk.type*2))
+					{
+						PKManager.getInstance().addFilter(pk);
+					}
 				}
 			}
-			if (map == null && area != null) {
-				System.out.println("pk.area:" + pk.area);
+			if (state==null&&map == null && area != null) {
 				if (pk.area.equals(area)) {
 
 					PKManager.getInstance().addFilter(pk);
 				}
 			}
-			if (area == null & map != null) {
+			if (state==null&&area == null & map != null) {
 				if (pk.map.equals(area)) {
-					System.out.println("area==null&map!=null");
 					PKManager.getInstance().addFilter(pk);
 				}
 			}
-			if (area == null & map == null&sql_id==-1) {
+			if(map == null && area == null&&state!=null)
+			{
+				if(state.equals("满员")&&((pk.faqiSeatCount+pk.yingzhanSeatCount)==pk.type*2))
+				{
+					PKManager.getInstance().addFilter(pk);
+				}
+				else if(state.equals("未满员")&&((pk.faqiSeatCount+pk.yingzhanSeatCount)!=pk.type*2))
+				{
+					PKManager.getInstance().addFilter(pk);
+				}
+			}
+			if (area == null && map == null&&state==null&&sql_id==-1) {
 				RefreshTable();
 				return;
 			}
 		}
-
 		for (int i = 0; i < PKManager.getInstance().getFilterPKNum(); i++) {
 			TableItem item = new TableItem(table, SWT.NONE);
 		}

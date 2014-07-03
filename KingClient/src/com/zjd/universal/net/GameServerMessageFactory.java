@@ -11,11 +11,13 @@ import receive.JoinPKResultMessageReceive2003;
 import receive.CrashLeavePKResultMessageRecevie2004;
 import receive.NoCanStartGamePKMessageReceive2010;
 import receive.NormalLeavePKResultMessageRecevie2011;
+import receive.PointNotEnoughMessage2017;
 import receive.RepeatLoginErrorMessageRecevie2014;
 import receive.RoleNameErrorMessageRecevie2015;
 import receive.RoomPKBeginMessageReceive2013;
 import receive.RoomPKMessageReceive2001;
 import receive.RoomPKFinishMessageReceive2008;
+import receive.SizeofResultMessageRecevie2016;
 import receive.SocketMessageReceived;
 import receive.StartGamePKResultMessageReceive2006;
 
@@ -57,6 +59,10 @@ public class GameServerMessageFactory {
 			return new RepeatLoginErrorMessageRecevie2014();
 		case 2015:
 			return new RoleNameErrorMessageRecevie2015();
+		case 2016:
+			return new SizeofResultMessageRecevie2016();
+		case 2017:
+			return new PointNotEnoughMessage2017();
 		default:
 			break;
 		}
