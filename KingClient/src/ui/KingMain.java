@@ -68,6 +68,7 @@ public class KingMain extends ApplicationWindow {
 	private String curMap, curArea,curState;
 	private Image icon, image_shaixuan, image_bg_menu, image_bg_top;
 	private long curSql_id=-1;
+	boolean isClick=true;
 	Browser browser;
 	Text  sql_idText;
 	/**
@@ -108,7 +109,7 @@ public class KingMain extends ApplicationWindow {
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("挑战发起成功，作为发起人，你现在不能加入其他挑战房间！");
 			mb.open();
-			tableDisable();
+			disable();
 
 			btn_create_tz.setEnabled(false);
 
@@ -116,7 +117,7 @@ public class KingMain extends ApplicationWindow {
 					area, title, point,map);
 			waitDia.setBlockOnOpen(false);
 			waitDia.open();
-			disable();
+			
 		}
 	}
 
@@ -131,31 +132,30 @@ public class KingMain extends ApplicationWindow {
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("加入成功，作为加入人，你现在不能加入其他挑战房间！");
 			mb.open();
-			tableDisable();
+			disable();
 			btn_create_tz.setEnabled(false);
 			JoinPKWaitDia waitDia = new JoinPKWaitDia(getShell(), users, type,
 					area, title, point,map);
 			waitDia.setBlockOnOpen(false);
 			waitDia.open();
-			disable();
 		}
 	}
 
-	public void tableDisable() {
-		for (int i = 0; i < table.getChildren().length; i++) {
-			if (table.getChildren()[i] instanceof Button) {
-				table.getChildren()[i].setEnabled(false);
-			}
-		}
-	}
-
-	public void tableEnable() {
-		for (int i = 0; i < table.getChildren().length; i++) {
-			if (table.getChildren()[i] instanceof Button) {
-				table.getChildren()[i].setEnabled(true);
-			}
-		}
-	}
+//	public void tableDisable() {
+//		for (int i = 0; i < table.getChildren().length; i++) {
+//			if (table.getChildren()[i] instanceof Button) {
+//				table.getChildren()[i].setEnabled(false);
+//			}
+//		}
+//	}
+//
+//	public void tableEnable() {
+//		for (int i = 0; i < table.getChildren().length; i++) {
+//			if (table.getChildren()[i] instanceof Button) {
+//				table.getChildren()[i].setEnabled(true);
+//			}
+//		}
+//	}
 
 	protected boolean showTopSeperator() {
 		return false;
@@ -313,7 +313,7 @@ public class KingMain extends ApplicationWindow {
 		column.setWidth(105);
 		column.setText("对战人数");
 		column = new TableColumn(table, SWT.CENTER);
-		column.setWidth(90);
+		column.setWidth(75);
 		column.setText("挑战点");
 		column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(90);
@@ -341,6 +341,7 @@ public class KingMain extends ApplicationWindow {
 
 		table.addListener(SWT.MouseDown, new Listener() {
 		      public void handleEvent(Event event) {
+		    	  if(!isClick){return;}
 		        Rectangle clientArea = table.getClientArea();
 		        Point pt = new Point(event.x, event.y);
 		        int index = table.getTopIndex();
@@ -838,7 +839,7 @@ public class KingMain extends ApplicationWindow {
 	public void HostLeave(String id) {
 		if (!id.equals(KingLogin.id))// 非房主弹出此对话框
 		{
-			tableEnable();
+			enable();
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("房主退出房间，挑战解散");//
@@ -853,7 +854,7 @@ public class KingMain extends ApplicationWindow {
 	public void HostCrashLeave(String id) {
 		if (!id.equals(KingLogin.id))// 自己是房主 不需要弹出此对话框
 		{
-			tableEnable();
+			enable();
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("房主异常退出房间，挑战解散");//
@@ -865,12 +866,14 @@ public class KingMain extends ApplicationWindow {
 	ArrayList<Control> listControl = new ArrayList<Control>();
 	public void disable()
 	{
+		isClick=false;
 		for (Control control : listControl) {
 			control.setEnabled(false);
 		}
 	}
 	public void enable()
 	{
+		isClick=true;
 		for (Control control : listControl) {
 			control.setEnabled(true);
 		}

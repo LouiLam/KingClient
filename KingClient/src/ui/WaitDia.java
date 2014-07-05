@@ -140,7 +140,7 @@ public abstract class WaitDia extends Dialog {
 						if (window instanceof KingMain) {
 
 							KingMain main = (KingMain) window;
-							main.tableEnable();
+							main.enable();
 						}
 					}
 					curTime = 0;
@@ -167,7 +167,7 @@ public abstract class WaitDia extends Dialog {
 				for (Window window : JfaceWindowManager.wm.getWindows()) {
 					if (window instanceof KingMain) {
 						KingMain main = (KingMain) window;
-						main.tableEnable();
+						main.enable();
 					}
 				}
 				curTime = 0;
