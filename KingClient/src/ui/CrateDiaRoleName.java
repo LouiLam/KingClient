@@ -130,6 +130,7 @@ public class CrateDiaRoleName extends Dialog {
 		point = new Combo(container, SWT.READ_ONLY);
 		point.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
 				1));
+		point.add("2");
 		point.add("10");
 		point.add("30");
 		point.add("50");
@@ -243,7 +244,7 @@ public class CrateDiaRoleName extends Dialog {
 	public void httpPostFightAdd() {
 		
 		CloseableHttpClient httpClient = HttpClients.createDefault();
-		HttpPost httpPost = new HttpPost("http://124.248.237.30/yxlm/member/fight_add.php");
+		HttpPost httpPost = new HttpPost("http://www.hexcm.com/yxlm/member/fight_add.php");
 
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("action", "dopost"));

@@ -189,7 +189,7 @@ public class TestDemo extends ApplicationWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				UrlDia dia = new UrlDia(TestDemo.this.getShell(),
-						"http://124.248.237.30/yxlm/single/lc.html");
+						"http://www.hexcm.com/yxlm/single/lc.html");
 				dia.open();
 			}
 		});
@@ -201,7 +201,7 @@ public class TestDemo extends ApplicationWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				UrlDia dia = new UrlDia(TestDemo.this.getShell(),
-						"http://124.248.237.30/yxlm/single/zc.html");
+						"http://www.hexcm.com/yxlm/single/zc.html");
 				dia.open();
 			}
 		});
@@ -213,7 +213,7 @@ public class TestDemo extends ApplicationWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				UrlDia dia = new UrlDia(TestDemo.this.getShell(),
-						"http://124.248.237.30/yxlm/single/ds.html");
+						"http://www.hexcm.com/yxlm/single/ds.html");
 				dia.open();
 			}
 		});
@@ -222,9 +222,9 @@ public class TestDemo extends ApplicationWindow {
 
 		Browser browser = new Browser(container, SWT.NONE);
 		browser.setBounds(1024 - 285, 48, 278, 587);
-//		browser.setUrl("http://124.248.237.30/yxlm/single/lc1.html");
+//		browser.setUrl("http://www.hexcm.com/yxlm/single/lc1.html");
 		
-		browser.setUrl("http://124.248.237.30/yxlm/index_right.php?uid="
+		browser.setUrl("http://www.hexcm.com/yxlm/index_right.php?uid="
 				+ PKUser.uid);
 		browser.setJavascriptEnabled(true);
 		Combo area = new Combo(container, SWT.NONE);

@@ -50,8 +50,11 @@ public class KingLogin extends ApplicationWindow {
 	public static String[] AREA;
 	Button btn_isAutoSave;
 	String autoSave = "0";
+	public static String VersionName;
+	public static int VersionCode;
+	public static String DownUrl;
 	boolean isBreak=true;
-	
+	public static int LocalVersionCode=1;
 	/**
 	 * Create the application window,
 	 */
@@ -96,13 +99,26 @@ public class KingLogin extends ApplicationWindow {
 	protected Control createContents(Composite parent) {
 		try {
 			httpGet();
+			httpGetVersion();
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
+		if(LocalVersionCode<VersionCode)//版本更新
+		{
+			MessageBox mb = new MessageBox(KingLogin.this.getShell(),
+					SWT.ICON_INFORMATION | SWT.OK);
+			mb.setMessage("当前客户端需要更新，下载地址为"+DownUrl+"，请更新客户端后重新启动");
+			int ret=mb.open();
+			if(ret==SWT.OK)
+			{
+				System.exit(0);
+			}
+		}
 		if(KingLogin.isFirstRun)
 		{
-			UrlDia dia=new UrlDia(KingLogin.this.getShell(),"http://124.248.237.30/yxlm/single/lc1.html");
+			UrlDia dia=new UrlDia(KingLogin.this.getShell(),"http://www.hexcm.com/yxlm/single/lc1.html");
 			dia.open();
 		}
 		parent.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
@@ -296,24 +312,45 @@ public class KingLogin extends ApplicationWindow {
 	protected Point getInitialSize() {
 		return new Point(360, 293);
 	}
-	public static void  httpGet() throws Exception {
-		String url="http://124.248.237.30/yxlm/member/fight_cha.php?action=area";
-		
-		
-		
-		
-//		String testEncode = URLEncoder.encode("2|3|4", "utf-8" ); 
-//		String testEncode1 = URLEncoder.encode("12|13|14", "utf-8" ); 
-//		String uu="action=stac&id="+sql_id+"&status=1&gt="+testEncode+"&yt="+testEncode1;	
+	public static void  httpGetVersion() throws Exception {
+		String url="http://www.hexcm.com/yxlm/member/fight_banben.php";
 	    CloseableHttpClient httpclient = HttpClients.createDefault();
 	    try {
 	        HttpGet httpGet = new HttpGet(url);
 	        CloseableHttpResponse response1 = httpclient.execute(httpGet);
-	        // The underlying HTTP connection is still held by the response object
-	        // to allow the response content to be streamed directly from the network socket.
-	        // In order to ensure correct deallocation of system resources
-	        // the user MUST either fully consume the response content  or abort request
-	        // execution by calling CloseableHttpResponse#close().
+
+	        try {
+	        	
+	        	String str=EntityUtils.toString(response1
+							.getEntity());
+	        	System.out.println(str);
+	            HttpEntity entity1 = response1.getEntity();
+	            JSONObject a=new JSONObject(str);
+	            // do something useful with the response body
+	            // and ensure it is fully consumed
+	            if(response1.getStatusLine().getStatusCode()==HttpStatus.SC_OK)
+	            {
+	            VersionName=(String) a.get("bb");
+	            VersionCode=Integer.parseInt((String) a.get("bbz"));
+	            DownUrl=(String) a.get("url");
+				}
+	            EntityUtils.consume(entity1);
+	          
+	        } finally {
+	            response1.close();
+	        }
+
+	    } finally {
+	        httpclient.close();
+	    }
+
+	}
+	public static void  httpGet() throws Exception {
+		String url="http://www.hexcm.com/yxlm/member/fight_cha.php?action=area";
+	    CloseableHttpClient httpclient = HttpClients.createDefault();
+	    try {
+	        HttpGet httpGet = new HttpGet(url);
+	        CloseableHttpResponse response1 = httpclient.execute(httpGet);
 
 	        try {
 	        	
@@ -346,7 +383,7 @@ public class KingLogin extends ApplicationWindow {
 	public void httpPost() {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(
-				"http://124.248.237.30/yxlm/member/index_do.php?fmdo=login&dopost=login");
+				"http://www.hexcm.com/yxlm/member/index_do.php?fmdo=login&dopost=login");
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("userid", combo.getText()));
 		nvps.add(new BasicNameValuePair("pwd", pwd_text.getText()));

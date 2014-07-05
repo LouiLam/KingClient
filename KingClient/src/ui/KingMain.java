@@ -1,5 +1,6 @@
 package ui;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import object.JfaceWindowManager;
@@ -11,7 +12,6 @@ import object.State;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -27,6 +27,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -55,18 +56,18 @@ public class KingMain extends ApplicationWindow {
 	Composite[] tabItem = new Composite[5];
 	// private String tabItemText[] = { "对战信息", "个人设置", "挑战记录", "充值管理",
 	// "礼品兑换" };
-	private String urlText[] = { "http://124.248.237.30/yxlm/setting.php",
-			"http://124.248.237.30/yxlm/setting.php",
-			"http://124.248.237.30/yxlm/lszj.php",
-			"http://124.248.237.30/yxlm/cz.php",
-			"http://124.248.237.30/yxlm/dj.php" };
+	private String urlText[] = { "http://www.hexcm.com/yxlm/setting.php",
+			"http://www.hexcm.com/yxlm/setting.php",
+			"http://www.hexcm.com/yxlm/lszj.php",
+			"http://www.hexcm.com/yxlm/cz.php",
+			"http://www.hexcm.com/yxlm/dj.php" };
 
 	private Image image_join, image_create_tz, image_query,
 			image_table_bg;
 	private Image image_pk_flow, image_zhogncai_way, image_pk_point_count;
 	private String curMap, curArea,curState;
 	private Image icon, image_shaixuan, image_bg_menu, image_bg_top;
-	private long curSql_id;
+	private long curSql_id=-1;
 	Browser browser;
 	Text  sql_idText;
 	/**
@@ -272,21 +273,47 @@ public class KingMain extends ApplicationWindow {
 	 * @return Control
 	 */
 	private Composite getTabControlOne(Composite parent) {
+		
+
 		Composite container = new Composite(parent, SWT.NONE);
 
 		container.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-		
 	
-		table = new Table(container, SWT.BORDER | SWT.MULTI| SWT.VIRTUAL);
+		table = new Table(container, SWT.BORDER| SWT.MULTI | SWT.VIRTUAL);
 		table.setLinesVisible(false);
 		table.setHeaderVisible(true);
 		table.setBounds(2, 48, 1024 - 289, 580);
 		table.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+		try
+		{
+		    /*
+		     * Locate the method setItemHeight(int). Note that if you do not
+		     * have access to the method, you must use getDeclaredMethod(). If
+		     * setItemHeight(int) were public, you could simply call
+		     * getDeclaredMethod.
+		     */
+		    Method setItemHeightMethod =
+		        table.getClass().getDeclaredMethod("setItemHeight", int.class);
+		    /*
+		     * Set the method as accessible. Again, this would not be necessary
+		     * if setItemHeight(int) were public.
+		     */
+		    setItemHeightMethod.setAccessible(true);
+
+		    /*
+		     * Invoke the method. Equivalent to table.setItemHeight(50).
+		     */
+		    setItemHeightMethod.invoke(table, 35);
+		}
+		catch (Exception e)
+		{
+		    e.printStackTrace();
+		}
 		TableColumn column = new TableColumn(table, SWT.CENTER);
-		column.setWidth(90);
+		column.setWidth(105);
 		column.setText("对战人数");
 		column = new TableColumn(table, SWT.CENTER);
-		column.setWidth(105);
+		column.setWidth(90);
 		column.setText("挑战点");
 		column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(90);
@@ -312,22 +339,52 @@ public class KingMain extends ApplicationWindow {
 		column.setWidth(220);
 		column.setText("标题");
 
-		table.addListener(SWT.SetData, new Listener(){
-	        public void handleEvent(Event event) {
-	            TableItem item = (TableItem)event.item;
-	            int index = event.index;
-	        }
-	    });
-		// Button query = new Button(container, SWT.CENTER);
-		// query.addSelectionListener(new SelectionAdapter() {
-		// @Override
-		// public void widgetSelected(SelectionEvent e) {
-		// QueryDia pkDia = new QueryDia(TestDemo.this.getShell());
-		// pkDia.open();
-		// }
-		// });
-		// query.setImage(image_query);
-		// query.setBounds(476, 11, 193, 38);
+		table.addListener(SWT.MouseDown, new Listener() {
+		      public void handleEvent(Event event) {
+		        Rectangle clientArea = table.getClientArea();
+		        Point pt = new Point(event.x, event.y);
+		        int index = table.getTopIndex();
+		        while (index < table.getItemCount()) {
+		          boolean visible = false;
+		          TableItem item = table.getItem(index);
+		          for (int i = 0; i <table.getColumnCount(); i++) {
+		            Rectangle rect = item.getBounds(i);
+		            if (rect.contains(pt)) {
+		              System.out.println("Item " + index + "-" + i);
+		              if(i==5)
+						{PK pk = PKManager.getInstance().getPKByIndex(index);
+						if(pk.type==pk.faqiSeatCount&&pk.type==pk.yingzhanSeatCount) //满员不能点
+						{return;}
+						JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
+								.getShell(), index, 1, pk.password);
+						pkDia.open();
+						}
+						
+						if(i==6)
+						{
+							
+							PK pk = PKManager.getInstance().getPKByIndex(index);	
+							if(pk.type==pk.faqiSeatCount&&pk.type==pk.yingzhanSeatCount) //满员不能点
+							{return;}
+						JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
+								.getShell(), index, 2, pk.password);
+						pkDia.open();
+						}
+		            }
+		            if (!visible && rect.intersects(clientArea)) {
+		              visible = true;
+		            }
+		          }
+		          if (!visible)
+		            return;
+		          index++;
+		        }
+		      }
+		    });
+		
+		
+	
+	
 		browser= new Browser(container, SWT.BORDER);
 		browser.setVisible(false);
 		browser.setBounds(0, 48, 1024, 600);
@@ -335,7 +392,7 @@ public class KingMain extends ApplicationWindow {
 		pk_flow.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				browser.setUrl("http://124.248.237.30/yxlm/single/lc.html");
+				browser.setUrl("http://www.hexcm.com/yxlm/single/lc.html");
 				browser.setJavascriptEnabled(true);
 				browser.setVisible(true);
 				table.setVisible(false);
@@ -350,7 +407,7 @@ public class KingMain extends ApplicationWindow {
 		zhogncai_way.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				browser.setUrl("http://124.248.237.30/yxlm/single/zc.html");
+				browser.setUrl("http://www.hexcm.com/yxlm/single/zc.html");
 				browser.setJavascriptEnabled(true);
 				browser.setVisible(true);
 				table.setVisible(false);
@@ -364,12 +421,12 @@ public class KingMain extends ApplicationWindow {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				
-				browser.setUrl("http://124.248.237.30/yxlm/single/ds.html");
+				browser.setUrl("http://www.hexcm.com/yxlm/single/ds.html");
 				browser.setJavascriptEnabled(true);
 				browser.setVisible(true);
 				table.setVisible(false);
 //				UrlDia dia = new UrlDia(KingMain.this.getShell(),
-//						"http://124.248.237.30/yxlm/single/ds.html");
+//						"http://www.hexcm.com/yxlm/single/ds.html");
 //				dia.open();
 			}
 		});
@@ -378,9 +435,9 @@ public class KingMain extends ApplicationWindow {
 
 		Browser browser = new Browser(container, SWT.NONE);
 		browser.setBounds(1024 - 285, 48, 278, 587);
-		// browser.setUrl("http://124.248.237.30/yxlm/single/lc1.html");
+		// browser.setUrl("http://www.hexcm.com/yxlm/single/lc1.html");
 
-		browser.setUrl("http://124.248.237.30/yxlm/index_right.php?uid="
+		browser.setUrl("http://www.hexcm.com/yxlm/index_right.php?uid="
 				+ PKUser.uid);
 		browser.setJavascriptEnabled(true);
 		Combo area = new Combo(container, SWT.NONE);
@@ -819,7 +876,6 @@ public class KingMain extends ApplicationWindow {
 		}
 	}
 	public void RefreshTable() {
-
 		table.clearAll();
 		table.removeAll();
 		for (int i = 0; i < listControl.size(); i++) {
@@ -828,154 +884,44 @@ public class KingMain extends ApplicationWindow {
 		table.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		table.setBackgroundImage(image_table_bg);
 		listControl.clear();
-//		for (int i = 0; i < PKManager.getInstance().getPKNum(); i++) {
-//			TableItem item = new TableItem(table, SWT.NONE);
-//		}
 		table.setItemCount(PKManager.getInstance().getPKNum());
-	
 		TableItem[] items = table.getItems();
-		System.out.println("items.length:"+items.length);
 		for (int i = 0; i < items.length; i++) {
 			PK pk = PKManager.getInstance().getPKByIndex(i);
-			TableEditor editor = new TableEditor(table);
-			Label textType = new Label(table, SWT.CENTER);
-			textType.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			textType.setText(pk.type + "v" + pk.type);
-			textType.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-			editor.grabHorizontal = true;
-			editor.setEditor(textType, items[i], 0);
-			textType.setToolTipText(pk.type + "v" + pk.type);
-			listControl.add(textType);
-
-			editor = new TableEditor(table);
-			Label textPoint = new Label(table, SWT.CENTER);
-			textPoint.setForeground(SWTResourceManager
-					.getColor(SWT.COLOR_WHITE));
-			textPoint.setText(pk.point + "");
-			textPoint.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			editor.grabHorizontal = true;
-			editor.setEditor(textPoint, items[i], 1);
-			textPoint.setToolTipText(pk.point + "");
-			listControl.add(textPoint);
-			
-			editor = new TableEditor(table);
-			Label textCurNum = new Label(table, SWT.CENTER);
-			textCurNum.setForeground(SWTResourceManager
-					.getColor(SWT.COLOR_WHITE));
-			boolean isFull=false;
-			
+			items[i].setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+			items[i].setFont(SWTResourceManager.getFont("宋体",15, SWT.NORMAL));
+			String jiVji=null,join_tz=null,join_yz=null;
 			if (pk.password.equals("")) {
-				textCurNum.setText(pk.faqiSeatCount + "-"
-						 +pk.yingzhanSeatCount);
+				jiVji=pk.faqiSeatCount + "-"
+						 +pk.yingzhanSeatCount;
 				if(pk.type==pk.faqiSeatCount&&pk.type==pk.yingzhanSeatCount)
 				{
-					textCurNum.setText("满员");
-					isFull=true;
+					jiVji="满员";
+				}
+				else
+				{
+					int num=pk.type-pk.faqiSeatCount;
+					if(num!=0)
+					{
+						join_tz="缺"+num;
+					}
+					num=pk.type-pk.yingzhanSeatCount;
+					if(num!=0)
+					{
+						join_yz="缺"+num;
+					}
+					
 				}
 			} 
 			else{
-				textCurNum.setText(pk.faqiSeatCount + "-"
-						+ pk.yingzhanSeatCount + "(密)");
+				jiVji=pk.faqiSeatCount + "-"
+						+ pk.yingzhanSeatCount + "(密)";
 			}
-			textCurNum
-					.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			editor.grabHorizontal = true;
-			editor.setEditor(textCurNum, items[i], 2);
-			textCurNum.setToolTipText(pk.faqiSeatCount + "-"
-					+ pk.yingzhanSeatCount);
-			listControl.add(textCurNum);
-
-			editor = new TableEditor(table);
-			Label textArea = new Label(table, SWT.CENTER);
-			textArea.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-			textArea.setText(pk.area);
-			textArea.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			editor.grabHorizontal = true;
-			editor.setEditor(textArea, items[i], 3);
-			textArea.setToolTipText(pk.area);
-			listControl.add(textArea);
-
-			editor = new TableEditor(table);
-			Label textMap = new Label(table, SWT.CENTER);
-			textMap.setText(pk.map);
-			textMap.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-			textMap.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			editor.grabHorizontal = true;
-			editor.setEditor(textMap, items[i], 4);
-			textMap.setToolTipText(pk.map);
-			listControl.add(textMap);
-
-			editor = new TableEditor(table);
-			Label join_tz = new Label(table, SWT.CENTER);
-			join_tz.setImage(image_join);
-			join_tz.setData(i);
-			join_tz.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseUp(MouseEvent e) {
-					int index = (int) ((Label) e.getSource()).getData();
-					PK pk = PKManager.getInstance().getPKByIndex(index);
-					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
-							.getShell(), index, 1, pk.password);
-					pkDia.open();
-				}
-			});
-			
-			editor.minimumWidth = join_tz.getSize().x;
-			editor.minimumHeight = join_tz.getSize().y;
-			editor.grabHorizontal = true;
-			editor.setEditor(join_tz, items[i], 5);
-			listControl.add(join_tz);
-
-			editor = new TableEditor(table);
-			Label join_yz = new Label(table, SWT.CENTER);
-			join_yz.setImage(image_join);
-			join_yz.setData(i);
-			join_yz.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseUp(MouseEvent e) {
-					int index = (int) ((Widget) e.getSource()).getData();
-					PK pk = PKManager.getInstance().getPKByIndex(index);
-					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
-							.getShell(), index, 2, pk.password);
-					pkDia.open();
-
-				}
-			});
-			editor.minimumWidth = join_yz.getSize().x;
-			editor.minimumHeight = join_yz.getSize().y;
-			editor.grabHorizontal = true;
-			editor.setEditor(join_yz, items[i], 6);
-			listControl.add(join_yz);
-
-			if(isFull)
-			{
-				join_tz.setEnabled(false);
-				join_yz.setEnabled(false);
-			}
-			
-			editor = new TableEditor(table);
-			Label textName = new Label(table, SWT.CENTER);
-			textName.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-			textName.setText(pk.id);
-			textName.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			editor.grabHorizontal = true;
-			editor.setEditor(textName, items[i], 7);
-			textName.setToolTipText(pk.id);
-			listControl.add(textName);
-
-		
-
-			editor = new TableEditor(table);
-			Label textTitle = new Label(table, SWT.CENTER);
-			textTitle.setForeground(SWTResourceManager
-					.getColor(SWT.COLOR_WHITE));
-			textTitle.setText(pk.title);
-			textTitle.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			editor.grabHorizontal = true;
-			editor.setEditor(textTitle, items[i], 8);
-			textTitle.setToolTipText(pk.title);
-			listControl.add(textTitle);
-
+			items[i].setImage(5, image_join);
+			items[i].setImage(6, image_join);
+			items[i].setFont(5,SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+			items[i].setFont(6,SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+			items[i].setText(new String[]{pk.type + "v" + pk.type,pk.point + "",jiVji,pk.area,pk.map,join_tz,join_yz,pk.id,pk.title});
 		}
 
 	}
@@ -996,9 +942,8 @@ public class KingMain extends ApplicationWindow {
 		for (int i = 0; i < PKManager.getInstance().getPKNum(); i++) {
 			
 			PK pk = PKManager.getInstance().getPKByIndex(i);
-			System.out.println("pk.sql_id:"+pk.sql_id);
-			System.out.println("sql_id:"+sql_id);
-			if(pk.sql_id==sql_id)
+		
+			if(pk.sql_id==sql_id&&pk.sql_id>0)
 			{
 				PKManager.getInstance().addFilter(pk);
 				break;
@@ -1018,12 +963,11 @@ public class KingMain extends ApplicationWindow {
 			}
 			if (state==null&&map == null && area != null) {
 				if (pk.area.equals(area)) {
-
 					PKManager.getInstance().addFilter(pk);
 				}
 			}
 			if (state==null&&area == null & map != null) {
-				if (pk.map.equals(area)) {
+				if (pk.map.equals(map)) {
 					PKManager.getInstance().addFilter(pk);
 				}
 			}
@@ -1043,152 +987,58 @@ public class KingMain extends ApplicationWindow {
 				return;
 			}
 		}
-		for (int i = 0; i < PKManager.getInstance().getFilterPKNum(); i++) {
-			TableItem item = new TableItem(table, SWT.NONE);
-		}
-
+		table.setItemCount( PKManager.getInstance().getFilterPKNum());
 		TableItem[] items = table.getItems();
 		for (int i = 0; i < items.length; i++) {
-			PK pk = PKManager.getInstance().getFilterPKByIndex(i);
-			TableEditor editor = new TableEditor(table);
-			Label textType = new Label(table, SWT.CENTER);
-			textType.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			textType.setText(pk.type + "v" + pk.type);
-			textType.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-			editor.grabHorizontal = true;
-			editor.setEditor(textType, items[i], 0);
-			textType.setToolTipText(pk.type + "v" + pk.type);
-			listControl.add(textType);
 
-			editor = new TableEditor(table);
-			Label textPoint = new Label(table, SWT.CENTER);
-			textPoint.setForeground(SWTResourceManager
-					.getColor(SWT.COLOR_WHITE));
-			textPoint.setText(pk.point + "");
-			textPoint.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			editor.grabHorizontal = true;
-			editor.setEditor(textPoint, items[i], 1);
-			textPoint.setToolTipText(pk.point + "");
-			listControl.add(textPoint);
-			
-			editor = new TableEditor(table);
-			Label textCurNum = new Label(table, SWT.CENTER);
-			textCurNum.setForeground(SWTResourceManager
-					.getColor(SWT.COLOR_WHITE));
-			
-			boolean isFull=false;
+			PK pk =  PKManager.getInstance().getFilterPKByIndex(i);
+			items[i].setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+			items[i].setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
+			String jiVji=null,join_tz=null,join_yz=null;
 			if (pk.password.equals("")) {
-				textCurNum.setText(pk.faqiSeatCount + "-"
-						 +pk.yingzhanSeatCount);
+				jiVji=pk.faqiSeatCount + "-"
+						 +pk.yingzhanSeatCount;
 				if(pk.type==pk.faqiSeatCount&&pk.type==pk.yingzhanSeatCount)
 				{
-					textCurNum.setText("满员");
-					isFull=true;
+					jiVji="满员";
+				}
+				else
+				{
+					int num=pk.type-pk.faqiSeatCount;
+					if(num!=0)
+					{
+						join_tz="缺"+num;
+					}
+					num=pk.type-pk.yingzhanSeatCount;
+					if(num!=0)
+					{
+						join_yz="缺"+num;
+					}
+					
 				}
 			} 
 			else{
-				textCurNum.setText(pk.faqiSeatCount + "-"
-						+ pk.yingzhanSeatCount + "(密)");
+				jiVji=pk.faqiSeatCount + "-"
+						+ pk.yingzhanSeatCount + "(密)";
 			}
-			
-			textCurNum
-					.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			editor.grabHorizontal = true;
-			editor.setEditor(textCurNum, items[i], 2);
-			textCurNum.setToolTipText(pk.faqiSeatCount + "-"
-					+ pk.yingzhanSeatCount);
-			listControl.add(textCurNum);
-
-			editor = new TableEditor(table);
-			Label textArea = new Label(table, SWT.CENTER);
-			textArea.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-			textArea.setText(pk.area);
-			textArea.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			editor.grabHorizontal = true;
-			editor.setEditor(textArea, items[i], 3);
-			textArea.setToolTipText(pk.area);
-			listControl.add(textArea);
-
-			editor = new TableEditor(table);
-			Label textMap = new Label(table, SWT.CENTER);
-			textMap.setText(pk.map);
-			textMap.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-			textMap.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			editor.grabHorizontal = true;
-			editor.setEditor(textMap, items[i], 4);
-			textMap.setToolTipText(pk.map);
-			listControl.add(textMap);
-
-			editor = new TableEditor(table);
-			Label join_tz = new Label(table, SWT.CENTER);
-			join_tz.setImage(image_join);
-			join_tz.setData(i);
-			join_tz.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseUp(MouseEvent e) {
-					int index = (int) ((Button) e.getSource()).getData();
-					PK pk = PKManager.getInstance().getPKByIndex(index);
-					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
-							.getShell(), index, 1, pk.password);
-					pkDia.open();
-				}
-			});
-			
-			editor.minimumWidth = join_tz.getSize().x;
-			editor.minimumHeight = join_tz.getSize().y;
-			editor.grabHorizontal = true;
-			editor.setEditor(join_tz, items[i], 5);
-			listControl.add(join_tz);
-
-			editor = new TableEditor(table);
-			Label join_yz = new Label(table, SWT.CENTER);
-			join_yz.setImage(image_join);
-			join_yz.setData(i);
-			join_yz.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseUp(MouseEvent e) {
-					int index = (int) ((Widget) e.getSource()).getData();
-					PK pk = PKManager.getInstance().getPKByIndex(index);
-					JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
-							.getShell(), index, 2, pk.password);
-					pkDia.open();
-
-				}
-			});
-			editor.minimumWidth = join_yz.getSize().x;
-			editor.minimumHeight = join_yz.getSize().y;
-			editor.grabHorizontal = true;
-			editor.setEditor(join_yz, items[i], 6);
-			listControl.add(join_yz);
-			
-			if(isFull)
-			{
-				join_tz.setEnabled(false);
-				join_yz.setEnabled(false);
-			}
-
-			editor = new TableEditor(table);
-			Label textName = new Label(table, SWT.CENTER);
-			textName.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-			textName.setText(pk.id);
-			textName.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			editor.grabHorizontal = true;
-			editor.setEditor(textName, items[i], 7);
-			textName.setToolTipText(pk.id);
-			listControl.add(textName);
-
+			items[i].setImage(5, image_join);
+			items[i].setImage(6, image_join);
+			items[i].setFont(5,SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+			items[i].setFont(6,SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+			items[i].setText(new String[]{pk.type + "v" + pk.type,pk.point + "",jiVji,pk.area,pk.map,join_tz,join_yz,pk.id,pk.title});
 		
-
-			editor = new TableEditor(table);
-			Label textTitle = new Label(table, SWT.CENTER);
-			textTitle.setForeground(SWTResourceManager
-					.getColor(SWT.COLOR_WHITE));
-			textTitle.setText(pk.title);
-			textTitle.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-			editor.grabHorizontal = true;
-			editor.setEditor(textTitle, items[i], 8);
-			textTitle.setToolTipText(pk.title);
-			listControl.add(textTitle);
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 
 		}
 
