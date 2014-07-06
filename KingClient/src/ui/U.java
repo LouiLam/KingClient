@@ -21,7 +21,7 @@ public class U {
 	public static void infoQueue(String str)
 	{
 		U.str=str;
-		Display.getDefault().asyncExec(r);
+		Display.getDefault().syncExec(r);
 	}
 	
 }

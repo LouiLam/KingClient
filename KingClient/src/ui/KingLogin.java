@@ -209,7 +209,7 @@ public class KingLogin extends ApplicationWindow {
 				}
 				httpPost();
 //				login.setImage(image_login);
-//				Display.getDefault().asyncExec(new Runnable() {
+//				Display.getDefault().syncExec(new Runnable() {
 //					
 //					@Override
 //					public void run() {

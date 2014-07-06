@@ -15,7 +15,7 @@ public class RoomPKFinishMessageReceive2008 extends SocketMessageReceived {
 	public void parse(ChannelBuffer buffer) {
 
 		
-		Display.getDefault().asyncExec(new Runnable() {
+		Display.getDefault().syncExec(new Runnable() {
 
 			@Override
 			public void run() {

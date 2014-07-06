@@ -65,7 +65,7 @@ public class RoomPKMessageReceive2001 extends SocketMessageReceived {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-//		Display.getDefault().asyncExec(new Runnable() {
+//		Display.getDefault().syncExec(new Runnable() {
 //
 //			@Override
 //			public void run() {

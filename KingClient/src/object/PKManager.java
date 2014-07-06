@@ -4,16 +4,17 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class PKManager {
 
 	private static PKManager myself;
 	private HashMap<Long, PK> pkMap;
-	private ArrayList<PK> pkList;
+	private LinkedList<PK> pkList;
 	private ArrayList<PK> pkListFilter;
 	private PKManager() {
 		pkMap = new HashMap<Long, PK>();
-		pkList = new ArrayList<PK>();
+		pkList = new LinkedList<PK>();
 		pkListFilter= new ArrayList<PK>();
 	}
 
@@ -34,7 +35,7 @@ public class PKManager {
 	}
 	public void add(PK pk) {
 		pkMap.put(pk.sql_id, pk);
-		pkList.add(pk);
+		pkList.push(pk);
 	}
 	public void addFilter(PK pk) {
 		pkListFilter.add(pk);

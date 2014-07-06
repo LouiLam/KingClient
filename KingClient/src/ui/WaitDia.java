@@ -428,7 +428,7 @@ public abstract class WaitDia extends Dialog {
 
 			@Override
 			public void run() {
-				Display.getDefault().asyncExec(new Runnable() {
+				Display.getDefault().syncExec(new Runnable() {
 
 					@Override
 					public void run() {

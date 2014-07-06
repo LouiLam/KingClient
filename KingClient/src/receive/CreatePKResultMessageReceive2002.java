@@ -23,7 +23,7 @@ public class CreatePKResultMessageReceive2002 extends SocketMessageReceived {
 		try {
 			int status = buffer.readShort();
 			if (status != 0) {
-				Display.getDefault().asyncExec(new Runnable() {
+				Display.getDefault().syncExec(new Runnable() {
 
 					@Override
 					public void run() {
@@ -82,7 +82,7 @@ public class CreatePKResultMessageReceive2002 extends SocketMessageReceived {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Display.getDefault().asyncExec(new Runnable() {
+		Display.getDefault().syncExec(new Runnable() {
 
 			@Override
 			public void run() {

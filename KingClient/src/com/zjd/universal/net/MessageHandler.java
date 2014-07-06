@@ -56,7 +56,7 @@ public class MessageHandler extends SimpleChannelHandler {
 	 public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) {
 		 System.out.println("客户读关闭连接");
 
-			Display.getDefault().asyncExec(new Runnable() {
+			Display.getDefault().syncExec(new Runnable() {
 
 				@Override
 				public void run() {

@@ -1,6 +1,7 @@
 package ui;
 
 import object.JfaceWindowManager;
+import object.PK;
 import object.PKManager;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -28,17 +29,19 @@ public class JoinDiaRoleName extends Dialog {
 	private int index,camp;
 	private String password;
 	private Text passwordText;
+	private boolean shaixuanState;
 	/**
 	 * Create the dialog.
 	 * 
 	 * @param parentShell
 	 */
-	public JoinDiaRoleName(Shell parentShell,int index,int camp,String password) {
+	public JoinDiaRoleName(Shell parentShell,int index,int camp,String password,boolean shaixuanState) {
 		super(parentShell);
 		setWindowManager(JfaceWindowManager.wm);
 		this.index=index;
 		this.camp=camp;
 		this.password=password;
+		this.shaixuanState=shaixuanState;
 	}
 
 	/**
@@ -107,11 +110,15 @@ public class JoinDiaRoleName extends Dialog {
 				{
 					str=passwordText.getText();
 				}
-				System.out.println("加入房间sqlid"+PKManager.getInstance()
-						.getPKByIndex(index).sql_id);
+				PK pk=null;
+				if(shaixuanState)
+				{ pk = PKManager.getInstance().getFilterPKByIndex(index);}
+				else
+				{ pk = PKManager.getInstance().getPKByIndex(index);}
+				
+				System.out.println("加入房间sqlid"+pk.sql_id);
 				GameClient.getInstance().sendMessageToGameServer(
-						new JoinPKMessage1003(PKManager.getInstance()
-								.getPKByIndex(index).sql_id,camp,KingLogin.id,
+						new JoinPKMessage1003(pk.sql_id,camp,KingLogin.id,
 								KingLogin.roleName,str));
 
 			

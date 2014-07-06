@@ -21,7 +21,7 @@ public class EndGamePKResultMessageReceive2007 extends SocketMessageReceived {
 		
 		status=buffer.readInt();
 		win_side=buffer.readInt();
-			Display.getDefault().asyncExec(new Runnable() {
+			Display.getDefault().syncExec(new Runnable() {
 				
 				@Override
 				public void run() {

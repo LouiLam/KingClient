@@ -69,6 +69,7 @@ public class KingMain extends ApplicationWindow {
 	private Image icon, image_shaixuan, image_bg_menu, image_bg_top;
 	private long curSql_id=-1;
 	boolean isClick=true;
+	private boolean shaixuanState=false;//筛选状态
 	Browser browser;
 	Text  sql_idText;
 	/**
@@ -345,30 +346,39 @@ public class KingMain extends ApplicationWindow {
 		        Rectangle clientArea = table.getClientArea();
 		        Point pt = new Point(event.x, event.y);
 		        int index = table.getTopIndex();
+		        System.out.println("table.getItemCount():"+table.getItemCount());
 		        while (index < table.getItemCount()) {
 		          boolean visible = false;
 		          TableItem item = table.getItem(index);
 		          for (int i = 0; i <table.getColumnCount(); i++) {
 		            Rectangle rect = item.getBounds(i);
 		            if (rect.contains(pt)) {
-		              System.out.println("Item " + index + "-" + i);
+		              System.out.println("Item " + index + "-Column" + i);
 		              if(i==5)
-						{PK pk = PKManager.getInstance().getPKByIndex(index);
+						{
+		            	  PK pk=null;
+							if(shaixuanState)
+							{ pk = PKManager.getInstance().getFilterPKByIndex(index);}
+							else
+							{ pk = PKManager.getInstance().getPKByIndex(index);}
 						if(pk.type==pk.faqiSeatCount&&pk.type==pk.yingzhanSeatCount) //满员不能点
 						{return;}
 						JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
-								.getShell(), index, 1, pk.password);
+								.getShell(), index, 1, pk.password,shaixuanState);
 						pkDia.open();
 						}
 						
 						if(i==6)
 						{
-							
-							PK pk = PKManager.getInstance().getPKByIndex(index);	
+							PK pk=null;
+							if(shaixuanState)
+							{ pk = PKManager.getInstance().getFilterPKByIndex(index);}
+							else
+							{ pk = PKManager.getInstance().getPKByIndex(index);}
 							if(pk.type==pk.faqiSeatCount&&pk.type==pk.yingzhanSeatCount) //满员不能点
 							{return;}
 						JoinDiaRoleName pkDia = new JoinDiaRoleName(KingMain.this
-								.getShell(), index, 2, pk.password);
+								.getShell(), index, 2, pk.password,shaixuanState);
 						pkDia.open();
 						}
 		            }
@@ -860,7 +870,7 @@ public class KingMain extends ApplicationWindow {
 			mb.setMessage("房主异常退出房间，挑战解散");//
 			mb.open();
 		}
-
+		btn_create_tz.setEnabled(true);
 	}
 
 	ArrayList<Control> listControl = new ArrayList<Control>();
@@ -874,6 +884,8 @@ public class KingMain extends ApplicationWindow {
 	public void enable()
 	{
 		isClick=true;
+		if(State.CurState!=State.STATE_GAME_START)
+		{btn_create_tz.setEnabled(true);}
 		for (Control control : listControl) {
 			control.setEnabled(true);
 		}
@@ -925,6 +937,7 @@ public class KingMain extends ApplicationWindow {
 			items[i].setFont(5,SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 			items[i].setFont(6,SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 			items[i].setText(new String[]{pk.type + "v" + pk.type,pk.point + "",jiVji,pk.area,pk.map,join_tz,join_yz,pk.id,pk.title});
+			shaixuanState=false;
 		}
 
 	}
@@ -990,6 +1003,7 @@ public class KingMain extends ApplicationWindow {
 				return;
 			}
 		}
+		shaixuanState=true;
 		table.setItemCount( PKManager.getInstance().getFilterPKNum());
 		TableItem[] items = table.getItems();
 		for (int i = 0; i < items.length; i++) {
@@ -1029,18 +1043,6 @@ public class KingMain extends ApplicationWindow {
 			items[i].setFont(5,SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 			items[i].setFont(6,SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 			items[i].setText(new String[]{pk.type + "v" + pk.type,pk.point + "",jiVji,pk.area,pk.map,join_tz,join_yz,pk.id,pk.title});
-		
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 
 		}

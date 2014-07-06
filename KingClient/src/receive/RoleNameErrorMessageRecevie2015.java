@@ -25,7 +25,7 @@ public class RoleNameErrorMessageRecevie2015 extends
 
 	@Override
 	public void logicHandle(ChannelBuffer buffer, Channel channel) {
-		Display.getDefault().asyncExec(new Runnable() {
+		Display.getDefault().syncExec(new Runnable() {
 
 			@Override
 			public void run() {
