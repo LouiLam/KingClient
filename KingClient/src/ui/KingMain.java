@@ -912,6 +912,7 @@ public class KingMain extends ApplicationWindow {
 				if(pk.type==pk.faqiSeatCount&&pk.type==pk.yingzhanSeatCount)
 				{
 					jiVji="满员";
+					items[i].setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 				}
 				else
 				{
@@ -934,6 +935,7 @@ public class KingMain extends ApplicationWindow {
 			}
 			items[i].setImage(5, image_join);
 			items[i].setImage(6, image_join);
+			
 			items[i].setFont(5,SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 			items[i].setFont(6,SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 			items[i].setText(new String[]{pk.type + "v" + pk.type,pk.point + "",jiVji,pk.area,pk.map,join_tz,join_yz,pk.id,pk.title});
