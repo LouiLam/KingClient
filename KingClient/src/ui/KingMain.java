@@ -818,12 +818,12 @@ public class KingMain extends ApplicationWindow {
 
 	}
 	public void RepeatLoginError() {
-			MessageBox mb = new MessageBox(KingMain.this.getShell(),
+		GameClient.getInstance().disConnect();
+		MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
-			mb.setMessage("您的帐号在其他地方已登录，您可以重新登录或修改密码,你的网络连接已经断开，您可以重新登录");
-			mb.open();
-			GameClient.getInstance().disConnect();
-			System.exit(0);
+		mb.setMessage("您的帐号在其他地方已登录，您可以重新登录或修改密码,你的网络连接已经断开，您可以重新登录");
+		mb.open();
+		System.exit(0);
 	}
 	public void NetError() {
 		MessageBox mb = new MessageBox(KingMain.this.getShell(),

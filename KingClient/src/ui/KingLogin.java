@@ -170,11 +170,12 @@ public class KingLogin extends ApplicationWindow {
 			combo.add(obj.id);
 
 		}
-		combo.select(combo.getItemCount() - 1);
+		if(combo.getItemCount() >0)
+		{combo.select(combo.getItemCount() - 1);
 		if (!ReadFile.accounts.get(combo.getItemCount() - 1).isAutoSave
 				.equals("0")) {
 			pwd_text.setText(ReadFile.accounts.get(combo.getItemCount() - 1).password);
-		}
+		}}
 		Label reg = new Label(container, SWT.FLAT);
 		reg.setImage(image_reg);
 		reg.addMouseListener(new MouseAdapter() {
@@ -239,11 +240,12 @@ public class KingLogin extends ApplicationWindow {
 				.getColor(SWT.COLOR_WHITE));
 		btn_isAutoSave.setBounds(103, 190, 72, 22);
 		btn_isAutoSave.setText("记住密码");
-		if (!ReadFile.accounts.get(combo.getItemCount() - 1).isAutoSave
+		if(combo.getItemCount() >0)
+		{if (!ReadFile.accounts.get(combo.getItemCount() - 1).isAutoSave
 				.equals("0")) {
 			btn_isAutoSave.setSelection(true);
 			autoSave = "1";
-		}
+		}}
 		Label lblNewLabel = new Label(container, SWT.WRAP);
 		lblNewLabel.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 		lblNewLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
