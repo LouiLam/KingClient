@@ -738,7 +738,7 @@ public class KingMain extends ApplicationWindow {
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
 			if (id.equals(KingLogin.id)) {
-				mb.setMessage("现在你有操作权限可以结束游戏了");
+				mb.setMessage("比赛开始：您的挑战点数已被暂时冻结，比赛胜负判定后将马上返回您冻结的挑战点数");
 				if (JfaceWindowManager.getCurWindow() instanceof CreatePKWaitDia) {
 					CreatePKWaitDia dia = (CreatePKWaitDia) JfaceWindowManager
 							.getCurWindow();
@@ -746,7 +746,7 @@ public class KingMain extends ApplicationWindow {
 					dia.hideTime();
 				}
 			} else {
-				mb.setMessage("房主已经点击开始游戏了，游戏开始\n\n"+"1.启动英雄联盟游戏\n\n" + "2.请等待当前游戏的房主将您加入到英雄联盟游戏中\n\n"
+				mb.setMessage("比赛开始：您的挑战点数已被暂时冻结，比赛胜负判定后将马上返回您冻结的挑战点数\n\n"+"1.启动英雄联盟游戏\n\n" + "2.请等待当前游戏的房主将您加入到英雄联盟游戏中\n\n"
 						+ "3.进行英雄联盟比赛\n\n" + "4.比赛结束后请回到当前页面点击\"结束游戏\",系统将会判断比赛胜负");
 				if (JfaceWindowManager.getCurWindow() instanceof WaitDia) {
 					WaitDia dia = (WaitDia) JfaceWindowManager.getCurWindow();

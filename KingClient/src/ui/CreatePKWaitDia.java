@@ -27,7 +27,7 @@ public class CreatePKWaitDia extends WaitDia {
 
 	public CreatePKWaitDia(Shell parentShell, int type, String area,
 			String title, int point, String map) {
-		super(parentShell, 60 * 20, type, area, title, point, map);
+		super(parentShell, 60 * 5, type, area, title, point, map);
 	}
 
 	@Override

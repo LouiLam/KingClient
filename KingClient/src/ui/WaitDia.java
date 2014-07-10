@@ -401,6 +401,18 @@ public abstract class WaitDia extends Dialog {
 		label_5.setForeground(SWTResourceManager.getColor(SWT.COLOR_YELLOW));
 		label_5.setFont(SWTResourceManager.getFont("宋体", 16, SWT.NORMAL));
 		label_5.setBounds(169, 61, 99, 21);
+		
+		Label lblid = new Label(composite_titlebar, SWT.NONE);
+		lblid.setText("房间ID：");
+		lblid.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblid.setFont(SWTResourceManager.getFont("宋体", 16, SWT.NORMAL));
+		lblid.setBounds(32, 88, 105, 21);
+		
+		Label label_7 = new Label(composite_titlebar, SWT.NONE);
+		label_7.setText(PKUser.sql_id+"");
+		label_7.setForeground(SWTResourceManager.getColor(SWT.COLOR_YELLOW));
+		label_7.setFont(SWTResourceManager.getFont("宋体", 16, SWT.NORMAL));
+		label_7.setBounds(169, 88, 99, 21);
 
 		// Label typeLabel = new Label(composite_titlebar, SWT.CENTER);
 		// typeLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -507,7 +519,7 @@ public abstract class WaitDia extends Dialog {
 	protected void configureShell(Shell newShell) {
 		// TODO Auto-generated method stub
 		super.configureShell(newShell);
-		newShell.setText("等待界面：房间id为" + PKUser.sql_id);
+		newShell.setText("等待界面");
 	}
 
 	private void createItem(Composite item_group, int index, boolean isFaQi) {

@@ -31,7 +31,7 @@ public class JoinPKWaitDia extends WaitDia {
 			return result;
 		}
 	public JoinPKWaitDia(Shell parentShell,PKUser users[],int type,String area,String title,int point,String map) {
-		super(parentShell, users,60*5,type,area,title,point,map);
+		super(parentShell, users,60*1,type,area,title,point,map);
 	}
 	@Override
 	void createDialogAreaDoSomeThing(Composite container) {
