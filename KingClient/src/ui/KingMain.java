@@ -56,11 +56,11 @@ public class KingMain extends ApplicationWindow {
 	Composite[] tabItem = new Composite[5];
 	// private String tabItemText[] = { "对战信息", "个人设置", "挑战记录", "充值管理",
 	// "礼品兑换" };
-	private String urlText[] = { "http://117.18.65.102/yxlm/setting.php",
-			"http://117.18.65.102/yxlm/setting.php",
-			"http://117.18.65.102/yxlm/lszj.php",
-			"http://117.18.65.102/yxlm/cz.php",
-			"http://117.18.65.102/yxlm/dj.php" };
+	private String urlText[] = { "http://218.76.35.162/yxlm/setting.php",
+			"http://218.76.35.162/yxlm/setting.php",
+			"http://218.76.35.162/yxlm/lszj.php",
+			"http://218.76.35.162/yxlm/cz.php",
+			"http://218.76.35.162/yxlm/dj.php" };
 
 	private Image image_join, image_create_tz, image_query,
 			image_table_bg;
@@ -403,7 +403,7 @@ public class KingMain extends ApplicationWindow {
 		pk_flow.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				browser.setUrl("http://117.18.65.102/yxlm/single/lc.html");
+				browser.setUrl("http://218.76.35.162/yxlm/single/lc.html");
 				browser.setJavascriptEnabled(true);
 				browser.setVisible(true);
 				table.setVisible(false);
@@ -418,7 +418,7 @@ public class KingMain extends ApplicationWindow {
 		zhogncai_way.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				browser.setUrl("http://117.18.65.102/yxlm/single/zc.html");
+				browser.setUrl("http://218.76.35.162/yxlm/single/zc.html");
 				browser.setJavascriptEnabled(true);
 				browser.setVisible(true);
 				table.setVisible(false);
@@ -432,12 +432,12 @@ public class KingMain extends ApplicationWindow {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				
-				browser.setUrl("http://117.18.65.102/yxlm/single/ds.html");
+				browser.setUrl("http://218.76.35.162/yxlm/single/ds.html");
 				browser.setJavascriptEnabled(true);
 				browser.setVisible(true);
 				table.setVisible(false);
 //				UrlDia dia = new UrlDia(KingMain.this.getShell(),
-//						"http://117.18.65.102/yxlm/single/ds.html");
+//						"http://218.76.35.162/yxlm/single/ds.html");
 //				dia.open();
 			}
 		});
@@ -446,9 +446,9 @@ public class KingMain extends ApplicationWindow {
 
 		Browser browser = new Browser(container, SWT.NONE);
 		browser.setBounds(1024 - 285, 48, 278, 587);
-		// browser.setUrl("http://117.18.65.102/yxlm/single/lc1.html");
+		// browser.setUrl("http://218.76.35.162/yxlm/single/lc1.html");
 
-		browser.setUrl("http://117.18.65.102/yxlm/index_right.php?uid="
+		browser.setUrl("http://218.76.35.162/yxlm/index_right.php?uid="
 				+ PKUser.uid);
 		browser.setJavascriptEnabled(true);
 		Combo area = new Combo(container, SWT.NONE);

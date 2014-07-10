@@ -189,7 +189,7 @@ public class TestDemo extends ApplicationWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				UrlDia dia = new UrlDia(TestDemo.this.getShell(),
-						"http://117.18.65.102/yxlm/single/lc.html");
+						"http://218.76.35.162/yxlm/single/lc.html");
 				dia.open();
 			}
 		});
@@ -201,7 +201,7 @@ public class TestDemo extends ApplicationWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				UrlDia dia = new UrlDia(TestDemo.this.getShell(),
-						"http://117.18.65.102/yxlm/single/zc.html");
+						"http://218.76.35.162/yxlm/single/zc.html");
 				dia.open();
 			}
 		});
@@ -213,7 +213,7 @@ public class TestDemo extends ApplicationWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				UrlDia dia = new UrlDia(TestDemo.this.getShell(),
-						"http://117.18.65.102/yxlm/single/ds.html");
+						"http://218.76.35.162/yxlm/single/ds.html");
 				dia.open();
 			}
 		});
@@ -222,9 +222,9 @@ public class TestDemo extends ApplicationWindow {
 
 		Browser browser = new Browser(container, SWT.NONE);
 		browser.setBounds(1024 - 285, 48, 278, 587);
-//		browser.setUrl("http://117.18.65.102/yxlm/single/lc1.html");
+//		browser.setUrl("http://218.76.35.162/yxlm/single/lc1.html");
 		
-		browser.setUrl("http://117.18.65.102/yxlm/index_right.php?uid="
+		browser.setUrl("http://218.76.35.162/yxlm/index_right.php?uid="
 				+ PKUser.uid);
 		browser.setJavascriptEnabled(true);
 		Combo area = new Combo(container, SWT.NONE);

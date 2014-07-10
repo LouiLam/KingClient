@@ -198,7 +198,7 @@ public class RegDia extends Dialog {
 	public void httpPost(String id, String pwd, String pwdok, String mail) {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(
-				"http://117.18.65.102/yxlm/member/reg_new.php?dopost=regbase&step=1");
+				"http://218.76.35.162/yxlm/member/reg_new.php?dopost=regbase&step=1");
 
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("userid", id));
