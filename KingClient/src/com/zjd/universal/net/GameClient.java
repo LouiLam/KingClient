@@ -32,12 +32,12 @@ public class GameClient {
     public static final int LOGIN_PROT = 4322;
 
 //   public static String GAME_IP="198.204.255.98";
-    public static String GAME_IP="218.76.35.162";
+    public static String GAME_IP="121.127.253.207";
 //   public static String GAME_IP="113.10.242.132";//hexcm
 //    public static String GAME_IP="louislam0714.xicp.net";
 
     
-//    public static String GAME_IP="218.76.35.162";
+//    public static String GAME_IP="121.127.253.207";
 //    public static String GAME_IP="192.168.1.205";
 //    public static String GAME_IP="192.168.1.100";
     

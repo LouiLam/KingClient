@@ -118,7 +118,7 @@ public class KingLogin extends ApplicationWindow {
 		}
 		if(KingLogin.isFirstRun)
 		{
-			UrlDia dia=new UrlDia(KingLogin.this.getShell(),"http://218.76.35.162/yxlm/single/lc1.html");
+			UrlDia dia=new UrlDia(KingLogin.this.getShell(),"http://121.127.253.207/yxlm/single/lc1.html");
 			dia.open();
 		}
 		parent.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
@@ -315,7 +315,7 @@ public class KingLogin extends ApplicationWindow {
 		return new Point(360, 293);
 	}
 	public static void  httpGetVersion() throws Exception {
-		String url="http://218.76.35.162/yxlm/member/fight_banben.php";
+		String url="http://121.127.253.207/yxlm/member/fight_banben.php";
 	    CloseableHttpClient httpclient = HttpClients.createDefault();
 	    try {
 	        HttpGet httpGet = new HttpGet(url);
@@ -348,7 +348,7 @@ public class KingLogin extends ApplicationWindow {
 
 	}
 	public static void  httpGet() throws Exception {
-		String url="http://218.76.35.162/yxlm/member/fight_cha.php?action=area";
+		String url="http://121.127.253.207/yxlm/member/fight_cha.php?action=area";
 	    CloseableHttpClient httpclient = HttpClients.createDefault();
 	    try {
 	        HttpGet httpGet = new HttpGet(url);
@@ -385,7 +385,7 @@ public class KingLogin extends ApplicationWindow {
 	public void httpPost() {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(
-				"http://218.76.35.162/yxlm/member/index_do.php?fmdo=login&dopost=login");
+				"http://121.127.253.207/yxlm/member/index_do.php?fmdo=login&dopost=login");
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("userid", combo.getText()));
 		nvps.add(new BasicNameValuePair("pwd", pwd_text.getText()));

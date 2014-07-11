@@ -326,7 +326,7 @@ public abstract class WaitDia extends Dialog {
 			public void mouseUp(MouseEvent e) {
 				if (State.CurState == State.STATE_GAME_START) {
 					UrlDia dia = new UrlDia(WaitDia.this.getParentShell(),
-							"http://218.76.35.162/yxlm/member/fight_zc.php?action=ss&fid="
+							"http://121.127.253.207/yxlm/member/fight_zc.php?action=ss&fid="
 									+ PKUser.sql_id + "&uid=" + PKUser.uid,
 							500, 400);
 					dia.open();
@@ -346,7 +346,7 @@ public abstract class WaitDia extends Dialog {
 			public void mouseUp(MouseEvent e) {
 				if (State.CurState == State.STATE_GAME_START) {
 					UrlDia dia = new UrlDia(WaitDia.this.getParentShell(),
-							"http://218.76.35.162/yxlm/member/fight_zc.php?action=zc&fid="
+							"http://121.127.253.207/yxlm/member/fight_zc.php?action=zc&fid="
 									+ PKUser.sql_id + "&uid=" + PKUser.uid,
 							500, 400);
 					dia.open();

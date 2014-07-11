@@ -244,7 +244,7 @@ public class QueryDia extends Dialog {
 	ArrayList<Control> listControl=new ArrayList<Control>();
 
 	public  void  httpGetFightCha(Channel channel) throws Exception {
-		String url="http://218.76.35.162/yxlm/member/fight_cha.php?action=dopost";
+		String url="http://121.127.253.207/yxlm/member/fight_cha.php?action=dopost";
 		
 		
 		if(status.getText().length()!=0)
