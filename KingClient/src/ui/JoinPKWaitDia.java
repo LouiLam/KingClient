@@ -38,9 +38,21 @@ public class JoinPKWaitDia extends WaitDia {
 		endGame.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
+
+				if(isClickEndGame)
+				{
 				GameClient.getInstance().sendMessageToGameServer(
 						new EndGamePKMessage1005());
-				endGame.setEnabled(false);
+				endGame.setEnabled(false);}
+				else
+				{
+					MessageBox mb = new MessageBox(JoinPKWaitDia.this.getParentShell(),
+							SWT.ICON_INFORMATION | SWT.OK);
+					mb.setMessage("游戏开始时间过短，请稍后点击");
+					mb.open();
+				}
+			
+			
 			}
 		});
 	}

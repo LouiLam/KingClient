@@ -797,7 +797,7 @@ public class KingMain extends ApplicationWindow {
 		{
 			MessageBox mb = new MessageBox(KingMain.this.getShell(),
 					SWT.ICON_INFORMATION | SWT.OK);
-			mb.setMessage("结束游戏失败:当前游戏没有结束或者游戏结束超时");//
+			mb.setMessage("结束游戏失败:当前游戏没有结束或者游戏结束超时，2分钟后，您可以再次点击游戏结束");//
 			mb.open();
 			if (JfaceWindowManager.getCurWindow() instanceof WaitDia) {
 				WaitDia waitDia = (WaitDia) JfaceWindowManager.getCurWindow();
@@ -984,11 +984,6 @@ public class KingMain extends ApplicationWindow {
 					PKManager.getInstance().addFilter(pk);
 				}
 			}
-			if (state==null&&area == null & map != null) {
-				if (pk.map.equals(map)) {
-					PKManager.getInstance().addFilter(pk);
-				}
-			}
 			if(map == null && area == null&&state!=null)
 			{
 				if(state.equals("满员")&&((pk.faqiSeatCount+pk.yingzhanSeatCount)==pk.type*2))
@@ -998,6 +993,43 @@ public class KingMain extends ApplicationWindow {
 				else if(state.equals("未满员")&&((pk.faqiSeatCount+pk.yingzhanSeatCount)!=pk.type*2))
 				{
 					PKManager.getInstance().addFilter(pk);
+				}
+			}
+			if (state==null&&area == null & map != null) {
+				if (pk.map.equals(map)) {
+					PKManager.getInstance().addFilter(pk);
+				}
+			}
+			if(area != null&&map != null&&state==null)
+			{
+				if (pk.area.equals(area)&&pk.map.equals(map)) {
+					PKManager.getInstance().addFilter(pk);
+				}
+			}
+			if(map != null&&state!=null&&area == null)
+			{
+				if (pk.map.equals(map)) {
+					if(state.equals("满员")&&((pk.faqiSeatCount+pk.yingzhanSeatCount)==pk.type*2))
+					{
+						PKManager.getInstance().addFilter(pk);
+					}
+					else if(state.equals("未满员")&&((pk.faqiSeatCount+pk.yingzhanSeatCount)!=pk.type*2))
+					{
+						PKManager.getInstance().addFilter(pk);
+					}
+				}
+			}
+			if(area != null&&state!=null&&map == null)
+			{
+				if (pk.area.equals(area)) {
+					if(state.equals("满员")&&((pk.faqiSeatCount+pk.yingzhanSeatCount)==pk.type*2))
+					{
+						PKManager.getInstance().addFilter(pk);
+					}
+					else if(state.equals("未满员")&&((pk.faqiSeatCount+pk.yingzhanSeatCount)!=pk.type*2))
+					{
+						PKManager.getInstance().addFilter(pk);
+					}
 				}
 			}
 			if (area == null && map == null&&state==null&&sql_id==-1) {
@@ -1020,6 +1052,7 @@ public class KingMain extends ApplicationWindow {
 				if(pk.type==pk.faqiSeatCount&&pk.type==pk.yingzhanSeatCount)
 				{
 					jiVji="满员";
+					items[i].setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 				}
 				else
 				{

@@ -53,7 +53,8 @@ public abstract class WaitDia extends Dialog {
 	Label faqiShadow[] = new Label[5];
 	Label yingzhanShadow[] = new Label[5];
 	Image image_start_game, image_end_game, image_shensu, image_zhongcai;
-
+	//是否可以点击游戏结束按钮
+	boolean  isClickEndGame=false;
 	// Image iamge_bg_head;
 	/**
 	 * Create the dialog.
@@ -145,7 +146,7 @@ public abstract class WaitDia extends Dialog {
 					}
 					curTime = 0;
 					TaskScheduled.clear();
-
+					TaskScheduled.cancel();
 					super.handleShellCloseEvent();
 				} else if (rc == SWT.CANCEL) {
 					return;
@@ -172,6 +173,7 @@ public abstract class WaitDia extends Dialog {
 				}
 				curTime = 0;
 				TaskScheduled.clear();
+				TaskScheduled.cancel();
 				super.handleShellCloseEvent();
 			} else {
 
@@ -461,10 +463,19 @@ public abstract class WaitDia extends Dialog {
 		}, 0, 1, TimeUnit.SECONDS);
 		return container;
 	}
-
+	//游戏开始调用此方法
 	public void hideTime() {
 		curTime = 0;
 		TaskScheduled.clear();
+		TaskScheduled.schedule(new Runnable() {
+			
+			@Override
+			public void run() {
+				System.out.println("isClickEndGame=true");
+				isClickEndGame=true;
+				
+			}
+		}, 10, TimeUnit.MINUTES);
 		time.setText("");
 		label_2.setVisible(false);
 		timeGroup.setVisible(false);

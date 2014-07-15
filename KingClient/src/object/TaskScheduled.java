@@ -8,8 +8,9 @@ import ui.KingLogin;
 
 public class TaskScheduled {
 
-	private static ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(1);
+	private static ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(2);
 	private static ScheduledThreadPoolExecutor schedulerForever = new ScheduledThreadPoolExecutor(1);
+	private static ScheduledFuture<?>  schedulerFuture;
 	/**
 	 * 以固定速率执行周期任务
 	 */
@@ -26,15 +27,16 @@ public class TaskScheduled {
 	 * 执行启动延时任务
 	 */
 	public static ScheduledFuture<?> schedule(Runnable command,long delay,TimeUnit unit){
-		return scheduler.schedule(command, delay, unit);
+		 schedulerFuture=scheduler.schedule(command, delay, unit);
+		 return schedulerFuture;
 	}
 
 	/**
 	 * 取消定时任务
 	 */
-	public static boolean cancel(ScheduledFuture<?> scheduled){
-		if(scheduled == null) return false;
-		return scheduled.cancel(true);
+	public static boolean cancel(){
+		if(schedulerFuture == null) return false;
+		return schedulerFuture.cancel(true);
 	}
 	public static void clear()
 	{
