@@ -8,7 +8,7 @@ import ui.KingLogin;
 
 public class TaskScheduled {
 
-	private static ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(2);
+	private static ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(3);
 	private static ScheduledThreadPoolExecutor schedulerForever = new ScheduledThreadPoolExecutor(1);
 	private static ScheduledFuture<?>  schedulerFuture;
 	/**

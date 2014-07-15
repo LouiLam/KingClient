@@ -2,12 +2,14 @@ package ui;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import object.JfaceWindowManager;
 import object.PK;
 import object.PKManager;
 import object.PKUser;
 import object.State;
+import object.TaskScheduled;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.StatusLineManager;
@@ -799,9 +801,18 @@ public class KingMain extends ApplicationWindow {
 					SWT.ICON_INFORMATION | SWT.OK);
 			mb.setMessage("结束游戏失败:当前游戏没有结束或者游戏结束超时，2分钟后，您可以再次点击游戏结束");//
 			mb.open();
+			
 			if (JfaceWindowManager.getCurWindow() instanceof WaitDia) {
-				WaitDia waitDia = (WaitDia) JfaceWindowManager.getCurWindow();
-				waitDia.endGame.setEnabled(true);
+				final WaitDia waitDia = (WaitDia) JfaceWindowManager.getCurWindow();
+				TaskScheduled.schedule(new Runnable() {
+					
+					@Override
+					public void run() {
+						System.out.println("2分钟isClickEndGame=true");
+						waitDia.endGame.setEnabled(true);
+					}
+				}, 2, TimeUnit.MINUTES);
+				
 			}
 		}
 		else
