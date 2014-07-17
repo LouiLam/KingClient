@@ -809,7 +809,15 @@ public class KingMain extends ApplicationWindow {
 					@Override
 					public void run() {
 						System.out.println("2分钟isClickEndGame=true");
-						waitDia.endGame.setEnabled(true);
+						Display.getDefault().syncExec(new Runnable() {
+							
+							@Override
+							public void run() {
+								waitDia.endGame.setEnabled(true);
+								
+							}
+						});
+						
 					}
 				}, 2, TimeUnit.MINUTES);
 				
