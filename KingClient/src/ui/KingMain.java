@@ -64,16 +64,16 @@ public class KingMain extends ApplicationWindow {
 			"http://121.127.253.207/yxlm/cz.php",
 			"http://121.127.253.207/yxlm/dj.php" };
 
-	private Image image_join, image_create_tz, image_query,
-			image_table_bg;
+	private Image image_join, image_create_tz, image_query;
 	private Image image_pk_flow, image_zhogncai_way, image_pk_point_count;
 	private String curMap, curArea,curState;
-	private Image icon, image_shaixuan, image_bg_menu, image_bg_top;
+	private Image icon, image_shaixuan, image_bg_menu, image_bg_top,image_table_title_bg,image_body_bg;
 	private long curSql_id=-1;
 	boolean isClick=true;
 	private boolean shaixuanState=false;//筛选状态
 	Browser browser;
 	Text  sql_idText;
+	Composite composite1,composite2;
 	/**
 	 * Create the application window.
 	 */
@@ -91,12 +91,14 @@ public class KingMain extends ApplicationWindow {
 		image_join = new Image(Display.getDefault(), "bt_join.png");
 		image_create_tz = new Image(Display.getDefault(), "create_tz.png");
 		image_query = new Image(Display.getDefault(), "query.png");
-		image_table_bg = new Image(Display.getDefault(), "table_bg.jpg");
 		image_pk_flow = new Image(Display.getDefault(), "pk_flow.png");
 		image_zhogncai_way = new Image(Display.getDefault(), "zhongcai_way.png");
+		image_body_bg = new Image(Display.getDefault(), "body_bg.jpg");
 		image_pk_point_count = new Image(Display.getDefault(),
 				"pk_point_count.png");
+
 		image_shaixuan = new Image(Display.getDefault(), "button_sx.png");
+		image_table_title_bg= new Image(Display.getDefault(), "table_title_bg.png");
 		image_bg_menu = new Image(Display.getDefault(), "bg_menu.jpg");
 		image_bg_top = new Image(Display.getDefault(), "bg_top.jpg");
 		setShellStyle(SWT.CLOSE | SWT.MIN | SWT.TITLE);
@@ -173,50 +175,56 @@ public class KingMain extends ApplicationWindow {
 	protected Control createContents(final Composite parent) {
 		parent.setLayout(null);
 		parent.setBackgroundMode(SWT.INHERIT_DEFAULT);
-		parent.setBackgroundImage(image_bg_top);
+	
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		// 设置容器上部菜单框大小
 		composite.setBounds(0, 0, getInitialSize().x,
 				image_bg_menu.getBounds().height);
-
-		// 设置布局
-		// composite.setLayoutData(new RowData(getInitialSize().x,
-		// tab_bg.getBounds().height));
-		// RowLayout r1=new RowLayout(SWT.HORIZONTAL);
-		// r1.spacing=110;
-		// composite.setLayout(r1);
-
 		composite.setBackgroundImage(image_bg_menu);
-
+		
+		final Label label[]=new Label[5];
 		// 设置容器里的控件
 		for (int i = 0; i < 5; i++) {
-			final Label label = new Label(composite, SWT.NONE);
-			label.setImage(image[i]);
-			label.setBounds(10 + i * (image[i].getBounds().width + 10), 0,
+			label[i] = new Label(composite, SWT.NONE);
+			if(i==0)
+			{
+				label[i].setImage(image_pressed[i]);
+			}
+			else
+			{
+				label[i].setImage(image[i]);
+			}
+			
+			label[i].setBounds(10 + i * (image[i].getBounds().width + 10), 0,
 					image[i].getBounds().width, image[i].getBounds().height);
-			label.setData(i);
-			label.addMouseListener(new MouseListener() {
+			label[i].setData(i);
+			label[i].addMouseListener(new MouseListener() {
 				@Override
 				public void mouseUp(MouseEvent arg0) {
 					
 					Widget d = (Widget) arg0.getSource();
 					int index = (int) d.getData();
-					label.setImage(image[index]);
+//					label.setImage(image[index]);
 					for (int i = 0; i < 5; i++) {
 						tabItem[i].setVisible(false);
 					}
 					browser.setVisible(false);
-					table.setVisible(true);
+					composite1.setVisible(true);
+					composite2.setVisible(true);
 					tabItem[index].setVisible(true);
 					System.out.println("index" + index);
 				}
 
 				@Override
 				public void mouseDown(MouseEvent arg0) {
-					Widget d = (Widget) arg0.getSource();
+					Label d = (Label) arg0.getSource();
 					int index = (int) d.getData();
-					label.setImage(image_pressed[index]);
+					for (int j = 0; j < image.length; j++) {
+						label[j].setImage(image[j]);
+					}
+					
+					d.setImage(image_pressed[index]);
 
 				}
 
@@ -277,15 +285,48 @@ public class KingMain extends ApplicationWindow {
 	 */
 	private Composite getTabControlOne(Composite parent) {
 		
-
+		//包含筛选和table的整个容器
 		Composite container = new Composite(parent, SWT.NONE);
-
 		container.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
-	
-		table = new Table(container, SWT.BORDER| SWT.MULTI | SWT.VIRTUAL);
+		container.setBounds(0, image_bg_menu.getBounds().height, getInitialSize().x,
+				768-image_bg_menu.getBounds().height);
+		
+		// 包含筛选的容器
+		  composite1 = new Composite(container, SWT.NONE);
+		composite1.setBounds(0, 0, getInitialSize().x,
+				image_bg_top.getBounds().height);
+		composite1.setBackgroundImage(image_bg_top);
+		// 包含左边table和右边html的容器
+		  composite2 = new Composite(container, SWT.NONE);
+		composite2.setBounds(0, image_bg_top.getBounds().height, getInitialSize().x,
+				image_body_bg.getBounds().height);
+		composite2.setBackgroundImage(image_body_bg);
+		//table标签栏上面的标题
+		Composite composite3 = new Composite(composite2, SWT.NONE);
+		composite3.setBounds(40, 32,image_table_title_bg.getBounds().width,
+				image_table_title_bg.getBounds().height);
+		composite3.setBackgroundImage(image_table_title_bg);
+		String arg[]={"对战人数","挑战点","当前(挑-应)","游戏区","挑战图","挑战方","应战方"};
+		int widthArg[]={105,75,90,125,105,108,108};
+		int temp=0;
+		for (int i = 0; i < 7; i++) {
+			Label label = new Label(composite3, SWT.CENTER);
+			label.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+			label.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+			label.setText(arg[i]);
+			label.setBounds(temp, 10, widthArg[i], 40);
+			temp+=widthArg[i];
+		}
+		
+		
+		
+		
+		table = new Table(composite2,  SWT.MULTI | SWT.VIRTUAL);
 		table.setLinesVisible(false);
-		table.setHeaderVisible(true);
-		table.setBounds(2, 48, 1024 - 289, 580);
+		table.getHorizontalBar().dispose();
+		table.getVerticalBar().setVisible(false);
+		table.setHeaderVisible(false);
+		table.setBounds(40, 32+image_table_title_bg.getBounds().height, 720, 452);
 		table.setFont(SWTResourceManager.getFont("宋体", 15, SWT.NORMAL));
 		try
 		{
@@ -313,6 +354,8 @@ public class KingMain extends ApplicationWindow {
 		    e.printStackTrace();
 		}
 		TableColumn column = new TableColumn(table, SWT.CENTER);
+		column.setWidth(1);
+		column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(105);
 		column.setText("对战人数");
 		column = new TableColumn(table, SWT.CENTER);
@@ -320,7 +363,7 @@ public class KingMain extends ApplicationWindow {
 		column.setText("挑战点");
 		column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(90);
-		column.setText("当前人数（挑-应）");
+		column.setText("当前（挑-应）");
 		column = new TableColumn(table, SWT.CENTER);
 		column.setWidth(125);
 		column.setText("游戏区");
@@ -401,35 +444,38 @@ public class KingMain extends ApplicationWindow {
 		browser= new Browser(container, SWT.BORDER);
 		browser.setVisible(false);
 		browser.setBounds(0, 48, 1024, 600);
-		Label pk_flow = new Label(container, SWT.CENTER);
+		Label pk_flow = new Label(composite1, SWT.CENTER);
 		pk_flow.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				browser.setUrl("http://121.127.253.207/yxlm/single/lc.html");
 				browser.setJavascriptEnabled(true);
 				browser.setVisible(true);
-				table.setVisible(false);
+				composite1.setVisible(false);
+				composite2.setVisible(false);
+//				table.setVisible(false);
 			}
 
 		});
 
 		pk_flow.setImage(image_pk_flow);
-		pk_flow.setBounds(659, 11, 108, 30);
+		pk_flow.setBounds(580, 5, 143, 54);
 
-		Label zhogncai_way = new Label(container, SWT.CENTER);
+		Label zhogncai_way = new Label(composite1, SWT.CENTER);
 		zhogncai_way.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				browser.setUrl("http://121.127.253.207/yxlm/single/zc.html");
 				browser.setJavascriptEnabled(true);
 				browser.setVisible(true);
-				table.setVisible(false);
+				composite1.setVisible(false);
+				composite2.setVisible(false);
 			}
 		});
 		zhogncai_way.setImage(image_zhogncai_way);
-		zhogncai_way.setBounds(773, 11, 108, 30);
+		zhogncai_way.setBounds(713, 5, 143, 54);
 
-		Label pk_point_count = new Label(container, SWT.CENTER);
+		Label pk_point_count = new Label(composite1, SWT.CENTER);
 		pk_point_count.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -437,24 +483,22 @@ public class KingMain extends ApplicationWindow {
 				browser.setUrl("http://121.127.253.207/yxlm/single/ds.html");
 				browser.setJavascriptEnabled(true);
 				browser.setVisible(true);
-				table.setVisible(false);
-//				UrlDia dia = new UrlDia(KingMain.this.getShell(),
-//						"http://121.127.253.207/yxlm/single/ds.html");
-//				dia.open();
+				composite1.setVisible(false);
+				composite2.setVisible(false);
 			}
 		});
 		pk_point_count.setImage(image_pk_point_count);
-		pk_point_count.setBounds(889, 11, 108, 30);
+		pk_point_count.setBounds(856, 5, 143, 54);
 
-		Browser browser = new Browser(container, SWT.NONE);
-		browser.setBounds(1024 - 285, 48, 278, 587);
+		Browser browser = new Browser(composite2, SWT.NONE);
+		browser.setBounds(1024 - 265, 32, 225, 480);
 		// browser.setUrl("http://121.127.253.207/yxlm/single/lc1.html");
 
 		browser.setUrl("http://121.127.253.207/yxlm/index_right.php?uid="
 				+ PKUser.uid);
 		browser.setJavascriptEnabled(true);
-		Combo area = new Combo(container, SWT.NONE);
-		area.setBounds(10, 16, 84, 21);
+		Combo area = new Combo(composite1, SWT.NONE);
+		area.setBounds(10, 26, 84, 21);
 		area.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
 		area.addSelectionListener(new SelectionListener() {
 
@@ -483,9 +527,9 @@ public class KingMain extends ApplicationWindow {
 		
 		area.setText("选择区服");
 
-		Combo map = new Combo(container, SWT.NONE);
+		Combo map = new Combo(composite1, SWT.NONE);
 		map.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-		map.setBounds(111, 16, 84, 21);
+		map.setBounds(101, 26, 84, 21);
 		map.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -512,9 +556,9 @@ public class KingMain extends ApplicationWindow {
 		map.add("嚎哭深渊");
 		map.setText("选择地图");
 
-		Combo state = new Combo(container, SWT.NONE);
+		Combo state = new Combo(composite1, SWT.NONE);
 		state.setFont(SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-		state.setBounds(212, 16, 84, 21);
+		state.setBounds(192, 26, 84, 21);
 		state.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -539,8 +583,8 @@ public class KingMain extends ApplicationWindow {
 		state.add("未满员");
 		state.setText("选择状态");
 		
-		sql_idText=new Text(container, SWT.NONE);
-		sql_idText.setBounds(310, 16, 84, 21);
+		sql_idText=new Text(composite1, SWT.NONE);
+		sql_idText.setBounds(283, 26, 84, 21);
 		sql_idText.setToolTipText("输入房间ID搜索房间");
 		sql_idText.setText("输入房间ID搜索房间");
 		sql_idText.addMouseListener(new MouseAdapter() {
@@ -560,8 +604,8 @@ public class KingMain extends ApplicationWindow {
 		});
 		
 		
-		Label shaixuan = new Label(container, SWT.NONE);
-		shaixuan.setBounds(405, 12, 80, 27);
+		Label shaixuan = new Label(composite1, SWT.NONE);
+		shaixuan.setBounds(380, 23, 90, 26);
 		shaixuan.setImage(image_shaixuan);
 		shaixuan.addMouseListener(new MouseAdapter() {
 			@Override
@@ -579,7 +623,7 @@ public class KingMain extends ApplicationWindow {
 		
 		
 		// 发起挑战按钮
-		btn_create_tz = new Label(container, SWT.CENTER);
+		btn_create_tz = new Label(composite1, SWT.CENTER);
 		btn_create_tz.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -589,7 +633,7 @@ public class KingMain extends ApplicationWindow {
 			}
 		});
 
-		btn_create_tz.setBounds(490, 11, 108, 30);
+		btn_create_tz.setBounds(480, 22, 93, 27);
 		btn_create_tz.setImage(image_create_tz);
 		return container;
 	}
@@ -916,7 +960,8 @@ public class KingMain extends ApplicationWindow {
 			listControl.get(i).dispose();
 		}
 		table.setBackgroundMode(SWT.INHERIT_DEFAULT);
-		table.setBackgroundImage(image_table_bg);
+		table.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+//		table.setBackgroundImage(image_table_bg);
 		listControl.clear();
 		table.setItemCount(PKManager.getInstance().getPKNum());
 		TableItem[] items = table.getItems();
@@ -940,24 +985,46 @@ public class KingMain extends ApplicationWindow {
 					{
 						join_tz="缺"+num;
 					}
+					else
+					{
+						join_tz="满员";
+					}
 					num=pk.type-pk.yingzhanSeatCount;
 					if(num!=0)
 					{
 						join_yz="缺"+num;
 					}
-					
+					else
+					{
+						join_yz="满员";
+					}
 				}
 			} 
 			else{
 				jiVji=pk.faqiSeatCount + "-"
 						+ pk.yingzhanSeatCount + "(密)";
 			}
-			items[i].setImage(5, image_join);
-			items[i].setImage(6, image_join);
+			if(jiVji.equals("满员"))
+			{
+				join_tz="满员";
+				join_yz="满员";
+			}
+			else
+			{
+				if(!join_tz.equals("满员"))
+				{
+				items[i].setImage(6, image_join);
+				}
+				if(!join_yz.equals("满员"))
+				{
+				items[i].setImage(7, image_join);
+				}
+			}
 			
-			items[i].setFont(5,SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+			
 			items[i].setFont(6,SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-			items[i].setText(new String[]{pk.type + "v" + pk.type,pk.point + "",jiVji,pk.area,pk.map,join_tz,join_yz,pk.id,pk.title});
+			items[i].setFont(7,SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+			items[i].setText(new String[]{"",pk.type + "v" + pk.type,pk.point + "",jiVji,pk.area,pk.map,join_tz,join_yz,pk.id,pk.title});
 			shaixuanState=false;
 		}
 
@@ -972,7 +1039,7 @@ public class KingMain extends ApplicationWindow {
 			listControl.get(i).dispose();
 		}
 		table.setBackgroundMode(SWT.INHERIT_DEFAULT);
-		table.setBackgroundImage(image_table_bg);
+		table.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		listControl.clear();
 		PKManager.getInstance().Filterclear();
 	
@@ -1092,12 +1159,29 @@ public class KingMain extends ApplicationWindow {
 				jiVji=pk.faqiSeatCount + "-"
 						+ pk.yingzhanSeatCount + "(密)";
 			}
-			items[i].setImage(5, image_join);
-			items[i].setImage(6, image_join);
-			items[i].setFont(5,SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-			items[i].setFont(6,SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
-			items[i].setText(new String[]{pk.type + "v" + pk.type,pk.point + "",jiVji,pk.area,pk.map,join_tz,join_yz,pk.id,pk.title});
 			
+			
+			if(jiVji.equals("满员"))
+			{
+				join_tz="满员";
+				join_yz="满员";
+			}
+			else
+			{
+				if(!join_tz.equals("满员"))
+				{
+				items[i].setImage(6, image_join);
+				}
+				if(!join_yz.equals("满员"))
+				{
+				items[i].setImage(7, image_join);
+				}
+			}
+			
+			
+			items[i].setFont(6,SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+			items[i].setFont(7,SWTResourceManager.getFont("宋体", 10, SWT.NORMAL));
+			items[i].setText(new String[]{"",pk.type + "v" + pk.type,pk.point + "",jiVji,pk.area,pk.map,join_tz,join_yz,pk.id,pk.title});
 
 		}
 

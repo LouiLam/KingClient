@@ -16,6 +16,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.viewers.deferred.SetModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -36,8 +37,8 @@ public class RegDia extends Dialog {
 	private Text pwd_text;
 	private Text pwdok_text;
 	private Text mail;
-	private Text text_4;
-	private Text text_5;
+	private Text qq;
+	private Text mobile;
 
 	/**
 	 * Create the dialog.
@@ -79,8 +80,9 @@ public class RegDia extends Dialog {
 		id_text = new Text(container, SWT.BORDER);
 		id_text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
 				1, 1));
+		id_text.setMessage("帐号最长20个字符，只能包含英文和数字，不能包含中文和特殊字符");
 		id_text.setTextLimit(20);
-		id_text.setToolTipText("\u5e10\u53f7\u6700\u957f20\u4e2a\u5b57\u7b26\uff0c\u4e2d\u6587\u4e3a2\u4e2a\u5b57\u7b26");// �ʺ��20���ַ�����Ϊ2���ַ�
+		id_text.setToolTipText("帐号最长20个字符，只能包含英文和数字，不能包含中文和特殊字符");
 
 		Label lblNewLabel_1 = new Label(container, SWT.NONE);
 		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
@@ -88,7 +90,9 @@ public class RegDia extends Dialog {
 		lblNewLabel_1.setText("\u767B\u5F55\u5BC6\u7801\uFF1A");
 		new Label(container, SWT.NONE);
 
+		
 		pwd_text = new Text(container, SWT.BORDER | SWT.PASSWORD);
+		pwd_text.setFocus();
 		pwd_text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
 				1, 1));
 		pwd_text.setTextLimit(36);
@@ -111,6 +115,8 @@ public class RegDia extends Dialog {
 		new Label(container, SWT.NONE);
 
 		mail = new Text(container, SWT.BORDER);
+		mail.setMessage("邮箱用于接收验证信息，请保证邮箱的真实性");
+		mail.setToolTipText("邮箱用于接收验证信息，请保证邮箱的真实性");
 		mail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label lblNewLabel_3 = new Label(container, SWT.NONE);
@@ -120,11 +126,10 @@ public class RegDia extends Dialog {
 
 		new Label(container, SWT.NONE);
 
-		text_4 = new Text(container, SWT.BORDER);
-		text_4.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
+		qq = new Text(container, SWT.BORDER);
+		qq.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
 				1));
-		text_4.setMessage("\u9884\u7559\u5b57\u6bb5\uff0c\u6682\u65e0\u7528");// Ԥ���ֶΣ�������
-		text_4.setEditable(false);
+		qq.setMessage("必填");
 
 		Label lblNewLabel_4 = new Label(container, SWT.NONE);
 		lblNewLabel_4.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
@@ -132,11 +137,10 @@ public class RegDia extends Dialog {
 		lblNewLabel_4.setText("\u624B\u673A\uFF1A");
 		new Label(container, SWT.NONE);
 
-		text_5 = new Text(container, SWT.BORDER);
-		text_5.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
+		mobile = new Text(container, SWT.BORDER);
+		mobile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
 				1));
-		text_5.setMessage("\u9884\u7559\u5b57\u6bb5\uff0c\u6682\u65e0\u7528");// Ԥ���ֶΣ�������
-		text_5.setEditable(false);
+		mobile.setMessage("必填");
 		return container;
 	}
 
@@ -155,22 +159,25 @@ public class RegDia extends Dialog {
 				if (pwd_text.getText() == null
 						|| pwd_text.getText().length() == 0
 						|| pwdok_text.getText() == null
-						|| pwdok_text.getText().length() == 0) {
+						|| pwdok_text.getText().length() == 0||qq.getText()==null||qq.getText().length()==0||
+						mobile.getText()==null||mobile.getText().length()==0||
+								mail.getText()==null||mail.getText().length()==0
+						) {
 					MessageBox mb = new MessageBox(
 							RegDia.this.getParentShell(), SWT.ICON_INFORMATION
 									| SWT.OK);
-					mb.setMessage("\u5bc6\u7801\u4e0d\u80fd\u4e3a\u7a7a");// ���벻��Ϊ��
+					mb.setMessage("所有字段必须填写");
 					mb.open();
 					return;
 				}
 				if (pwdok_text.getText().equals(pwd_text.getText())) {
 					httpPost(id_text.getText(), pwd_text.getText(),
-							pwdok_text.getText(), mail.getText());
+							pwdok_text.getText(), mail.getText(),qq.getText(),mobile.getText());
 				} else {
 					MessageBox mb = new MessageBox(
 							RegDia.this.getParentShell(), SWT.ICON_INFORMATION
 									| SWT.OK);
-					mb.setMessage("\u5bc6\u7801\u524d\u540e\u4e0d\u4e00\u81f4");// ����ǰ��һ��
+					mb.setMessage("\u5bc6\u7801\u524d\u540e\u4e0d\u4e00\u81f4");
 					mb.open();
 				}
 				RegDia.this.close();
@@ -195,7 +202,7 @@ public class RegDia extends Dialog {
 		return new Point(450, 300);
 	}
 
-	public void httpPost(String id, String pwd, String pwdok, String mail) {
+	public void httpPost(String id, String pwd, String pwdok, String mail,String qq,String mobile) {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(
 				"http://121.127.253.207/yxlm/member/reg_new.php?dopost=regbase&step=1");
@@ -205,6 +212,8 @@ public class RegDia extends Dialog {
 		nvps.add(new BasicNameValuePair("userpwd", pwd));
 		nvps.add(new BasicNameValuePair("userpwdok", pwdok));
 		nvps.add(new BasicNameValuePair("email", mail));
+		nvps.add(new BasicNameValuePair("qq", qq));
+		nvps.add(new BasicNameValuePair("mobile", mobile));
 		try {
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps));
 			CloseableHttpResponse httppHttpResponse2 = httpClient

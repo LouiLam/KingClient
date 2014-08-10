@@ -115,11 +115,11 @@ public class CrateDiaRoleName extends Dialog {
 		type.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
 				1, 1));
 		type.add("1V1");
-		type.add("2V2");
-		type.add("3V3");
-		type.add("4V4");
-		type.add("5V5");
-		type.select(4);
+		type.add("2V2 多人挑战有作弊风险，请尽量邀约朋友组成一队！");
+		type.add("3V3 多人挑战有作弊风险，请尽量邀约朋友组成一队！");
+		type.add("4V4 多人挑战有作弊风险，请尽量邀约朋友组成一队！");
+		type.add("5V5 多人挑战有作弊风险，请尽量邀约朋友组成一队！");
+		type.select(0);
 
 		new Label(container, SWT.NONE);
 
@@ -136,6 +136,9 @@ public class CrateDiaRoleName extends Dialog {
 		point.add("50");
 		point.add("100");
 		point.add("200");
+		point.add("400");
+		point.add("600");
+		point.add("800");
 		point.select(0);
 		new Label(container, SWT.NONE);
 
@@ -155,6 +158,7 @@ public class CrateDiaRoleName extends Dialog {
 		roleName = new Text(container, SWT.BORDER);
 		roleName.setTextLimit(50);
 		roleName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		roleName.setMessage("请确保英雄联盟角色名真实正确");
 		new Label(container, SWT.NONE);
 		
 		  btnCheckButton = new Button(container, SWT.CHECK);
